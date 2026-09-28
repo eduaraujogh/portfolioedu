@@ -30,7 +30,7 @@ export const site = {
     rest: 'à frente de todas as áreas de design de uma marca: identidade visual, UX/UI, campanhas, low-code e motion design.',
     // Apresentação ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
     about:
-      `Designer apaixonado por marcas, interfaces e campanhas bem resolvidas. Há ${years} anos ajudo empresas a tirar ideias do papel, seja uma identidade visual, um site ou uma campanha inteira.`,
+      `Apaixonado por marcas, interfaces e campanhas bem resolvidas. Há ${years} anos ajudo empresas a tirar ideias do papel, seja uma identidade visual, um aplicativo ou uma campanha inteira.`,
   },
 
   about: {
