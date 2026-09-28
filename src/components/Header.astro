@@ -48,9 +48,12 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
   const links = [...nav.querySelectorAll<HTMLAnchorElement>('.nav__link')];
   const current = links.find((l) => l.hasAttribute('aria-current')) ?? links[0];
 
+  const list = nav.querySelector<HTMLElement>('.nav__list')!;
+
   const moveTo = (link: HTMLAnchorElement) => {
+    // offsetLeft do link é relativo à lista; soma a posição da lista (o padding da pílula)
     indicator.style.width = `${link.offsetWidth}px`;
-    indicator.style.transform = `translateX(${link.offsetLeft}px)`;
+    indicator.style.transform = `translateX(${list.offsetLeft + link.offsetLeft}px)`;
     links.forEach((l) => l.classList.toggle('is-target', l === link));
   };
 
@@ -125,9 +128,21 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
     z-index: calc(var(--z-header) + 1);
     translate: -50% 0;
     padding: 4px;
-    background: var(--surface);
-    border: 1px solid var(--line);
     border-radius: var(--radius-pill);
+    /* Vidro: mantém o menu legível sobre fotos e projetos sem esconder o que está atrás */
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+      0 0 0 1px rgba(18, 18, 17, 0.06),
+      0 6px 24px rgba(18, 18, 17, 0.08);
+  }
+  /* Sem suporte a backdrop-filter: volta ao fundo sólido */
+  @supports not (backdrop-filter: blur(1px)) {
+    .nav {
+      background: var(--surface);
+    }
   }
   .nav__list {
     position: relative;
@@ -175,7 +190,6 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
     .nav {
       top: auto;
       bottom: calc(1rem + env(safe-area-inset-bottom));
-      box-shadow: 0 6px 24px rgba(18, 18, 17, 0.08);
     }
     .nav__link {
       padding: 0.625rem 1.125rem;
