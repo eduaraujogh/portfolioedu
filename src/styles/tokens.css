@@ -11,7 +11,13 @@
   /* Tipografia */
   --font: 'General Sans', ui-sans-serif, system-ui, sans-serif;
   --fs-display: clamp(2.25rem, 1rem + 3.4vw, 4rem);
+  --fs-lead: clamp(1.375rem, 0.9rem + 1.3vw, 2rem); /* parágrafos de destaque (About) */
+  --fs-stat: clamp(3rem, 2rem + 3vw, 4.5rem); /* números grandes */
   --fs-body: 1rem;
+  --fs-eyebrow: 0.6875rem; /* rótulos de seção */
+  --lh-lead: 1.3;
+  --tracking-lead: -0.02em;
+  --tracking-eyebrow: 0.08em;
   --fs-small: 0.8125rem;
   --lh-display: 1.08;
   --lh-small: 1.45;

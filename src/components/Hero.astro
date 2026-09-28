@@ -1,29 +1,20 @@
 ---
 import { site } from '../data/site';
+import SplitText from './SplitText.astro';
 
 const { lead, rest, about } = site.hero;
-
-// Cada palavra sobe de dentro de uma máscara, em sequência.
-const words = [
-  ...lead.split(' ').map((w) => ({ w, tone: 'lead' })),
-  ...rest.split(' ').map((w) => ({ w, tone: 'rest' })),
-];
 
 const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
 ---
 
 <section class="hero grid" aria-labelledby="hero-title">
-  <h1 id="hero-title" class="hero__title" aria-label={`${lead} ${rest}`}>
-    {
-      words.map(({ w, tone }, i) => (
-        <>
-          <span class={`w w--${tone}`} aria-hidden="true">
-            <span class="w__i" style={`--i:${i}`}>{w}</span>
-          </span>{' '}
-        </>
-      ))
-    }
-  </h1>
+  <SplitText
+    as="h1"
+    id="hero-title"
+    class="hero__title"
+    mode="load"
+    parts={[{ text: lead }, { text: rest, class: 'tone-2' }]}
+  />
 
   <div class="hero__meta small">
     <p class="hero__about">{about}</p>
@@ -43,7 +34,7 @@ const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
     padding-bottom: clamp(3rem, 6vw, 5rem);
   }
 
-  .hero__title {
+  .hero :global(.hero__title) {
     grid-column: 5 / -1;
     grid-row: 1;
     max-width: 17em;
@@ -51,19 +42,6 @@ const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
     font-weight: var(--fw-medium);
     line-height: var(--lh-display);
     letter-spacing: var(--tracking-display);
-  }
-
-  .w {
-    display: inline-block;
-    overflow: clip;
-    overflow-clip-margin: 0.12em; /* não corta acentos e descendentes */
-    vertical-align: top;
-  }
-  .w__i {
-    display: inline-block;
-  }
-  .w--rest {
-    color: var(--ink-3);
   }
 
   .hero__meta {
@@ -83,20 +61,10 @@ const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
     margin-top: var(--space-m);
   }
 
-  /* Entrada: palavras sobem da máscara; meta aparece depois */
-  :global(.motion) .w__i {
-    transform: translateY(110%);
-    animation: rise 1.1s var(--ease-out) forwards;
-    animation-delay: calc(0.15s + var(--i) * 45ms);
-  }
+  /* Entrada: o título sobe palavra por palavra (SplitText); meta aparece depois */
   :global(.motion) .hero__meta {
     opacity: 0;
     animation: fade 1s var(--ease-out) 0.9s forwards;
-  }
-  @keyframes rise {
-    to {
-      transform: none;
-    }
   }
   @keyframes fade {
     to {
@@ -105,7 +73,7 @@ const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
   }
 
   @media (max-width: 1023px) {
-    .hero__title {
+    .hero :global(.hero__title) {
       grid-column: 1 / -1;
     }
     .hero__meta {

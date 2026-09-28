@@ -1,0 +1,127 @@
+---
+// Referências: Exvia (rótulo à esquerda, texto grande à direita, linha de números)
+// + Jonas (frase em dois tons) + Max Pratt (lista de marcas).
+import { site } from '../data/site';
+import SplitText from './SplitText.astro';
+
+const { label, lead, rest, stats, brandsLabel, brands } = site.about;
+---
+
+<section id="sobre" class="about grid" aria-labelledby="about-label">
+  <h2 id="about-label" class="about__label eyebrow" data-reveal>{label}</h2>
+
+  <SplitText
+    class="about__statement"
+    parts={[{ text: lead }, { text: rest, class: 'tone-2' }]}
+  />
+
+  <div class="about__facts">
+    {
+      stats.map((stat, i) => (
+        <div class="stat" data-reveal style={`--reveal-delay:${i * 0.1}s`}>
+          <p class="stat__value">
+            {stat.value}
+            <sup>{stat.suffix}</sup>
+          </p>
+          <p class="stat__label eyebrow muted">{stat.label}</p>
+        </div>
+      ))
+    }
+
+    <div class="brands" data-reveal style="--reveal-delay:0.15s">
+      <p class="eyebrow muted">{brandsLabel}</p>
+      <ul class="brands__list">
+        {brands.map((b) => <li>{b}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    row-gap: var(--space-l);
+    padding-block: var(--space-l);
+    border-top: 1px solid var(--line);
+    margin-inline: var(--gutter);
+    padding-inline: 0;
+  }
+
+  .about__label {
+    grid-column: 1 / span 3;
+    padding-top: 0.6em; /* alinha com a primeira linha do texto grande */
+  }
+
+  .about :global(.about__statement) {
+    grid-column: 5 / -1;
+    max-width: 30em;
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    letter-spacing: var(--tracking-lead);
+    font-weight: var(--fw-medium);
+  }
+
+  .about__facts {
+    grid-column: 5 / -1;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    align-items: end;
+  }
+
+  .stat {
+    grid-column: span 3;
+  }
+  .stat__value {
+    font-size: var(--fs-stat);
+    font-weight: var(--fw-regular);
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+  }
+  .stat__value sup {
+    font-size: 0.35em;
+    vertical-align: top;
+    position: relative;
+    top: 0.2em;
+    margin-left: 0.08em;
+  }
+  .stat__label {
+    margin-top: 0.75rem;
+  }
+
+  .brands {
+    grid-column: 5 / -1;
+    display: grid;
+    gap: 0.75rem;
+  }
+  .brands__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    row-gap: 0.25rem;
+  }
+
+  @media (max-width: 1023px) {
+    .about__label {
+      grid-column: 1 / -1;
+      padding-top: 0;
+    }
+    .about :global(.about__statement),
+    .about__facts {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .about {
+      row-gap: var(--space-m);
+    }
+    .about__facts {
+      grid-template-columns: 1fr;
+      row-gap: var(--space-m);
+    }
+    .stat,
+    .brands {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
