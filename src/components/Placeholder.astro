@@ -1,0 +1,36 @@
+---
+// Página provisória para rotas que ainda não foram desenhadas.
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<section class="placeholder grid">
+  <h1>{title}</h1>
+  <p class="small muted">Em construção.</p>
+</section>
+
+<style>
+  .placeholder {
+    min-height: 100svh;
+    align-content: center;
+    row-gap: 1rem;
+  }
+  h1,
+  p {
+    grid-column: 5 / -1;
+  }
+  h1 {
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-display);
+    line-height: var(--lh-display);
+  }
+  @media (max-width: 1023px) {
+    h1,
+    p {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

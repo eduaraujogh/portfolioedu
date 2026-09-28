@@ -1,0 +1,183 @@
+---
+import { site } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<!-- Laterais: visíveis no topo e ao rolar para cima; recolhem ao descer,
+     deixando só a pílula para não disputar com o conteúdo. -->
+<header class="bar">
+  <div class="bar__side">
+    <a href="/" class="bar__name">{site.name}</a>
+    <p class="bar__detail small">{site.role} · {site.location}</p>
+  </div>
+  <div class="bar__side bar__side--end">
+    <a href={`mailto:${site.email}`} class="link-line">Contato ↗</a>
+    <ul class="bar__detail bar__socials small">
+      {site.socials.map((s) => <li><a href={s.href} class="link-line">{s.label}</a></li>)}
+    </ul>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Principal">
+  <span class="nav__indicator" aria-hidden="true"></span>
+  <ul class="nav__list">
+    {
+      site.nav.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class="nav__link"
+            aria-current={isCurrent(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<script>
+  // Indicador da pílula: repousa na página atual e acompanha o hover/foco,
+  // mostrando para onde o clique leva.
+  const nav = document.querySelector<HTMLElement>('.nav')!;
+  const indicator = nav.querySelector<HTMLElement>('.nav__indicator')!;
+  const links = [...nav.querySelectorAll<HTMLAnchorElement>('.nav__link')];
+  const current = links.find((l) => l.hasAttribute('aria-current')) ?? links[0];
+
+  const moveTo = (link: HTMLAnchorElement) => {
+    indicator.style.width = `${link.offsetWidth}px`;
+    indicator.style.transform = `translateX(${link.offsetLeft}px)`;
+    links.forEach((l) => l.classList.toggle('is-target', l === link));
+  };
+
+  links.forEach((l) => {
+    l.addEventListener('pointerenter', () => moveTo(l));
+    l.addEventListener('focus', () => moveTo(l));
+  });
+  nav.addEventListener('pointerleave', () => moveTo(current));
+  nav.addEventListener('focusout', (e) => {
+    if (!nav.contains(e.relatedTarget as Node)) moveTo(current);
+  });
+
+  document.fonts.ready.then(() => {
+    moveTo(current);
+    requestAnimationFrame(() => nav.classList.add('is-ready'));
+  });
+  addEventListener('resize', () => moveTo(current));
+</script>
+
+<style>
+  /* ---------- Barra (nome / contato) ---------- */
+  .bar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--z-header);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.25rem var(--gutter);
+    pointer-events: none;
+    transition:
+      opacity 0.5s var(--ease-out),
+      transform 0.5s var(--ease-out);
+  }
+  .bar a {
+    pointer-events: auto;
+  }
+  :global(.is-scrolled.is-going-down) .bar {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  :global(.is-scrolled.is-going-down) .bar a {
+    pointer-events: none;
+  }
+  /* Ao voltar a aparecer sobre o conteúdo, ganha fundo para não sobrepor texto */
+  :global(.is-scrolled) .bar {
+    background: var(--paper);
+  }
+  .bar__side {
+    display: grid;
+    gap: 0.125rem;
+    font-size: 0.875rem;
+    font-weight: var(--fw-medium);
+  }
+  .bar__side--end {
+    justify-items: end;
+  }
+  .bar__detail {
+    font-weight: var(--fw-regular);
+    color: var(--ink-2);
+  }
+  .bar__socials {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  /* ---------- Pílula de navegação ---------- */
+  .nav {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    z-index: calc(var(--z-header) + 1);
+    translate: -50% 0;
+    padding: 4px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+  }
+  .nav__list {
+    position: relative;
+    display: flex;
+  }
+  .nav__indicator {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    height: calc(100% - 8px);
+    width: 0;
+    background: var(--ink);
+    border-radius: var(--radius-pill);
+    opacity: 0;
+  }
+  .nav.is-ready .nav__indicator {
+    opacity: 1;
+    transition:
+      transform 0.5s var(--ease-out),
+      width 0.5s var(--ease-out);
+  }
+  .nav__link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+    border-radius: var(--radius-pill);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  /* Sem JS: página atual marcada pelo próprio link */
+  .nav:not(.is-ready) .nav__link[aria-current='page'] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .nav.is-ready .nav__link.is-target {
+    color: var(--paper);
+  }
+
+  /* ---------- Mobile: pílula desce para a zona do polegar ---------- */
+  @media (max-width: 767px) {
+    .bar__socials {
+      display: none;
+    }
+    .nav {
+      top: auto;
+      bottom: calc(1rem + env(safe-area-inset-bottom));
+      box-shadow: 0 6px 24px rgba(18, 18, 17, 0.08);
+    }
+    .nav__link {
+      padding: 0.625rem 1.125rem;
+    }
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+import Header from '../components/Header.astro';
+import { site } from '../data/site';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${site.name} — ${site.role}`,
+  description = `${site.hero.lead} ${site.hero.rest}`,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500&display=swap"
+    />
+    <!-- Liga as animações antes do primeiro paint, só se o usuário não pediu movimento reduzido -->
+    <script is:inline>
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('motion');
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip small" href="#main">Pular para o conteúdo</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <script>
+      import '../scripts/motion.ts';
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: fixed;
+    top: var(--space-xs);
+    left: var(--space-xs);
+    z-index: 100;
+    padding: 0.5rem 0.75rem;
+    background: var(--ink);
+    color: var(--paper);
+    transform: translateY(-200%);
+  }
+  .skip:focus-visible {
+    transform: none;
+  }
+</style>

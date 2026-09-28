@@ -1,0 +1,115 @@
+@import 'lenis/dist/lenis.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: 1.5;
+}
+
+h1, h2, h3, p, ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.small {
+  font-size: var(--fs-small);
+  line-height: var(--lh-small);
+}
+
+.muted {
+  color: var(--ink-2);
+}
+
+/* Grid de 12 colunas usado por todas as seções */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  padding-inline: var(--gutter);
+}
+
+/* Link com sublinhado que cresce no hover */
+.link-line {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size var(--dur-fast) var(--ease-out);
+}
+.link-line:hover {
+  background-size: 100% 1px;
+}
+
+/* Reveal de seções — só esconde se o JS estiver ativo e o movimento permitido */
+.motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity var(--dur-reveal) var(--ease-out),
+    transform var(--dur-reveal) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.motion [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.motion [data-reveal='media'] {
+  transform: none;
+  clip-path: inset(6% 0 0 0 round var(--radius-media));
+  transition:
+    opacity var(--dur-reveal) var(--ease-out),
+    clip-path 1.4s var(--ease-out);
+}
+.motion [data-reveal='media'] > * {
+  transform: scale(1.06);
+  transition: transform 1.6s var(--ease-out);
+}
+.motion [data-reveal='media'].is-in {
+  clip-path: inset(0 0 0 0 round var(--radius-media));
+}
+.motion [data-reveal='media'].is-in > * {
+  transform: none;
+}
