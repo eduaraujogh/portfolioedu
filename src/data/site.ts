@@ -49,7 +49,7 @@ export const site = {
   },
 
   // Experiência, da mais recente para a mais antiga. period vazio = não exibe.
-  // TODO: confirmar cargo e período de Grupo SBA e Grupo Ergon.
+  // TODO: confirmar cargo do Grupo Ergon e ano de início no Grupo SBA.
   experience: {
     label: 'Experiência',
     items: [
@@ -65,7 +65,7 @@ export const site = {
         company: 'Grupo Ergon',
         brands: 'Gedisa · Gaslog',
         role: 'Designer',
-        period: '',
+        period: '2025 — 2026',
         description:
           // TODO: confirmar/detalhar com o Eduardo
           'Criação para as duas empresas do grupo, do digital às peças de comunicação, incluindo landing pages e design responsivo para a Gedisa.',
@@ -79,20 +79,12 @@ export const site = {
           'Layouts de sites (UX/UI), landing pages, infográficos, e-books, estandes, gravação e edição de vídeos, social media e criações internas, além da coordenação de outros designers.',
       },
       {
-        company: 'Agência Allano',
-        brands: 'Publicidade',
+        company: 'Hascunho',
+        brands: 'Identidade visual · Ilustração',
         role: 'Designer Gráfico e Ilustrador',
-        period: '2018 — 2019',
+        period: '2018 — 2025',
         description:
-          'Criação de peças gráficas para empresas de diferentes segmentos, com foco em identidade visual e ilustração.',
-      },
-      {
-        company: 'Varejo de moda e esporte',
-        brands: 'Adidas · Side Walk · ArtWalk',
-        role: 'Vendas e atendimento',
-        period: '2012 — 2018',
-        description:
-          'Seis anos do lado de lá do balcão, em marcas como Adidas, Side Walk e ArtWalk. Foi onde aprendi, na prática, como as pessoas escolhem: o que faz alguém parar, olhar e decidir. Vendas, atendimento, gestão de loja e liderança de equipe que hoje entram em cada peça que desenho.',
+          'À frente da Hascunho, criei identidades visuais e ilustrações para marcas de diferentes segmentos, ajudando cada uma a se comunicar de forma autêntica, com foco no detalhe e sem complicar as coisas.',
       },
     ],
   },
