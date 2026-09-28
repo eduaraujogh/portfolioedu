@@ -50,14 +50,14 @@ export const site = {
   // featured: aparece na home. O primeiro em destaque ocupa a largura toda.
   works: [
     { slug: 'sabores', name: 'Sabores de Curitiba', sector: 'Gastronomia', discipline: 'Identidade Visual', featured: true },
-    // focus: ponto da imagem que fica visível quando a capa é recortada (object-position)
-    { slug: 'gedisa', name: 'Gedisa', sector: 'Energia', discipline: 'Web Design', featured: true, focus: 'left center' },
+    // Opcional: focus: 'left center' — ponto da imagem que fica visível quando a capa é recortada.
+    // Gedisa fica fora até ter uma capa boa (a atual é print de site).
+    { slug: 'thalles', name: 'Thalles Consultoria', sector: 'Consultoria', discipline: 'Identidade Visual', featured: true },
     { slug: 'fense', name: 'Fense Seguradora', sector: 'Seguros', discipline: 'Identidade Visual', featured: true },
     { slug: 'duo', name: 'Duo Garage', sector: 'Automotivo', discipline: 'Identidade Visual', featured: true },
     { slug: 'golden-vibes', name: 'Golden Vibes', sector: 'Semijoias', discipline: 'Branding', featured: true },
     { slug: 'bioerde', name: 'Bioerde', sector: 'Agronegócio', discipline: 'Branding', featured: false },
     { slug: 'riverside', name: 'Riverside', sector: 'Outdoor', discipline: 'Identidade Visual', featured: false },
-    { slug: 'thalles', name: 'Thalles Consultoria', sector: 'Consultoria', discipline: 'Identidade Visual', featured: false },
   ],
 } as const;
 
