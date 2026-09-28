@@ -1,8 +1,236 @@
 ---
+// About — referência: max-pratt.webflow.io/about
+// 1. Apresentação grande · 2. Coluna lateral fixa (listas) + subtítulo com pílulas, texto e foto
+// 3. Formação e Experiência (RowList) · 4. Como eu trabalho · CTA
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Placeholder from '../components/Placeholder.astro';
+import SplitText from '../components/SplitText.astro';
+import RowList from '../components/RowList.astro';
+import Cta from '../components/Cta.astro';
+import { site } from '../data/site';
+
+const { intro, side, heading, paragraphs, approachLabel, approach } = site.aboutPage;
+const { experience, education } = site;
+
+// Separador entre as palavras em pílula: "a, b e c "
+const sep = (i: number) => (i < heading.pills.length - 2 ? ', ' : i === heading.pills.length - 2 ? ' e ' : ' ');
+
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/me/portrait.{jpg,jpeg,png,webp}', {
+  eager: true,
+});
+const photo = Object.values(photos)[0]?.default;
 ---
 
-<BaseLayout title="About — Eduardo Araújo">
-  <Placeholder title="About" />
+<BaseLayout title={`About — ${site.name}`}>
+  <section class="ab-intro grid" aria-labelledby="ab-title">
+    <div class="ab-intro__text">
+      <SplitText
+        as="h1"
+        id="ab-title"
+        mode="load"
+        parts={[{ icon: 'wave' }, { text: intro.lead }, { text: intro.rest, class: 'tone-2' }]}
+      />
+    </div>
+  </section>
+
+  <section class="ab-story grid">
+    <aside class="ab-side">
+      <div>
+        <p class="eyebrow muted">{site.about.brandsLabel}</p>
+        <ul>{site.about.brands.map((b) => <li>{b}</li>)}</ul>
+      </div>
+      {
+        side.map((group) => (
+          <div>
+            <p class="eyebrow muted">{group.label}</p>
+            <ul>{group.items.map((i) => <li>{i}</li>)}</ul>
+          </div>
+        ))
+      }
+    </aside>
+
+    <div class="ab-main">
+      <h2 class="ab-heading" data-reveal>
+        {heading.before}{' '}{heading.pills.map((p, i) => <><span class="ab-pill">{p}</span>{sep(i)}</>)}{heading.after}
+      </h2>
+
+      <div class="ab-text">
+        {paragraphs.map((p, i) => <p data-reveal style={`--reveal-delay:${i * 0.05}s`}>{p}</p>)}
+      </div>
+
+      {
+        photo && (
+          <div class="ab-photo" data-reveal="media">
+            <Image src={photo} alt="Eduardo Araújo" widths={[640, 1024, 1600]} sizes="(max-width: 1023px) 100vw, 60vw" />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <RowList id="formacao" label={education.label} items={education.items} />
+  <RowList
+    id="experiencia"
+    label={experience.label}
+    items={experience.items.map((x) => ({
+      title: x.company,
+      subtitle: x.role,
+      period: x.period,
+      description: x.description,
+    }))}
+    continued
+  />
+
+  <section class="ab-approach grid" aria-labelledby="ab-approach-label">
+    <h2 id="ab-approach-label" class="ab-approach__label eyebrow" data-reveal>{approachLabel}</h2>
+    <ol class="ab-approach__list">
+      {
+        approach.map((a, i) => (
+          <li data-reveal style={`--reveal-delay:${i * 0.06}s`}>
+            <h3>
+              <span class="ab-approach__num">{String(i + 1).padStart(2, '0')}</span> {a.title}
+            </h3>
+            <p>{a.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <Cta />
 </BaseLayout>
+
+<style>
+  /* 1. Apresentação */
+  .ab-intro {
+    padding-top: clamp(8rem, 18vh, 11rem);
+    padding-bottom: var(--space-l);
+  }
+  .ab-intro__text {
+    grid-column: 1 / -1;
+    max-width: 22em;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* 2. Lateral + história */
+  .ab-story {
+    align-items: start;
+    padding-bottom: var(--space-l);
+  }
+  .ab-side {
+    grid-column: 1 / span 3;
+    position: sticky;
+    top: 6rem;
+    display: grid;
+    gap: 2.25rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .ab-side .eyebrow {
+    margin-bottom: 0.6rem;
+  }
+
+  .ab-main {
+    grid-column: 5 / -1;
+    display: grid;
+    gap: var(--space-m);
+  }
+  .ab-heading {
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    line-height: 1.55;
+    letter-spacing: var(--tracking-lead);
+    max-width: 24em;
+  }
+  .ab-pill {
+    display: inline-block;
+    padding: 0 0.45em 0.05em;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-pill);
+    line-height: 1.25;
+  }
+  .ab-text {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 38em;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+  .ab-photo {
+    overflow: hidden;
+    border-radius: var(--radius-media);
+    aspect-ratio: 16 / 10;
+  }
+  .ab-photo :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 20%;
+  }
+
+  /* 4. Como eu trabalho: título | texto (ref. "Approach") */
+  .ab-approach {
+    row-gap: var(--space-m);
+    padding-block: var(--space-l);
+  }
+  .ab-approach__label {
+    grid-column: 1 / span 3;
+    padding-top: 1.6rem;
+  }
+  .ab-approach__list {
+    grid-column: 5 / -1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .ab-approach__list li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 1.5rem;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .ab-approach__list h3 {
+    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-lead);
+    line-height: 1.2;
+  }
+  .ab-approach__num {
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .ab-approach__list p {
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1023px) {
+    .ab-side,
+    .ab-main,
+    .ab-approach__label,
+    .ab-approach__list {
+      grid-column: 1 / -1;
+    }
+    .ab-side {
+      position: static;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: var(--space-m);
+      order: 2;
+    }
+    .ab-approach__label {
+      padding-top: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .ab-approach__list li {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+  }
+</style>

@@ -48,6 +48,35 @@ export const site = {
     brands: ['Fense Seguradora', 'Artta', 'Sabores de Curitiba', 'SB Crédito', 'Thalles Consultoria', 'Gedisa', 'Duo Garage', 'Gaslog', 'Golden Vibes', 'Grupo Exati'],
   },
 
+  // Página About (ref. max-pratt.webflow.io/about)
+  aboutPage: {
+    intro: {
+      lead: 'Oi, eu sou o Eduardo.',
+      rest: `Designer Sênior em Curitiba, à frente de todas as áreas de design de uma marca. Há ${years} anos transformo ideias em marcas, interfaces e campanhas.`,
+    },
+    // Coluna lateral. TODO: confirmar ferramentas, competências e idiomas.
+    side: [
+      { label: 'Ferramentas', items: ['Figma', 'Photoshop', 'Illustrator', 'After Effects', 'Premiere Pro', 'Cinema 4D'] },
+      { label: 'Competências', items: ['Direção de arte', 'Liderança de equipe', 'Comunicação com clientes', 'Atenção aos detalhes', 'Resolução de problemas'] },
+      { label: 'Idiomas', items: ['Português, nativo'] },
+    ],
+    // Subtítulo: palavras em `pills` aparecem em pílulas com contorno
+    heading: { before: 'Do rascunho à entrega:', pills: ['marcas', 'interfaces', 'campanhas'], after: 'que fazem sentido.' },
+    paragraphs: [
+      'Sou formado em Publicidade e Propaganda pela Universidade Positivo e me especializei em Design Gráfico e UX/UI na EBAC. Trabalho com design desde 2015 e, ao longo desse caminho, passei por estúdio próprio e por diferentes grupos empresariais.',
+      'Na Hascunho, meu estúdio, desenvolvi identidades visuais e ilustrações para marcas de diferentes segmentos. Com o tempo, assumi frentes cada vez mais amplas: coordenei designers, criei sites, landing pages, estandes e vídeos, e passei a responder por todas as áreas de design das empresas em que atuo.',
+      'Trabalho com foco no detalhe, mas sem complicar as coisas. Meu objetivo é criar marcas que façam sentido, se conectem com as pessoas e causem aquele “é isso!”.',
+    ],
+    // Rascunho do processo. TODO: revisar com o Eduardo.
+    approachLabel: 'Como eu trabalho',
+    approach: [
+      { title: 'Imersão', text: 'Entendo o negócio, o público e o problema antes de abrir qualquer ferramenta. Boas soluções começam por boas perguntas.' },
+      { title: 'Conceito', text: 'Transformo o que foi aprendido em uma ideia central que guia todas as decisões visuais, da marca à última peça.' },
+      { title: 'Design', text: 'Desenvolvo o sistema visual e as peças com atenção aos detalhes, testando e refinando até cada elemento ter um motivo para estar ali.' },
+      { title: 'Entrega', text: 'Organizo arquivos, diretrizes e componentes para que o time consiga aplicar e evoluir o trabalho com autonomia.' },
+    ],
+  },
+
   // Serviços (ref. Rafa). Imagem: src/assets/services/<slug>.webp
   // TODO: motion.webp é provisória (still da Fense); trocar por um frame/vídeo de motion.
   services: {
