@@ -144,8 +144,6 @@ export const site = {
   footer: {
     lead: 'Tem um projeto em mente?',
     rest: 'Vamos conversar.',
-    coords: '25.4284° S, 49.2733° W', // Curitiba
-    timeZone: 'America/Sao_Paulo',
   },
 
   // Texto sobre a foto em tela cheia (canto superior esquerdo)
