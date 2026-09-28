@@ -1,6 +1,10 @@
 // Conteúdo editável do site. A estrutura visual vive nos componentes;
 // para mudar textos, links e projetos, edite apenas este arquivo.
 
+// Ano em que comecei a trabalhar com design; os anos de experiência se atualizam sozinhos.
+const startYear = 2015;
+const years = new Date().getFullYear() - startYear;
+
 export const site = {
   name: 'Eduardo Araújo',
   role: 'Designer gráfico',
@@ -26,7 +30,7 @@ export const site = {
     rest: 'que transforma assuntos complexos em marcas, telas e campanhas claras.',
     // Texto conceitual ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
     about:
-      'Designer gráfico apaixonado por marcas, interfaces e campanhas bem resolvidas. Há 8 anos ajudo empresas a tirar ideias do papel, seja uma identidade visual, um site ou uma campanha inteira.',
+      `Designer gráfico apaixonado por marcas, interfaces e campanhas bem resolvidas. Há ${years} anos ajudo empresas a tirar ideias do papel, seja uma identidade visual, um site ou uma campanha inteira.`,
   },
 
   // Placeholders até recebermos os projetos reais.
