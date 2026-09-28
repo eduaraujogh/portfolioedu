@@ -16,7 +16,6 @@ const { experience, education } = site;
   <WorksPreview />
   <About />
   <Portrait />
-  <Services />
   <RowList
     id="experiencia"
     label={experience.label}
@@ -28,4 +27,5 @@ const { experience, education } = site;
     }))}
   />
   <RowList id="formacao" label={education.label} items={education.items} continued />
+  <Services />
 </BaseLayout>

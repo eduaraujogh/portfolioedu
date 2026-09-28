@@ -1,7 +1,6 @@
 ---
-// Serviços em acordeão — referência: Rafa (rafa.framer.media).
-// Linha acende como card no hover; clique abre com descrição, entregas (chips) e imagem.
-// Várias podem ficar abertas; a primeira já começa aberta para mostrar o formato.
+// Serviços em acordeão — referência: Rafa (rafa.framer.media). Seção escura.
+// Tudo começa fechado; o clique abre um card (descrição, entregas e imagem) e fecha o anterior.
 import { Image } from 'astro:assets';
 import { site } from '../data/site';
 
@@ -21,15 +20,9 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
     {
       items.map((item, i) => {
         const img = imageOf(item.slug);
-        const open = i === 0;
         return (
-          <li class:list={['svc__item', { 'is-open': open }]} data-reveal style={`--reveal-delay:${i * 0.06}s`}>
-            <button
-              class="svc__toggle"
-              type="button"
-              aria-expanded={String(open)}
-              aria-controls={`svc-panel-${i}`}
-            >
+          <li class="svc__item" data-reveal style={`--reveal-delay:${i * 0.06}s`}>
+            <button class="svc__toggle" type="button" aria-expanded="false" aria-controls={`svc-panel-${i}`}>
               <span class="svc__num">{String(i + 1).padStart(2, '0')}</span>
               <span class="svc__title">{item.title}</span>
               <span class="svc__icon" aria-hidden="true" />
@@ -64,21 +57,37 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
 </section>
 
 <script>
-  document.querySelectorAll<HTMLElement>('.svc__item').forEach((item) => {
-    const btn = item.querySelector<HTMLButtonElement>('.svc__toggle')!;
-    btn.addEventListener('click', () => {
-      const open = item.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', String(open));
+  // Um aberto por vez: abrir um fecha o que estava aberto.
+  const items = [...document.querySelectorAll<HTMLElement>('.svc__item')];
+  const setOpen = (target: HTMLElement | null) =>
+    items.forEach((item) => {
+      const open = item === target;
+      item.classList.toggle('is-open', open);
+      item.querySelector('.svc__toggle')!.setAttribute('aria-expanded', String(open));
+    });
+
+  items.forEach((item) => {
+    item.querySelector('.svc__toggle')!.addEventListener('click', () => {
+      setOpen(item.classList.contains('is-open') ? null : item);
     });
   });
 </script>
 
 <style>
+  /* Seção escura: redefine os tokens localmente, o resto do componente segue igual */
   .svc {
+    --paper: #121211;
+    --surface: #1c1c1a;
+    --ink: #f3f2ef;
+    --ink-2: rgba(243, 242, 239, 0.68);
+    --ink-3: rgba(243, 242, 239, 0.4);
+    --line: rgba(243, 242, 239, 0.1);
+
     row-gap: var(--space-m);
-    padding-block: var(--space-l);
+    padding-block: var(--space-l) calc(var(--space-l) * 1.5);
     background: var(--paper);
-    position: relative; /* por cima da foto fixa da seção anterior */
+    color: var(--ink);
+    position: relative;
   }
   .svc__head {
     grid-column: 1 / span 3;
@@ -112,9 +121,21 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
     transition: opacity 0.4s var(--ease-out);
     pointer-events: none;
   }
-  .svc__item:hover::before,
   .svc__item.is-open::before {
     opacity: 1;
+  }
+
+  /* Hover sutil (só com mouse): fundo leve, título desliza um pouco, número acende */
+  @media (hover: hover) and (pointer: fine) {
+    .svc__item:not(.is-open):hover::before {
+      opacity: 0.55;
+    }
+    .svc__item:hover .svc__title {
+      translate: 0.35rem 0;
+    }
+    .svc__item:hover .svc__num {
+      color: var(--ink);
+    }
   }
   /* Card aberto/aceso "engole" a divisória de cima e de baixo */
   .svc__item.is-open,
@@ -144,12 +165,14 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
     font-variant-numeric: tabular-nums;
     color: var(--ink-3);
     letter-spacing: var(--tracking-lead);
+    transition: color 0.4s var(--ease-out);
   }
   .svc__title {
     font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
     font-weight: var(--fw-medium);
     letter-spacing: var(--tracking-lead);
     line-height: 1.2;
+    transition: translate 0.5s var(--ease-out);
   }
 
   /* Ícone + que vira × (mesmo padrão da Experiência) */
