@@ -49,7 +49,7 @@ export const site = {
   },
 
   // Experiência, da mais recente para a mais antiga. period vazio = não exibe.
-  // TODO: confirmar cargo do Grupo Ergon e ano de início no Grupo SBA.
+  // TODO: confirmar ano de início no Grupo SBA.
   experience: {
     label: 'Experiência',
     items: [
@@ -59,16 +59,15 @@ export const site = {
         role: 'Designer Sênior multidisciplinar',
         period: 'Atual',
         description:
-          'Responsável por todas as frentes de design de duas marcas do mercado financeiro: identidade visual, UX/UI, campanhas, social media, motion e audiovisual.',
+          'Responsável por todas as frentes de design de duas marcas do mercado financeiro. Conduzo identidade visual, UX/UI, campanhas, social media, motion e audiovisual, garantindo uma comunicação consistente em todos os pontos de contato.',
       },
       {
         company: 'Grupo Ergon',
         brands: 'Gedisa · Gaslog',
-        role: 'Designer',
+        role: 'Designer multidisciplinar',
         period: '2025 — 2026',
         description:
-          // TODO: confirmar/detalhar com o Eduardo
-          'Criação para as duas empresas do grupo, do digital às peças de comunicação, incluindo landing pages e design responsivo para a Gedisa.',
+          'Responsável por todas as frentes de design das empresas do grupo. Atuei de ponta a ponta, da identidade visual e das campanhas à presença digital, com landing pages e interfaces responsivas.',
       },
       {
         company: 'Grupo Exati',
@@ -76,7 +75,7 @@ export const site = {
         role: 'Designer Gráfico Pleno',
         period: '2021 — 2024',
         description:
-          'Layouts de sites (UX/UI), landing pages, infográficos, e-books, estandes, gravação e edição de vídeos, social media e criações internas, além da coordenação de outros designers.',
+          'Criação de sites e landing pages (UX/UI), infográficos, e-books, estandes, vídeos e conteúdo para social media, atendendo às demandas comerciais e internas da empresa. Também coordenei outros designers da equipe.',
       },
       {
         company: 'Hascunho',
@@ -84,7 +83,7 @@ export const site = {
         role: 'Designer Gráfico e Ilustrador',
         period: '2018 — 2025',
         description:
-          'À frente da Hascunho, criei identidades visuais e ilustrações para marcas de diferentes segmentos, ajudando cada uma a se comunicar de forma autêntica, com foco no detalhe e sem complicar as coisas.',
+          'Estúdio próprio de identidade visual e ilustração. Desenvolvi marcas para empresas de diferentes segmentos, do conceito ao sistema visual, com foco em comunicação autêntica e atenção aos detalhes.',
       },
     ],
   },
