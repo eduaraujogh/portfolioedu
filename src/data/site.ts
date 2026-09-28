@@ -48,6 +48,50 @@ export const site = {
     brands: ['Fense Seguradora', 'Artta', 'Sabores de Curitiba', 'SB Crédito', 'Thalles Consultoria', 'Gedisa', 'Duo Garage', 'Gaslog', 'Golden Vibes', 'Grupo Exati'],
   },
 
+  // Serviços (ref. Rafa). Imagem: src/assets/services/<slug>.webp
+  // TODO: motion.webp é provisória (still da Fense); trocar por um frame/vídeo de motion.
+  services: {
+    label: 'Serviços',
+    intro: 'Design de ponta a ponta para marcas que precisam se comunicar com clareza em todos os pontos de contato.',
+    items: [
+      {
+        slug: 'identidade-visual',
+        title: 'Identidade Visual',
+        description:
+          'Criação e evolução de marcas, do conceito ao sistema visual completo, com diretrizes que garantem consistência em qualquer aplicação.',
+        tags: ['Logotipo e símbolo', 'Sistema visual', 'Manual de marca', 'Rebranding', 'Papelaria e aplicações'],
+      },
+      {
+        slug: 'ux-ui',
+        title: 'UX/UI Design',
+        description:
+          'Interfaces para sites, landing pages e aplicativos, da arquitetura de informação ao layout final, pensadas para serem claras, acessíveis e fáceis de usar.',
+        tags: ['Arquitetura de informação', 'Wireframes e fluxos', 'UI para web e mobile', 'Design responsivo', 'Handoff para desenvolvimento'],
+      },
+      {
+        slug: 'campanhas',
+        title: 'Campanhas',
+        description:
+          'Campanhas completas para lançamentos e ações de marca, com peças para redes sociais, mídia digital, eventos e materiais impressos.',
+        tags: ['Conceito criativo', 'Social media', 'Mídia digital', 'Estandes e eventos', 'Materiais impressos'],
+      },
+      {
+        slug: 'no-code',
+        title: 'No-code',
+        description:
+          'Sites e landing pages publicados sem depender de desenvolvimento, prontos para o time editar o conteúdo com autonomia.',
+        tags: ['Sites institucionais', 'Landing pages', 'CMS editável', 'Animações e interações', 'Publicação'],
+      },
+      {
+        slug: 'motion',
+        title: 'Motion Design',
+        description:
+          'Animações para marcas, interfaces e redes sociais, além de captação e edição de vídeo, para dar movimento e ritmo à comunicação.',
+        tags: ['Animação de logotipo', 'Motion para social media', 'Microinterações', 'Edição de vídeo', 'Audiovisual'],
+      },
+    ],
+  },
+
   // Experiência, da mais recente para a mais antiga. period vazio = não exibe.
   // TODO: confirmar ano de início no Grupo SBA.
   experience: {

@@ -1,0 +1,296 @@
+---
+// Serviços em acordeão — referência: Rafa (rafa.framer.media).
+// Linha acende como card no hover; clique abre com descrição, entregas (chips) e imagem.
+// Várias podem ficar abertas; a primeira já começa aberta para mostrar o formato.
+import { Image } from 'astro:assets';
+import { site } from '../data/site';
+
+const { label, intro, items } = site.services;
+
+const images = import.meta.glob<{ default: ImageMetadata }>('../assets/services/*.webp', { eager: true });
+const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.default;
+---
+
+<section id="servicos" class="svc grid" aria-labelledby="svc-label">
+  <div class="svc__head">
+    <h2 id="svc-label" class="eyebrow" data-reveal>{label}</h2>
+    <p class="svc__intro small muted" data-reveal style="--reveal-delay:0.08s">{intro}</p>
+  </div>
+
+  <ol class="svc__list">
+    {
+      items.map((item, i) => {
+        const img = imageOf(item.slug);
+        const open = i === 0;
+        return (
+          <li class:list={['svc__item', { 'is-open': open }]} data-reveal style={`--reveal-delay:${i * 0.06}s`}>
+            <button
+              class="svc__toggle"
+              type="button"
+              aria-expanded={String(open)}
+              aria-controls={`svc-panel-${i}`}
+            >
+              <span class="svc__num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="svc__title">{item.title}</span>
+              <span class="svc__icon" aria-hidden="true" />
+            </button>
+
+            <div class="svc__panel" id={`svc-panel-${i}`} role="region" aria-label={item.title}>
+              <div class="svc__panel-inner">
+                <div class="svc__body">
+                  <p class="svc__desc">{item.description}</p>
+                  <ul class="svc__tags">
+                    {item.tags.map((t) => <li class="chip">{t}</li>)}
+                  </ul>
+                </div>
+                {img && (
+                  <div class="svc__media">
+                    <Image
+                      src={img}
+                      alt=""
+                      widths={[480, 800, 1200]}
+                      sizes="(max-width: 767px) 100vw, 30vw"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ol>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.svc__item').forEach((item) => {
+    const btn = item.querySelector<HTMLButtonElement>('.svc__toggle')!;
+    btn.addEventListener('click', () => {
+      const open = item.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
+</script>
+
+<style>
+  .svc {
+    row-gap: var(--space-m);
+    padding-block: var(--space-l);
+    background: var(--paper);
+    position: relative; /* por cima da foto fixa da seção anterior */
+  }
+  .svc__head {
+    grid-column: 1 / span 3;
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+    padding-top: 1.4rem;
+  }
+  .svc__intro {
+    max-width: 30ch;
+  }
+  .svc__list {
+    grid-column: 5 / -1;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Linha / card */
+  .svc__item {
+    position: relative;
+    border-bottom: 1px solid var(--line);
+  }
+  .svc__item::before {
+    content: '';
+    position: absolute;
+    inset: 3px 0 0; /* respiro entre dois cards acesos seguidos */
+    background: var(--surface);
+    border-radius: var(--radius-media);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out);
+    pointer-events: none;
+  }
+  .svc__item:hover::before,
+  .svc__item.is-open::before {
+    opacity: 1;
+  }
+  /* Card aberto/aceso "engole" a divisória de cima e de baixo */
+  .svc__item.is-open,
+  .svc__item:has(+ .is-open) {
+    border-bottom-color: transparent;
+  }
+
+  .svc__toggle {
+    all: unset;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: 0.75rem;
+    padding: 1.4rem 1.25rem;
+    cursor: pointer;
+  }
+  .svc__toggle:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: -2px;
+    border-radius: var(--radius-media);
+  }
+  .svc__num {
+    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-3);
+    letter-spacing: var(--tracking-lead);
+  }
+  .svc__title {
+    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-lead);
+    line-height: 1.2;
+  }
+
+  /* Ícone + que vira × (mesmo padrão da Experiência) */
+  .svc__icon {
+    align-self: center;
+    position: relative;
+    width: 14px;
+    height: 14px;
+    transition: rotate 0.5s var(--ease-out);
+  }
+  .svc__icon::before,
+  .svc__icon::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 1px;
+    background: currentColor;
+  }
+  .svc__icon::after {
+    rotate: 90deg;
+  }
+  .is-open .svc__icon {
+    rotate: 45deg;
+  }
+
+  /* Painel */
+  .svc__panel {
+    position: relative;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.7s var(--ease-out);
+  }
+  .is-open .svc__panel {
+    grid-template-rows: 1fr;
+  }
+  .svc__panel-inner {
+    min-height: 0;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 2rem;
+    padding: 0 1.25rem;
+    opacity: 0;
+    transition:
+      opacity 0.45s var(--ease-out),
+      padding 0.7s var(--ease-out);
+  }
+  .is-open .svc__panel-inner {
+    opacity: 1;
+    padding-bottom: 1.25rem;
+    transition-delay: 0.1s;
+  }
+
+  .svc__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .svc__desc {
+    max-width: 38em;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+  .svc__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: var(--paper);
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .chip::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--ink-3);
+  }
+
+  .svc__media {
+    overflow: hidden;
+    border-radius: calc(var(--radius-media) - 2px);
+    aspect-ratio: 16 / 10;
+    background: var(--line);
+  }
+  .svc__media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    scale: 1.06;
+    transition: scale 1.2s var(--ease-out);
+  }
+  .is-open .svc__media :global(img) {
+    scale: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .svc__panel,
+    .svc__panel-inner,
+    .svc__icon,
+    .svc__media :global(img),
+    .svc__item::before {
+      transition-duration: 0.01s;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .svc__head,
+    .svc__list {
+      grid-column: 1 / -1;
+    }
+    .svc__head {
+      padding-top: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .svc__toggle {
+      padding: 1.2rem 0.9rem;
+    }
+    .svc__panel-inner {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      padding-inline: 0.9rem;
+    }
+    .svc__media {
+      order: -1;
+    }
+  }
+</style>

@@ -5,6 +5,7 @@ import WorksPreview from '../components/WorksPreview.astro';
 import About from '../components/About.astro';
 import Portrait from '../components/Portrait.astro';
 import RowList from '../components/RowList.astro';
+import Services from '../components/Services.astro';
 import { site } from '../data/site';
 
 const { experience, education } = site;
@@ -15,6 +16,7 @@ const { experience, education } = site;
   <WorksPreview />
   <About />
   <Portrait />
+  <Services />
   <RowList
     id="experiencia"
     label={experience.label}
