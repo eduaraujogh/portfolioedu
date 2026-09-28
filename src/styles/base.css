@@ -26,6 +26,15 @@ h1, h2, h3, p, ul {
   margin: 0;
 }
 
+/* O conteúdo fica por cima do rodapé (sticky) e o revela ao subir, com cantos arredondados */
+#main {
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
+  border-radius: 0 0 clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 4vw, 3rem);
+  overflow: clip;
+}
+
 /* Títulos não carregam estilo próprio: tamanho e peso vêm do contexto/componente */
 h1, h2, h3 {
   font-size: inherit;

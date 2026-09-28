@@ -2,7 +2,7 @@
 // para mudar textos, links e projetos, edite apenas este arquivo.
 
 // Ano em que comecei a trabalhar com design; os anos de experiência se atualizam sozinhos.
-const startYear = 2015;
+export const startYear = 2015;
 const years = new Date().getFullYear() - startYear;
 
 export const site = {
@@ -140,8 +140,23 @@ export const site = {
     ],
   },
 
-  // Rodapé
+  // Rodapé (ref. Max Pratt)
   footer: {
+    kicker: 'Pronto para começar?',
+    title: 'Fale comigo',
+    coords: '25.4284° S, 49.2733° W', // Curitiba
+  },
+
+  // Gaveta de contato: formulário em forma de frase. Envio abre o e-mail com a mensagem pronta.
+  // TODO: se quiser receber sem abrir o app de e-mail, ligar a um serviço (Formspree, Web3Forms).
+  contact: {
+    intro: 'Conte um pouco sobre o seu projeto',
+    submit: 'Enviar',
+  },
+
+  // Chamada antes do rodapé (ref. Norwalk): pergunta + avatar com nome e cargo
+  cta: {
+    role: 'Designer Sênior', // cargo curto só no avatar
     lead: 'Tem um projeto em mente?',
     rest: 'Vamos conversar.',
   },

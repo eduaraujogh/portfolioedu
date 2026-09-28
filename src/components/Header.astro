@@ -14,7 +14,7 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
     <p class="bar__detail small">{site.role} · {site.location}</p>
   </div>
   <div class="bar__side bar__side--end">
-    <a href="#contato" class="link-line">Contato ↘</a>
+    <a href="#contato" class="link-line" data-contact>Contato ↗</a>
     <ul class="bar__detail bar__socials small">
       {site.socials.map((s) => <li><a href={s.href} class="link-line">{s.label}</a></li>)}
     </ul>

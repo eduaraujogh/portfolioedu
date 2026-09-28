@@ -1,0 +1,294 @@
+---
+// Gaveta de contato — referência: Max Pratt.
+// Abre pela direita a partir de qualquer link com [data-contact]; o resto da página desfoca atrás.
+// Formulário em forma de frase ("Oi, meu nome é ___"). Como o site é estático, o envio
+// abre o app de e-mail com a mensagem pronta (sem servidor). Esc ou clique fora fecham.
+import { site } from '../data/site';
+
+const { intro, submit } = site.contact;
+---
+
+<dialog class="contact" aria-labelledby="contact-title" data-lenis-prevent>
+  <div class="contact__panel">
+    <div class="contact__top">
+      <p id="contact-title" class="small">{intro}</p>
+      <button class="contact__close" type="button" aria-label="Fechar">
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <form class="contact__form" novalidate>
+      <p class="contact__sentence">
+        Oi, meu nome é
+        <input name="nome" type="text" autocomplete="name" required aria-label="Seu nome" placeholder="seu nome" />.
+        Pode me responder no e-mail
+        <input name="email" type="email" autocomplete="email" required aria-label="Seu e-mail" placeholder="voce@email.com" />.
+        Preciso de ajuda com
+        <input
+          name="tipo"
+          type="text"
+          list="contact-services"
+          aria-label="Tipo de projeto"
+          placeholder="identidade visual, site…"
+        />, meu orçamento é de
+        <input name="orcamento" type="text" inputmode="numeric" aria-label="Orçamento" placeholder="R$ 5.000" />
+        e o prazo é
+        <input name="prazo" type="text" aria-label="Prazo" placeholder="dezembro" />.
+      </p>
+      <datalist id="contact-services">
+        {site.services.items.map((s) => <option value={s.title} />)}
+      </datalist>
+
+      <div class="contact__actions">
+        <button class="contact__submit" type="submit">
+          {submit}
+          <span aria-hidden="true">→</span>
+        </button>
+        <p class="contact__status small muted" aria-live="polite"></p>
+      </div>
+    </form>
+
+    <div class="contact__bottom small">
+      {site.socials.map((s) => <a class="link-line" href={s.href}>{s.label}</a>)}
+      <a class="link-line" href={`mailto:${site.email}`}>{site.email}</a>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('.contact');
+  if (dialog) {
+    const form = dialog.querySelector<HTMLFormElement>('.contact__form')!;
+    const status = dialog.querySelector<HTMLElement>('.contact__status')!;
+    const lenis = () => (window as unknown as { lenis?: { stop(): void; start(): void } | null }).lenis;
+    const email = form.closest('dialog')!.querySelector<HTMLAnchorElement>('a[href^="mailto:"]')!.href.slice(7);
+
+    const open = () => {
+      dialog.showModal();
+      lenis()?.stop();
+      status.textContent = '';
+    };
+    dialog.addEventListener('close', () => lenis()?.start());
+
+    document.querySelectorAll<HTMLAnchorElement>('[data-contact]').forEach((link) =>
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        open();
+      }),
+    );
+
+    dialog.querySelector('.contact__close')!.addEventListener('click', () => dialog.close());
+    // Clique no fundo desfocado (fora do painel) fecha
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      const v = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      const or = (x: string) => x?.trim() || 'a combinar';
+      const body =
+        `Oi, meu nome é ${v.nome.trim()}. Pode me responder no e-mail ${v.email.trim()}. ` +
+        `Preciso de ajuda com ${or(v.tipo)}, meu orçamento é de ${or(v.orcamento)} e o prazo é ${or(v.prazo)}.`;
+      const subject = `Novo projeto: ${v.tipo?.trim() || 'contato pelo portfólio'}`;
+      location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      status.textContent = 'Abrindo seu e-mail com a mensagem pronta…';
+    });
+  }
+</script>
+
+<style>
+  .contact {
+    position: fixed;
+    inset: 0 0 0 auto;
+    width: min(36rem, 100vw);
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: -24px 0 60px rgba(18, 18, 17, 0.12);
+
+    /* Entra/sai deslizando pela direita */
+    translate: 100% 0;
+    transition:
+      translate 0.7s var(--ease-out),
+      display 0.7s allow-discrete,
+      overlay 0.7s allow-discrete;
+  }
+  .contact[open] {
+    translate: 0 0;
+  }
+  @starting-style {
+    .contact[open] {
+      translate: 100% 0;
+    }
+  }
+
+  .contact::backdrop {
+    background: rgba(18, 18, 17, 0);
+    backdrop-filter: blur(0);
+    transition:
+      background-color 0.6s var(--ease-out),
+      backdrop-filter 0.6s var(--ease-out),
+      display 0.6s allow-discrete,
+      overlay 0.6s allow-discrete;
+  }
+  .contact[open]::backdrop {
+    background: rgba(18, 18, 17, 0.35);
+    backdrop-filter: blur(8px);
+  }
+  @starting-style {
+    .contact[open]::backdrop {
+      background: rgba(18, 18, 17, 0);
+      backdrop-filter: blur(0);
+    }
+  }
+
+  .contact__panel {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 1.75rem clamp(1.25rem, 3vw, 2.25rem);
+  }
+  .contact__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* × desenhado com duas linhas */
+  .contact__close {
+    position: relative;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+    transition: rotate 0.5s var(--ease-out);
+  }
+  .contact__close span::before,
+  .contact__close span::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    width: 60%;
+    height: 1.5px;
+    background: currentColor;
+    rotate: 45deg;
+  }
+  .contact__close span::after {
+    rotate: -45deg;
+  }
+  .contact__close:hover {
+    rotate: 90deg;
+  }
+
+  .contact__form {
+    align-self: center;
+    display: grid;
+    gap: 2rem;
+  }
+  .contact__sentence {
+    font-size: clamp(1.25rem, 1rem + 0.9vw, 1.6rem);
+    line-height: 1.85;
+    letter-spacing: var(--tracking-lead);
+  }
+  .contact__sentence input {
+    font: inherit;
+    letter-spacing: inherit;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    padding: 0 0.15em;
+    margin: 0 0.1em;
+    field-sizing: content; /* cresce com o texto digitado (Chrome/Edge) */
+    max-width: 100%;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  /* Largura mínima de cada campo = tamanho do texto de exemplo */
+  .contact__sentence input[name='nome'] {
+    min-width: 8ch;
+    width: 8ch;
+  }
+  .contact__sentence input[name='email'] {
+    min-width: 13.5ch;
+    width: 13.5ch;
+  }
+  .contact__sentence input[name='tipo'] {
+    min-width: 18ch;
+    width: 18ch;
+  }
+  .contact__sentence input[name='orcamento'] {
+    min-width: 7ch;
+    width: 7ch;
+  }
+  .contact__sentence input[name='prazo'] {
+    min-width: 8ch;
+    width: 8ch;
+  }
+  @supports (field-sizing: content) {
+    .contact__sentence input {
+      width: auto !important;
+    }
+  }
+  .contact__sentence input::placeholder {
+    color: var(--ink-3);
+  }
+  .contact__sentence input:focus {
+    outline: none;
+    border-bottom-color: var(--ink);
+  }
+  .contact__sentence input:user-invalid {
+    border-bottom-color: #b3261e;
+  }
+
+  .contact__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+  .contact__submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.3rem;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--ink);
+    color: var(--paper);
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: var(--fw-medium);
+    cursor: pointer;
+  }
+  .contact__submit span {
+    transition: translate 0.4s var(--ease-out);
+  }
+  .contact__submit:hover span {
+    translate: 0.25rem 0;
+  }
+
+  .contact__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    color: var(--ink-2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact,
+    .contact::backdrop {
+      transition-duration: 0.01s;
+    }
+  }
+</style>

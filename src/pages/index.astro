@@ -4,8 +4,9 @@ import Hero from '../components/Hero.astro';
 import WorksPreview from '../components/WorksPreview.astro';
 import About from '../components/About.astro';
 import Portrait from '../components/Portrait.astro';
-import RowList from '../components/RowList.astro';
 import Services from '../components/Services.astro';
+import RowList from '../components/RowList.astro';
+import Cta from '../components/Cta.astro';
 import { site } from '../data/site';
 
 const { experience, education } = site;
@@ -16,6 +17,7 @@ const { experience, education } = site;
   <WorksPreview />
   <About />
   <Portrait />
+  <Services />
   <RowList
     id="experiencia"
     label={experience.label}
@@ -27,5 +29,5 @@ const { experience, education } = site;
     }))}
   />
   <RowList id="formacao" label={education.label} items={education.items} continued />
-  <Services />
+  <Cta />
 </BaseLayout>

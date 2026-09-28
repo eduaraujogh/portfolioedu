@@ -13,6 +13,8 @@ if (motionOk) {
     anchors: true,
   });
 }
+// Exposto para outros scripts (ex.: a gaveta de contato pausa a rolagem da página)
+(window as unknown as { lenis: Lenis | null }).lenis = lenis;
 
 // Revela cada elemento [data-reveal] uma vez, quando entra na tela.
 let revealRest = () => {};
