@@ -4,7 +4,10 @@ import Hero from '../components/Hero.astro';
 import WorksPreview from '../components/WorksPreview.astro';
 import About from '../components/About.astro';
 import Portrait from '../components/Portrait.astro';
-import Experience from '../components/Experience.astro';
+import RowList from '../components/RowList.astro';
+import { site } from '../data/site';
+
+const { experience, education } = site;
 ---
 
 <BaseLayout>
@@ -12,5 +15,16 @@ import Experience from '../components/Experience.astro';
   <WorksPreview />
   <About />
   <Portrait />
-  <Experience />
+  <RowList
+    id="experiencia"
+    label={experience.label}
+    items={experience.items.map((x) => ({
+      title: x.company,
+      subtitle: x.role,
+      period: x.period,
+      meta: x.brands,
+      description: x.description,
+    }))}
+  />
+  <RowList id="formacao" label={education.label} items={education.items} continued />
 </BaseLayout>

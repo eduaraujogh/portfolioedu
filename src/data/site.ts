@@ -89,6 +89,18 @@ export const site = {
     ],
   },
 
+  // Formação, da mais recente para a mais antiga (do currículo).
+  // TODO: confirmar os anos de "Profissão UX/UI" e "Design de Logos" (no CV aparecem 2019 e 2020).
+  education: {
+    label: 'Formação',
+    items: [
+      { title: 'Publicidade e Propaganda', subtitle: 'Universidade Positivo · Curitiba', period: '2020 — 2024' },
+      { title: 'Design Gráfico', subtitle: 'EBAC', period: '2020 — 2022' },
+      { title: 'Profissão UX/UI', subtitle: 'EBAC', period: '2020' },
+      { title: 'Design de Logos', subtitle: 'Domestika', period: '2019' },
+    ],
+  },
+
   // Texto sobre a foto em tela cheia (canto superior esquerdo)
   portrait: {
     // Adaptado do "Sobre" do currículo ("criar identidades que façam sentido, que se conectem

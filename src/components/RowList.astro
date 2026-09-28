@@ -1,0 +1,266 @@
+---
+// Seção em lista: rótulo à esquerda, linhas finas à direita (título, subtítulo, período).
+// Referência: "Awards & Recognitions" do Max Pratt. Usada em Experiência e Formação.
+//
+// Linhas com `description` abrem com a descrição: no hover (mouse) ou no clique/toque/teclado.
+// Uma aberta por vez; abrir e fechar acontecem juntos, então a lista não "pula" sob o mouse.
+// Linhas sem descrição são estáticas.
+
+export interface Row {
+  title: string;
+  subtitle: string;
+  period: string;
+  meta?: string; // linha pequena no topo da descrição (ex.: marcas)
+  description?: string;
+}
+
+interface Props {
+  id: string;
+  label: string;
+  items: readonly Row[];
+  continued?: boolean; // logo depois de outra lista: sem espaço extra no topo
+}
+
+const { id, label, items, continued = false } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={['rows grid', { 'rows--continued': continued }]}
+  aria-labelledby={`${id}-label`}
+>
+  <h2 id={`${id}-label`} class="rows__label eyebrow" data-reveal>{label}</h2>
+
+  <ol class="rows__list">
+    {
+      items.map((item, i) => {
+        const panelId = `${id}-panel-${i}`;
+        const inner = (
+          <>
+            <span class="rows__title">{item.title}</span>
+            <span class="rows__subtitle small muted">{item.subtitle}</span>
+            <span class="rows__period">{item.period}</span>
+          </>
+        );
+        return (
+          <li class="rows__item" data-reveal style={`--reveal-delay:${i * 0.06}s`}>
+            {item.description ? (
+              <>
+                <button class="rows__head" type="button" aria-expanded="false" aria-controls={panelId}>
+                  {inner}
+                  <span class="rows__icon" aria-hidden="true" />
+                </button>
+                <div class="rows__panel" id={panelId} role="region" aria-label={item.title}>
+                  <div class="rows__panel-inner">
+                    {item.meta && <p class="eyebrow muted">{item.meta}</p>}
+                    <p class="rows__desc">{item.description}</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div class="rows__head rows__head--static">{inner}</div>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</section>
+
+<script>
+  const hover = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  document.querySelectorAll<HTMLElement>('.rows__list').forEach((list) => {
+    const items = [...list.querySelectorAll<HTMLElement>('.rows__item')].filter((item) =>
+      item.querySelector('button.rows__head'),
+    );
+    if (!items.length) return;
+    let timer: number | undefined;
+
+    const open = (target: HTMLElement | null) => {
+      items.forEach((item) => {
+        const isOpen = item === target;
+        item.classList.toggle('is-open', isOpen);
+        item.querySelector('.rows__head')!.setAttribute('aria-expanded', String(isOpen));
+      });
+      list.classList.toggle('has-open', !!target);
+    };
+
+    items.forEach((item) => {
+      const head = item.querySelector<HTMLElement>('.rows__head')!;
+      head.addEventListener('click', () => open(item.classList.contains('is-open') ? null : item));
+      if (hover) {
+        // Pequena espera: passar o mouse rápido por cima não abre tudo em sequência
+        item.addEventListener('pointerenter', () => {
+          clearTimeout(timer);
+          timer = window.setTimeout(() => open(item), 90);
+        });
+      }
+    });
+
+    if (hover) {
+      list.addEventListener('pointerleave', () => {
+        clearTimeout(timer);
+        timer = window.setTimeout(() => open(null), 150);
+      });
+    }
+  });
+</script>
+
+<style>
+  .rows {
+    row-gap: var(--space-m);
+    padding-block: var(--space-l);
+    background: var(--paper);
+    position: relative; /* fica por cima da foto fixa da seção anterior */
+  }
+  .rows--continued {
+    padding-top: 0;
+  }
+  .rows__label {
+    grid-column: 1 / span 3;
+    padding-top: 1.6rem;
+  }
+  .rows__list {
+    grid-column: 5 / -1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .rows__item {
+    border-bottom: 1px solid var(--line);
+    transition: opacity 0.4s var(--ease-out);
+  }
+  /* Com uma linha aberta, as outras recuam para dar foco */
+  .rows__list.has-open .rows__item:not(.is-open) {
+    opacity: 0.4;
+  }
+
+  .rows__head {
+    all: unset;
+    box-sizing: border-box;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'title    period icon'
+      'subtitle period icon';
+    align-items: baseline;
+    column-gap: 1.5rem;
+    padding-block: 1.5rem;
+  }
+  button.rows__head {
+    cursor: pointer;
+  }
+  .rows__head:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+  }
+  /* Linha estática reserva a coluna do ícone para os períodos alinharem com as outras listas */
+  .rows__head--static::after {
+    content: '';
+    grid-area: icon;
+    width: 12px;
+  }
+  .rows__title {
+    grid-area: title;
+    font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-lead);
+    line-height: 1.2;
+  }
+  .rows__subtitle {
+    grid-area: subtitle;
+    margin-top: 0.25rem;
+  }
+  .rows__period {
+    grid-area: period;
+    align-self: center;
+    font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* Ícone + que vira × */
+  .rows__icon {
+    grid-area: icon;
+    align-self: center;
+    position: relative;
+    width: 12px;
+    height: 12px;
+    transition: rotate 0.5s var(--ease-out);
+  }
+  .rows__icon::before,
+  .rows__icon::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 1px;
+    background: currentColor;
+  }
+  .rows__icon::after {
+    rotate: 90deg;
+  }
+  .is-open .rows__icon {
+    rotate: 45deg;
+  }
+
+  /* Painel: anima a altura com grid-template-rows 0fr → 1fr */
+  .rows__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.6s var(--ease-out);
+  }
+  .is-open .rows__panel {
+    grid-template-rows: 1fr;
+  }
+  .rows__panel-inner {
+    overflow: hidden;
+    min-height: 0;
+    display: grid;
+    gap: 0.75rem;
+    max-width: 44em;
+    opacity: 0;
+    translate: 0 -6px;
+    transition:
+      opacity 0.4s var(--ease-out),
+      translate 0.5s var(--ease-out),
+      padding 0.6s var(--ease-out);
+  }
+  .is-open .rows__panel-inner {
+    opacity: 1;
+    translate: none;
+    padding-bottom: 1.75rem;
+    transition-delay: 0.08s;
+  }
+  .rows__desc {
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rows__panel,
+    .rows__panel-inner,
+    .rows__icon,
+    .rows__item {
+      transition-duration: 0.01s;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .rows__label,
+    .rows__list {
+      grid-column: 1 / -1;
+    }
+    .rows__label {
+      padding-top: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .rows__head {
+      column-gap: 1rem;
+      padding-block: 1.25rem;
+    }
+  }
+</style>
