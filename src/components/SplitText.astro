@@ -23,6 +23,15 @@ let i = 0;
 const words = parts.flatMap((part) =>
   part.text.split(' ').map((w) => ({ w, cls: part.class ?? '', i: i++ })),
 );
+
+// Evita palavra sozinha na última linha: as duas últimas palavras viram um bloco só
+// (cada palavra é inline-block, então text-wrap: pretty não consegue agir).
+if (words.length > 2) {
+  const last = words.pop()!;
+  const prev = words[words.length - 1];
+  if (prev.cls === last.cls) prev.w = `${prev.w} ${last.w}`;
+  else words.push(last);
+}
 const label = parts.map((p) => p.text).join(' ');
 ---
 
