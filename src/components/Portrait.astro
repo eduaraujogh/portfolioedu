@@ -107,11 +107,16 @@ const photo = Object.values(photos)[0]?.default;
       const half = size / 2;
       lens!.style.translate = `${lx - half}px ${ly - half}px`;
 
-      // Recorta a camada nítida exatamente na área do visor (coordenadas da imagem)
+      // Recorta a camada nítida exatamente na área do visor. O clip-path usa as coordenadas
+      // internas da imagem (antes do scale), então converte da tela para a imagem com o fator f.
       const ir = sharp!.getBoundingClientRect();
-      const top = ly - half - ir.top;
-      const left = lx - half - ir.left;
-      sharp!.style.clipPath = `inset(${top}px ${ir.width - left - size}px ${ir.height - top - size}px ${left}px)`;
+      const w = sharp!.offsetWidth;
+      const h = sharp!.offsetHeight;
+      const f = w / ir.width;
+      const top = (ly - half - ir.top) * f;
+      const left = (lx - half - ir.left) * f;
+      const s = size * f;
+      sharp!.style.clipPath = `inset(${top}px ${w - left - s}px ${h - top - s}px ${left}px)`;
 
       requestAnimationFrame(tick);
     }
@@ -148,10 +153,12 @@ const photo = Object.values(photos)[0]?.default;
     height: 100%;
     object-fit: cover;
     object-position: center top; /* preserva a cabeça quando a foto é cortada */
+    /* Mesmo zoom nas duas camadas (mantém alinhadas); esconde a borda que o blur cria */
+    transform: scale(1.04);
+    transform-origin: center 25%; /* cresce pouco para cima: esconde a borda sem cortar a cabeça */
   }
   .portrait__img--blur {
     filter: blur(6px) brightness(0.85);
-    transform: scale(1.04); /* esconde a borda clara que o blur cria */
   }
 
   /* Texto no canto superior; o degradê existe só para garantir leitura sobre a foto */
