@@ -7,7 +7,7 @@ const years = new Date().getFullYear() - startYear;
 
 export const site = {
   name: 'Eduardo Araújo',
-  role: 'Designer Sênior multidisciplinar',
+  role: 'Designer Sênior', // header, aba do navegador e descrição
   location: 'Curitiba, BR',
   email: 'edujunior254@gmail.com',
 
