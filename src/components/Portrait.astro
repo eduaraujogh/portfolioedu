@@ -1,9 +1,12 @@
 ---
-// Foto em tela cheia com revelação "janela" — referência: primeira imagem da Norwalk.
-// A moldura rola normalmente; a foto fica presa à tela (position: fixed recortada pelo
-// clip-path do pai) e ainda sobe devagar (parallax), então a janela vai revelando a imagem.
+// Foto em tela cheia. Dois efeitos combinados:
+// 1. Revelação em "janela" (ref. Norwalk): a moldura rola, a foto fica presa à tela
+//    (position: fixed recortada pelo clip-path da seção) e sobe devagar (parallax).
+// 2. Visor de foco (ref. Exvia): a foto aparece desfocada e um quadrado nítido segue o mouse.
+//    Sem mouse (toque), o visor fica parado no centro.
 //
-// Para trocar a foto: coloque o arquivo em src/assets/me/ com o nome portrait.(jpg|png|webp).
+// Para trocar a foto: substitua src/assets/me/portrait.(jpg|png|webp).
+// A atual é provisória (Unsplash, licença livre).
 import { Image } from 'astro:assets';
 
 const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/me/portrait.{jpg,jpeg,png,webp}', {
@@ -16,41 +19,92 @@ const photo = Object.values(photos)[0]?.default;
   <div class="portrait__pin">
     {
       photo ? (
-        <Image
-          class="portrait__img"
-          src={photo}
-          alt="Eduardo Araújo"
-          widths={[768, 1280, 1920, 2560]}
-          sizes="100vw"
-        />
+        <div class="portrait__layer">
+          {/* Camada desfocada: versão pequena já basta, o blur esconde a resolução */}
+          <Image
+            class="portrait__img portrait__img--blur"
+            src={photo}
+            alt=""
+            aria-hidden="true"
+            widths={[480, 800]}
+            sizes="100vw"
+          />
+          <Image
+            class="portrait__img portrait__img--sharp"
+            src={photo}
+            alt="Eduardo Araújo"
+            widths={[768, 1280, 1920, 2400]}
+            sizes="100vw"
+          />
+        </div>
       ) : (
-        <div class="portrait__img portrait__placeholder">
+        <div class="portrait__placeholder">
           <span class="eyebrow">Sua foto aqui · src/assets/me/portrait.jpg</span>
         </div>
       )
     }
+    <div class="portrait__lens" aria-hidden="true"></div>
   </div>
 </section>
 
 <script>
-  // Parallax leve: a foto sobe mais devagar que a moldura enquanto a seção cruza a tela.
   const section = document.querySelector<HTMLElement>('.portrait');
-  const img = section?.querySelector<HTMLElement>('.portrait__img');
-  const motionOk = document.documentElement.classList.contains('motion');
+  const layer = section?.querySelector<HTMLElement>('.portrait__layer');
+  const sharp = section?.querySelector<HTMLElement>('.portrait__img--sharp');
+  const lens = section?.querySelector<HTMLElement>('.portrait__lens');
 
-  if (section && img && motionOk) {
+  if (section && layer && sharp && lens) {
+    const motionOk = document.documentElement.classList.contains('motion');
+    const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
     let visible = false;
-    new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(section);
+    let hovering = false;
+    let mx = innerWidth / 2, my = innerHeight / 2; // alvo do visor
+    let lx = mx, ly = my; // posição desenhada (segue com atraso)
 
-    const update = () => {
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible) requestAnimationFrame(tick);
+    }).observe(section);
+
+    if (finePointer) {
+      section.addEventListener('pointermove', (e) => {
+        hovering = true;
+        mx = e.clientX;
+        my = e.clientY;
+      });
+      section.addEventListener('pointerleave', () => (hovering = false));
+    }
+
+    function tick() {
       if (!visible) return;
-      const r = section.getBoundingClientRect();
-      const p = (innerHeight - r.top) / (innerHeight + r.height); // 0 → 1 enquanto atravessa a tela
-      img.style.translate = `0 ${(0.5 - p) * 16}%`;
-    };
-    addEventListener('scroll', update, { passive: true });
-    addEventListener('resize', update);
-    update();
+
+      // Parallax: a foto sobe mais devagar que a moldura
+      if (motionOk) {
+        const r = section!.getBoundingClientRect();
+        const p = (innerHeight - r.top) / (innerHeight + r.height);
+        layer!.style.translate = `0 ${(0.5 - p) * 16}%`;
+      }
+
+      // Visor: segue o mouse; sem mouse, volta ao centro da tela
+      const tx = hovering ? mx : innerWidth / 2;
+      const ty = hovering ? my : innerHeight / 2;
+      const k = motionOk ? 0.12 : 1;
+      lx += (tx - lx) * k;
+      ly += (ty - ly) * k;
+
+      const size = lens!.offsetWidth;
+      const half = size / 2;
+      lens!.style.translate = `${lx - half}px ${ly - half}px`;
+
+      // Recorta a camada nítida exatamente na área do visor (coordenadas da imagem)
+      const ir = sharp!.getBoundingClientRect();
+      const top = ly - half - ir.top;
+      const left = lx - half - ir.left;
+      sharp!.style.clipPath = `inset(${top}px ${ir.width - left - size}px ${ir.height - top - size}px ${left}px)`;
+
+      requestAnimationFrame(tick);
+    }
   }
 </script>
 
@@ -61,26 +115,72 @@ const photo = Object.values(photos)[0]?.default;
     clip-path: inset(0); /* recorta o conteúdo fixo: é a "janela" */
     background: var(--ink);
   }
+  @media (hover: hover) and (pointer: fine) {
+    .portrait {
+      cursor: none; /* a cruz do visor faz o papel de cursor */
+    }
+  }
+
   .portrait__pin {
     position: fixed;
     inset: 0;
     overflow: hidden;
   }
-  .portrait__img {
-    display: block;
-    width: 100%;
-    height: 116%; /* folga para o parallax */
-    margin-top: -8%;
-    object-fit: cover;
-    object-position: center 30%;
+  .portrait__layer {
+    position: absolute;
+    inset: -8% 0; /* folga para o parallax */
     will-change: translate;
   }
+  .portrait__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+  }
+  .portrait__img--blur {
+    filter: blur(14px) brightness(0.8);
+    transform: scale(1.08); /* esconde a borda clara que o blur cria */
+  }
+  /* Visor: moldura fina + cruz central */
+  .portrait__lens {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: clamp(10rem, 20vw, 21rem);
+    aspect-ratio: 1;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+    will-change: translate;
+  }
+  .portrait__lens::before,
+  .portrait__lens::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    translate: -50% -50%;
+  }
+  .portrait__lens::before {
+    width: 11px;
+    height: 1px;
+  }
+  .portrait__lens::after {
+    width: 1px;
+    height: 11px;
+  }
+
   .portrait__placeholder {
+    position: absolute;
+    inset: 0;
     display: grid;
     place-items: center;
-    background:
-      radial-gradient(60% 70% at 50% 40%, #3a3935 0%, #1a1a18 70%),
-      var(--ink);
+    background: radial-gradient(60% 70% at 50% 40%, #3a3935 0%, #1a1a18 70%);
     color: rgba(255, 255, 255, 0.55);
+  }
+  .portrait__placeholder ~ .portrait__lens {
+    display: none;
   }
 </style>
