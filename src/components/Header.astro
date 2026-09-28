@@ -1,7 +1,8 @@
 ---
 import { site } from '../data/site';
+import { stripBase, withBase } from '../utils/url';
 
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const path = stripBase(Astro.url.pathname);
 const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
@@ -9,7 +10,7 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
      deixando só a pílula para não disputar com o conteúdo. -->
 <header class="bar">
   <div class="bar__side">
-    <a href="/" class="bar__name">{site.name}</a>
+    <a href={withBase('/')} class="bar__name">{site.name}</a>
     <p class="bar__detail small">{site.role} · {site.location}</p>
   </div>
   <div class="bar__side bar__side--end">
@@ -27,7 +28,7 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
       site.nav.map((item) => (
         <li>
           <a
-            href={item.href}
+            href={withBase(item.href)}
             class="nav__link"
             aria-current={isCurrent(item.href) ? 'page' : undefined}
           >
