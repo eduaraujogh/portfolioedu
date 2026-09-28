@@ -48,6 +48,12 @@ export const site = {
     brands: ['Fense Seguradora', 'Artta', 'Sabores de Curitiba', 'SB Crédito', 'Thalles Consultoria', 'Gedisa', 'Duo Garage', 'Gaslog', 'Golden Vibes', 'Grupo Exati'],
   },
 
+  // Texto sobre a foto em tela cheia (canto superior esquerdo)
+  portrait: {
+    title: 'Tem um projeto em mente? Vamos conversar.',
+    cta: 'Entrar em contato',
+  },
+
   // Projetos (mesmos da Slowexe). Capa: src/assets/works/<slug>.webp
   // featured: aparece na home. O primeiro em destaque ocupa a largura toda.
   works: [

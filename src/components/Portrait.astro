@@ -8,6 +8,7 @@
 // Para trocar a foto: substitua src/assets/me/portrait.(jpg|png|webp).
 // A atual é provisória (Unsplash, licença livre).
 import { Image } from 'astro:assets';
+import { site } from '../data/site';
 
 const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/me/portrait.{jpg,jpeg,png,webp}', {
   eager: true,
@@ -26,7 +27,7 @@ const photo = Object.values(photos)[0]?.default;
             src={photo}
             alt=""
             aria-hidden="true"
-            widths={[480, 800]}
+            widths={[800, 1280]}
             sizes="100vw"
           />
           <Image
@@ -44,6 +45,11 @@ const photo = Object.values(photos)[0]?.default;
       )
     }
     <div class="portrait__lens" aria-hidden="true"></div>
+
+    <div class="portrait__cta">
+      <h2 class="portrait__title">{site.portrait.title}</h2>
+      <a class="portrait__button eyebrow" href={`mailto:${site.email}`}>{site.portrait.cta}</a>
+    </div>
   </div>
 </section>
 
@@ -140,15 +146,54 @@ const photo = Object.values(photos)[0]?.default;
     object-position: center 30%;
   }
   .portrait__img--blur {
-    filter: blur(14px) brightness(0.8);
-    transform: scale(1.08); /* esconde a borda clara que o blur cria */
+    filter: blur(6px) brightness(0.85);
+    transform: scale(1.04); /* esconde a borda clara que o blur cria */
+  }
+
+  /* Texto no canto superior; o degradê existe só para garantir leitura sobre a foto */
+  .portrait__cta {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 2;
+    display: grid;
+    justify-items: start;
+    gap: 1.5rem;
+    padding: clamp(5.5rem, 12vh, 8rem) var(--gutter) 6rem;
+    background: linear-gradient(rgba(0, 0, 0, 0.45), transparent);
+    color: #fff;
+  }
+  .portrait__title {
+    max-width: 13em;
+    font-size: clamp(2rem, 1rem + 3vw, 3.5rem);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+    text-wrap: balance;
+  }
+  .portrait__button {
+    padding: 0.7rem 1.1rem;
+    border-radius: var(--radius-pill);
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .portrait__button:hover {
+    background: var(--ink);
+    color: #fff;
+  }
+  .portrait__button:focus-visible {
+    outline-color: #fff;
   }
   /* Visor: moldura fina + cruz central */
   .portrait__lens {
     position: absolute;
     top: 0;
     left: 0;
-    width: clamp(10rem, 20vw, 21rem);
+    z-index: 1;
+    width: clamp(14rem, 30vw, 32rem);
     aspect-ratio: 1;
     border: 1px solid rgba(255, 255, 255, 0.35);
     pointer-events: none;
