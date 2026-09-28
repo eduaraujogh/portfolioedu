@@ -7,7 +7,7 @@ const years = new Date().getFullYear() - startYear;
 
 export const site = {
   name: 'Eduardo Araújo',
-  role: 'Diretor de Arte Sênior',
+  role: 'Designer Sênior Multidisciplinar',
   location: 'Curitiba, BR',
   email: 'edujunior254@gmail.com',
 
@@ -26,8 +26,8 @@ export const site = {
 
   hero: {
     // Primeira parte: quem é (tom principal). Segunda: o que diferencia (tom secundário).
-    lead: 'Eduardo Araújo — Designer Digital e Diretor de Arte Sênior',
-    rest: 'que transforma assuntos complexos em marcas, telas e campanhas claras.',
+    lead: 'Eduardo Araújo — Designer Sênior Multidisciplinar',
+    rest: 'que cuida de todas as frentes de design de uma marca: identidade, interfaces, social media, motion e audiovisual.',
     // Apresentação ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
     about:
       `Designer apaixonado por marcas, interfaces e campanhas bem resolvidas. Há ${years} anos ajudo empresas a tirar ideias do papel, seja uma identidade visual, um site ou uma campanha inteira.`,
@@ -37,7 +37,7 @@ export const site = {
     label: 'Sobre',
     // Frase em dois tons, como no hero: primeira parte forte, resto em tom secundário.
     lead: 'Oi, eu sou o Eduardo.',
-    rest: 'Desde 2015 crio marcas, sites e campanhas para empresas de diferentes segmentos, cuidando de cada projeto do conceito à entrega. Já trabalhei em agência, coordenei times de design e hoje atuo como Diretor de Arte no mercado financeiro.',
+    rest: 'Desde 2015 crio marcas, sites e campanhas para empresas de diferentes segmentos, cuidando de cada projeto do conceito à entrega. Já trabalhei em agência, coordenei times de design e hoje atuo em todas as frentes de design de duas empresas do mercado financeiro.',
     // Números: só entram os que tiverem valor real. TODO: projetos entregues, marcas atendidas.
     stats: [
       { value: String(years), suffix: '+', label: 'anos de experiência' },
