@@ -1,8 +1,58 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Placeholder from '../components/Placeholder.astro';
+import SplitText from '../components/SplitText.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { site } from '../data/site';
 ---
 
 <BaseLayout title="Works — Eduardo Araújo">
-  <Placeholder title="Works" />
+  <section class="page-head grid" aria-labelledby="works-title">
+    <div class="page-head__title">
+      <SplitText
+        as="h1"
+        id="works-title"
+        mode="load"
+        parts={[{ text: 'Projetos' }, { text: `(${site.works.length})`, class: 'tone-2' }]}
+      />
+    </div>
+  </section>
+
+  <section class="works-all" aria-label="Todos os projetos">
+    {site.works.map((work, i) => <WorkCard work={work} delay={(i % 2) * 0.12} eager={i < 2} />)}
+  </section>
 </BaseLayout>
+
+<style>
+  .page-head {
+    padding-top: 10rem;
+    padding-bottom: var(--space-m);
+  }
+  .page-head__title {
+    grid-column: 5 / -1;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  .works-all {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--col-gap);
+    padding: 0 var(--gutter) var(--space-l);
+  }
+
+  @media (max-width: 1023px) {
+    .page-head__title {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 767px) {
+    .page-head {
+      padding-top: 7rem;
+    }
+    .works-all {
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+    }
+  }
+</style>

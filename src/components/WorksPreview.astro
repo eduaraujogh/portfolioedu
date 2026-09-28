@@ -1,25 +1,36 @@
 ---
+// Projetos em destaque na home. Ritmo: um projeto em largura total, depois pares.
 import { site } from '../data/site';
+import { withBase } from '../utils/url';
 import WorkCard from './WorkCard.astro';
 
-const [first, ...others] = site.works;
+const [first, ...others] = site.works.filter((w) => w.featured);
+const pairs = [];
+for (let i = 0; i < others.length; i += 2) pairs.push(others.slice(i, i + 2));
 ---
 
-<!-- Prévia provisória: serve para sentir o scroll, os reveals e o hover até os projetos reais chegarem. -->
 <section class="works" aria-labelledby="works-title">
-  <h2 id="works-title" class="visually-hidden">Trabalhos selecionados</h2>
+  <h2 id="works-title" class="visually-hidden">Projetos selecionados</h2>
 
-  <WorkCard {...first} wide />
+  <WorkCard work={first} wide eager />
 
-  <div class="works__row">
-    {others.map((work, i) => <WorkCard {...work} delay={i * 0.12} />)}
-  </div>
+  {
+    pairs.map((pair) => (
+      <div class="works__row">
+        {pair.map((work, i) => <WorkCard work={work} delay={i * 0.12} />)}
+      </div>
+    ))
+  }
+
+  <a class="works__all link-line" href={withBase('/works')} data-reveal>
+    Todos os projetos ({site.works.length}) ↗
+  </a>
 </section>
 
 <style>
   .works {
     display: grid;
-    gap: var(--space-l);
+    gap: var(--col-gap);
     padding: 0 var(--gutter) var(--space-l);
   }
   .works__row {
@@ -27,11 +38,23 @@ const [first, ...others] = site.works;
     grid-template-columns: 1fr 1fr;
     gap: var(--col-gap);
   }
+  .works__all {
+    justify-self: end;
+    margin-top: var(--space-m);
+    font-size: 0.875rem;
+    font-weight: var(--fw-medium);
+  }
 
   @media (max-width: 767px) {
+    .works {
+      gap: var(--space-m);
+    }
     .works__row {
       grid-template-columns: 1fr;
       gap: var(--space-m);
+    }
+    .works__all {
+      justify-self: start;
     }
   }
 </style>

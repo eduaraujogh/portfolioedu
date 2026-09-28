@@ -3,43 +3,50 @@
 // Com mouse: o card recua levemente, as informações aparecem sobre a imagem
 // e o cursor vira um círculo "Ver projeto" (ver Cursor.astro).
 // Em telas de toque (sem hover): as informações ficam sempre visíveis abaixo da imagem.
+import { Image } from 'astro:assets';
+import { coverOf, type Work } from '../data/site';
 import { withBase } from '../utils/url';
 
 interface Props {
-  client: string;
-  brands: string;
-  year?: string;
-  tone: string;
+  work: Work;
   href?: string;
   wide?: boolean;
   delay?: number;
+  eager?: boolean;
 }
 
-const { client, brands, year, tone, href = '/works', wide = false, delay = 0 } = Astro.props;
+const { work, href = '/works', wide = false, delay = 0, eager = false } = Astro.props;
+const { name, sector, discipline, slug } = work;
+const focus = 'focus' in work ? work.focus : 'center';
 ---
 
 <article class:list={['work', { 'work--wide': wide }]}>
-  <a class="work__link" href={withBase(href)} data-cursor="Ver projeto">
+  <a class="work__link" href={withBase(href)} data-cursor="Open">
     <div class="work__card">
       <div class="work__media" data-reveal="media" style={`--reveal-delay:${delay}s`}>
-        <div class="work__placeholder" style={`--tone:${tone}`}>
-          <span class="small">Imagem do projeto</span>
-        </div>
+        <Image
+          class="work__img"
+          src={coverOf(slug)}
+          alt={`${name}, ${discipline.toLowerCase()} para ${sector.toLowerCase()}`}
+          widths={[480, 800, 1200, 1600]}
+          sizes={wide ? '(max-width: 767px) 100vw, 96vw' : '(max-width: 767px) 100vw, 48vw'}
+          loading={eager ? 'eager' : 'lazy'}
+          style={`object-position:${focus}`}
+        />
       </div>
 
       <div class="work__tags" aria-hidden="true">
-        <span class="tag">{client}</span>
+        <span class="tag">{name}</span>
         <span class="work__tags-end">
-          <span class="tag">{brands}</span>
-          {year && <span class="tag">{year}</span>}
+          <span class="tag">{sector}</span>
+          <span class="tag">{discipline}</span>
         </span>
       </div>
     </div>
 
     <div class="work__info small" data-reveal style={`--reveal-delay:${delay}s`}>
-      <h3>{client}</h3>
-      <p class="muted">{brands}</p>
-      {year && <p class="muted">{year}</p>}
+      <h3>{name}</h3>
+      <p class="muted">{sector} · {discipline}</p>
     </div>
   </a>
 </article>
@@ -59,14 +66,17 @@ const { client, brands, year, tone, href = '/works', wide = false, delay = 0 } =
       border-radius 0.7s var(--ease-out);
   }
 
-  .work__placeholder {
-    display: grid;
-    place-items: center;
-    aspect-ratio: 4 / 3;
-    background: var(--tone);
-    color: var(--ink-2);
+  .work__media {
+    background: var(--line); /* fundo enquanto a imagem carrega */
   }
-  .work--wide .work__placeholder {
+  .work__media :global(.work__img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .work--wide .work__media :global(.work__img) {
     aspect-ratio: 16 / 8;
   }
 
@@ -138,8 +148,8 @@ const { client, brands, year, tone, href = '/works', wide = false, delay = 0 } =
   }
 
   @media (max-width: 767px) {
-    .work--wide .work__placeholder {
-      aspect-ratio: 4 / 5;
+    .work--wide .work__media :global(.work__img) {
+      aspect-ratio: 4 / 3;
     }
     .work__info {
       flex-wrap: wrap;
