@@ -2,12 +2,11 @@
 // Texto que entra palavra por palavra, subindo de dentro de uma máscara.
 // mode="load": anima ao carregar a página (hero).
 // mode="scroll": anima quando entra na tela (seções).
+// Uma parte pode ser um ícone em vez de texto ({ icon: 'wave' }).
 // Estilos em styles/base.css (.split).
+import WaveHand from './WaveHand.astro';
 
-interface Part {
-  text: string;
-  class?: string;
-}
+type Part = { text: string; class?: string } | { icon: 'wave' };
 
 interface Props {
   parts: Part[];
@@ -19,30 +18,35 @@ interface Props {
 
 const { parts, as: Tag = 'p', mode = 'scroll', class: className = '', id } = Astro.props;
 
+type Token = { w: string; cls: string; i: number } | { icon: 'wave'; i: number };
+const isWord = (t: Token): t is { w: string; cls: string; i: number } => 'w' in t;
+
 let i = 0;
-const words = parts.flatMap((part) =>
-  part.text.split(' ').map((w) => ({ w, cls: part.class ?? '', i: i++ })),
+const tokens: Token[] = parts.flatMap((part): Token[] =>
+  'icon' in part
+    ? [{ icon: part.icon, i: i++ }]
+    : part.text.split(' ').map((w) => ({ w, cls: part.class ?? '', i: i++ })),
 );
 
 // Palavras de uma letra ("à", "e", "a", "o") não ficam soltas no fim da linha:
 // descem junto com a palavra seguinte.
-for (let k = words.length - 2; k >= 0; k--) {
-  const [cur, next] = [words[k], words[k + 1]];
-  if (cur.w.length === 1 && cur.cls === next.cls) {
+for (let k = tokens.length - 2; k >= 0; k--) {
+  const [cur, next] = [tokens[k], tokens[k + 1]];
+  if (isWord(cur) && isWord(next) && cur.w.length === 1 && cur.cls === next.cls) {
     cur.w = `${cur.w} ${next.w}`;
-    words.splice(k + 1, 1);
+    tokens.splice(k + 1, 1);
   }
 }
 
 // Evita palavra sozinha na última linha: as duas últimas palavras viram um bloco só
 // (cada palavra é inline-block, então text-wrap: pretty não consegue agir).
-if (words.length > 2) {
-  const last = words.pop()!;
-  const prev = words[words.length - 1];
-  if (prev.cls === last.cls) prev.w = `${prev.w} ${last.w}`;
-  else words.push(last);
+const [prev, last] = tokens.slice(-2);
+if (tokens.length > 2 && isWord(prev) && isWord(last) && prev.cls === last.cls) {
+  prev.w = `${prev.w} ${last.w}`;
+  tokens.pop();
 }
-const label = parts.map((p) => p.text).join(' ');
+
+const label = parts.flatMap((p) => ('text' in p ? [p.text] : [])).join(' ');
 ---
 
 <Tag
@@ -52,12 +56,18 @@ const label = parts.map((p) => p.text).join(' ');
   data-reveal={mode === 'scroll' ? 'split' : undefined}
 >
   {
-    words.map(({ w, cls, i }) => (
-      <>
-        <span class={`w ${cls}`} aria-hidden="true">
-          <span class="w__i" style={`--i:${i}`}>{w}</span>
-        </span>{' '}
-      </>
-    ))
+    tokens.map((t) =>
+      isWord(t) ? (
+        <>
+          <span class={`w ${t.cls}`} aria-hidden="true">
+            <span class="w__i" style={`--i:${t.i}`}>{t.w}</span>
+          </span>{' '}
+        </>
+      ) : (
+        <>
+          <WaveHand i={t.i} />{' '}
+        </>
+      ),
+    )
   }
 </Tag>

@@ -5,13 +5,16 @@ import { site } from '../data/site';
 import SplitText from './SplitText.astro';
 
 const { label, lead, rest, stats, brandsLabel, brands } = site.about;
+
 ---
 
 <section id="sobre" class="about grid" aria-labelledby="about-label">
   <h2 id="about-label" class="about__label eyebrow" data-reveal>{label}</h2>
 
   <div class="about__statement">
-    <SplitText parts={[{ text: lead }, { text: rest, class: 'tone-2' }]} />
+    <SplitText
+      parts={[{ icon: 'wave' }, { text: lead }, { text: rest, class: 'tone-2' }]}
+    />
   </div>
 
   <div class="about__facts">
