@@ -26,7 +26,7 @@ export const site = {
 
   hero: {
     // Primeira parte: quem é (tom principal). Segunda: o que diferencia (tom secundário).
-    lead: 'Eduardo Araújo — Designer Sênior multidisciplinar,',
+    lead: 'Designer Sênior multidisciplinar,',
     rest: 'à frente de todas as áreas de design de uma marca: identidade visual, UX/UI, campanhas, low-code e motion design.',
     // Apresentação ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
     about:
@@ -37,13 +37,15 @@ export const site = {
     label: 'Sobre',
     // Frase em dois tons, como no hero: primeira parte forte, resto em tom secundário.
     lead: 'Oi, eu sou o Eduardo.',
-    rest: 'Desde 2015 crio marcas, sites e campanhas para empresas de diferentes segmentos, cuidando de cada projeto do conceito à entrega. Já trabalhei em agência, coordenei times de design e hoje atuo em todas as frentes de design de duas empresas do mercado financeiro.',
+    // Discurso centrado em mim e no meu jeito de trabalhar, nunca em um empregador específico.
+    rest: 'Desde 2015 ajudo empresas de diferentes segmentos a construir marcas consistentes em todos os pontos de contato, da identidade visual ao site, das campanhas ao motion. Já passei por agência, coordenei times de design e cuido de cada projeto do conceito à entrega.',
     // Números: só entram os que tiverem valor real. TODO: projetos entregues, marcas atendidas.
     stats: [
       { value: String(years), suffix: '+', label: 'anos de experiência' },
     ],
     brandsLabel: 'Marcas com quem trabalhei',
-    brands: ['Artta', 'SB Crédito', 'Gedisa', 'Gaslog', 'Grupo Exati', 'Agência Allano'],
+    // Mistura empresas e clientes de projetos para não concentrar a lista em um só lugar.
+    brands: ['Fense Seguradora', 'Artta', 'Sabores de Curitiba', 'SB Crédito', 'Thalles Consultoria', 'Gedisa', 'Duo Garage', 'Gaslog', 'Golden Vibes', 'Grupo Exati'],
   },
 
   // Projetos (mesmos da Slowexe). Capa: src/assets/works/<slug>.webp

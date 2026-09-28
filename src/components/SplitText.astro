@@ -24,6 +24,16 @@ const words = parts.flatMap((part) =>
   part.text.split(' ').map((w) => ({ w, cls: part.class ?? '', i: i++ })),
 );
 
+// Palavras de uma letra ("à", "e", "a", "o") não ficam soltas no fim da linha:
+// descem junto com a palavra seguinte.
+for (let k = words.length - 2; k >= 0; k--) {
+  const [cur, next] = [words[k], words[k + 1]];
+  if (cur.w.length === 1 && cur.cls === next.cls) {
+    cur.w = `${cur.w} ${next.w}`;
+    words.splice(k + 1, 1);
+  }
+}
+
 // Evita palavra sozinha na última linha: as duas últimas palavras viram um bloco só
 // (cada palavra é inline-block, então text-wrap: pretty não consegue agir).
 if (words.length > 2) {
