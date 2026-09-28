@@ -48,7 +48,7 @@ const photo = Object.values(photos)[0]?.default;
 
     <div class="portrait__cta">
       <h2 class="portrait__title">{site.portrait.title}</h2>
-      <a class="portrait__button eyebrow" href={`mailto:${site.email}`}>{site.portrait.cta}</a>
+      <a class="portrait__link" href={`mailto:${site.email}`}>{site.portrait.cta} ↗</a>
     </div>
   </div>
 </section>
@@ -157,7 +157,7 @@ const photo = Object.values(photos)[0]?.default;
     z-index: 2;
     display: grid;
     justify-items: start;
-    gap: 1.5rem;
+    gap: 1.25rem;
     padding: clamp(5.5rem, 12vh, 8rem) var(--gutter) 6rem;
     background: linear-gradient(rgba(0, 0, 0, 0.45), transparent);
     color: #fff;
@@ -170,21 +170,23 @@ const photo = Object.values(photos)[0]?.default;
     letter-spacing: var(--tracking-display);
     text-wrap: balance;
   }
-  .portrait__button {
-    padding: 0.7rem 1.1rem;
-    border-radius: var(--radius-pill);
-    background: #fff;
-    color: var(--ink);
+  /* Link discreto: texto pequeno com sublinhado fino que some e volta no hover */
+  .portrait__link {
+    font-size: var(--fs-small);
+    color: rgba(255, 255, 255, 0.85);
+    padding-bottom: 2px;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
     cursor: pointer;
     transition:
-      background-color var(--dur-fast) var(--ease-out),
+      background-size 0.5s var(--ease-out),
       color var(--dur-fast) var(--ease-out);
   }
-  .portrait__button:hover {
-    background: var(--ink);
+  .portrait__link:hover {
     color: #fff;
+    background-size: 0 1px;
+    background-position: 100% 100%;
   }
-  .portrait__button:focus-visible {
+  .portrait__link:focus-visible {
     outline-color: #fff;
   }
   /* Visor: moldura fina + cruz central */
