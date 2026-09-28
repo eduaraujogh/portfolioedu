@@ -24,8 +24,11 @@ export const site = {
     // Primeira parte: quem é (tom principal). Segunda: o que diferencia (tom secundário).
     lead: 'Eduardo Araújo — designer gráfico',
     rest: 'que transforma assuntos complexos em marcas, telas e campanhas claras.',
-    now: 'Hoje no Grupo SBA, criando para Artta e SB Crédito.',
-    before: 'Antes: Grupo Ergon (Gedisa e Gaslog), Grupo Exati e Agência Allano.',
+    // Texto conceitual ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
+    about: [
+      'Toda boa ideia nasce torta.',
+      'Começo no rascunho, erro rápido e lapido até sobrar só o que importa — com cuidado no detalhe e sem levar tudo tão a sério.',
+    ],
   },
 
   // Placeholders até recebermos os projetos reais.
