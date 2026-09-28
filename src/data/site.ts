@@ -48,6 +48,55 @@ export const site = {
     brands: ['Fense Seguradora', 'Artta', 'Sabores de Curitiba', 'SB Crédito', 'Thalles Consultoria', 'Gedisa', 'Duo Garage', 'Gaslog', 'Golden Vibes', 'Grupo Exati'],
   },
 
+  // Experiência, da mais recente para a mais antiga. period vazio = não exibe.
+  // TODO: confirmar cargo e período de Grupo SBA e Grupo Ergon.
+  experience: {
+    label: 'Experiência',
+    items: [
+      {
+        company: 'Grupo SBA',
+        brands: 'Artta · SB Crédito',
+        role: 'Designer Sênior multidisciplinar',
+        period: 'Atual',
+        description:
+          'Responsável por todas as frentes de design de duas marcas do mercado financeiro: identidade visual, UX/UI, campanhas, social media, motion e audiovisual.',
+      },
+      {
+        company: 'Grupo Ergon',
+        brands: 'Gedisa · Gaslog',
+        role: 'Designer',
+        period: '',
+        description:
+          // TODO: confirmar/detalhar com o Eduardo
+          'Criação para as duas empresas do grupo, do digital às peças de comunicação, incluindo landing pages e design responsivo para a Gedisa.',
+      },
+      {
+        company: 'Grupo Exati',
+        brands: 'Área Comercial',
+        role: 'Designer Gráfico Pleno',
+        period: '2021 — 2024',
+        description:
+          'Layouts de sites (UX/UI), landing pages, infográficos, e-books, estandes, gravação e edição de vídeos, social media e criações internas, além da coordenação de outros designers.',
+      },
+      {
+        company: 'Agência Allano',
+        brands: 'Publicidade',
+        role: 'Designer Gráfico e Ilustrador',
+        period: '2018 — 2019',
+        description:
+          'Criação de peças gráficas para empresas de diferentes segmentos, com foco em identidade visual e ilustração.',
+      },
+      {
+        company: 'Varejo de moda e esporte',
+        brands: 'Adidas · Side Walk · ArtWalk',
+        role: 'Vendas e atendimento',
+        period: '2012 — 2018',
+        description:
+          'Seis anos do lado de lá do balcão, em marcas como Adidas, Side Walk e ArtWalk. Foi onde aprendi, na prática, como as pessoas escolhem: o que faz alguém parar, olhar e decidir. Vendas, atendimento, gestão de loja e liderança de equipe que hoje entram em cada peça que desenho.',
+      },
+    ],
+  },
+
   // Texto sobre a foto em tela cheia (canto superior esquerdo)
   portrait: {
     // Adaptado do "Sobre" do currículo ("criar identidades que façam sentido, que se conectem
