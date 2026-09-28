@@ -50,7 +50,9 @@ export const site = {
 
   // Texto sobre a foto em tela cheia (canto superior esquerdo)
   portrait: {
-    title: 'Tem um projeto em mente? Vamos conversar.',
+    // Adaptado do "Sobre" do currículo ("criar identidades que façam sentido, que se conectem
+    // e que causem aquele impacto de 'é isso!'").
+    title: 'Marcas que fazem sentido, se conectam e causam aquele “é isso!”.',
     cta: 'Entrar em contato',
   },
 
