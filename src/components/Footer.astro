@@ -16,9 +16,15 @@ const year = new Date().getFullYear();
     <p class="footer__end">{coords}</p>
   </div>
 
+  <!-- Visor de foco (mesma ideia da foto): só o "Fale comigo" fica desfocado; com o mouse,
+       um quadrado nítido segue o cursor. Em toque, tudo fica nítido e o visor não existe. -->
   <div class="footer__hero">
     <p class="small muted">{kicker}</p>
-    <a class="footer__cta" href={`mailto:${site.email}`} data-contact>{title}</a>
+    <a class="footer__cta" href={`mailto:${site.email}`} data-contact aria-label={title}>
+      <span class="footer__cta-blur" aria-hidden="true">{title}</span>
+      <span class="footer__cta-sharp" aria-hidden="true">{title}</span>
+    </a>
+    <div class="footer__lens" aria-hidden="true"></div>
   </div>
 
   <div class="footer__row footer__row--bottom small">
@@ -29,6 +35,60 @@ const year = new Date().getFullYear();
     <a class="link-line footer__end" href="#main">Voltar ao topo ↑</a>
   </div>
 </footer>
+
+<script>
+  // Visor de foco no "Fale comigo" (só com mouse)
+  const hero = document.querySelector<HTMLElement>('.footer__hero');
+  const sharp = hero?.querySelector<HTMLElement>('.footer__cta-sharp');
+  const lens = hero?.querySelector<HTMLElement>('.footer__lens');
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  if (hero && sharp && lens && fine) {
+    hero.classList.add('has-lens');
+    const motionOk = document.documentElement.classList.contains('motion');
+    let tx = 0, ty = 0; // alvo (mouse), relativo ao hero
+    let x = 0, y = 0; // posição desenhada
+    let inside = false;
+    let raf = 0;
+
+    const draw = () => {
+      const k = motionOk ? 0.14 : 1;
+      x += (tx - x) * k;
+      y += (ty - y) * k;
+      const size = lens.offsetWidth;
+      const half = size / 2;
+      lens.style.translate = `${x - half}px ${y - half}px`;
+
+      // Recorta a camada nítida na área do visor (coordenadas relativas ao texto)
+      const h = hero.getBoundingClientRect();
+      const s = sharp.getBoundingClientRect();
+      const top = y - half - (s.top - h.top);
+      const left = x - half - (s.left - h.left);
+      sharp.style.clipPath = `inset(${top}px ${s.width - left - size}px ${s.height - top - size}px ${left}px)`;
+
+      raf = inside ? requestAnimationFrame(draw) : 0;
+    };
+
+    hero.addEventListener('pointerenter', (e) => {
+      const h = hero.getBoundingClientRect();
+      tx = x = e.clientX - h.left;
+      ty = y = e.clientY - h.top;
+      inside = true;
+      lens.classList.add('is-on');
+      if (!raf) raf = requestAnimationFrame(draw);
+    });
+    hero.addEventListener('pointermove', (e) => {
+      const h = hero.getBoundingClientRect();
+      tx = e.clientX - h.left;
+      ty = e.clientY - h.top;
+    });
+    hero.addEventListener('pointerleave', () => {
+      inside = false;
+      lens.classList.remove('is-on');
+      sharp.style.clipPath = 'inset(50%)';
+    });
+  }
+</script>
 
 <style>
   .footer {
@@ -63,17 +123,80 @@ const year = new Date().getFullYear();
     gap: 0.75rem;
     text-align: center;
   }
-  /* Hover sutil: o texto só esmaece um pouco */
   .footer__cta {
+    position: relative;
+    display: inline-grid;
     font-size: clamp(2rem, 1.2rem + 2.4vw, 3.5rem);
     font-weight: var(--fw-regular);
     letter-spacing: var(--tracking-display);
     line-height: 1.1;
-    transition: opacity 0.5s var(--ease-out);
   }
-  .footer__cta:hover,
-  .footer__cta:focus-visible {
-    opacity: 0.55;
+  .footer__cta > span {
+    grid-area: 1 / 1;
+  }
+  /* Sem visor (toque/teclado): só a camada nítida aparece */
+  .footer__cta-blur {
+    visibility: hidden;
+  }
+
+  .footer__lens {
+    display: none;
+  }
+
+  /* Com mouse: texto desfocado + visor que revela a camada nítida */
+  @media (hover: hover) and (pointer: fine) {
+    .footer__hero {
+      position: relative;
+      cursor: none; /* a cruz do visor faz o papel de cursor */
+    }
+    .footer__hero .footer__cta {
+      cursor: none;
+    }
+    .has-lens .footer__cta-blur {
+      visibility: visible;
+      filter: blur(9px);
+    }
+    .has-lens .footer__cta-sharp {
+      clip-path: inset(50%);
+    }
+
+    .footer__lens {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: clamp(7rem, 11vw, 11rem);
+      aspect-ratio: 1;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      pointer-events: none;
+      scale: 0;
+      transition: scale 0.45s var(--ease-out);
+      will-change: translate;
+    }
+    .footer__lens.is-on {
+      scale: 1;
+    }
+    .footer__lens::before,
+    .footer__lens::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      background: rgba(255, 255, 255, 0.8);
+      translate: -50% -50%;
+    }
+    .footer__lens::before {
+      width: 11px;
+      height: 1px;
+    }
+    .footer__lens::after {
+      width: 1px;
+      height: 11px;
+    }
+  }
+  /* Foco pelo teclado: mostra o texto nítido inteiro */
+  .footer__cta:focus-visible .footer__cta-sharp {
+    clip-path: none !important;
   }
 
   .footer__socials {
