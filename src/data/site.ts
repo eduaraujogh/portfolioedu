@@ -71,11 +71,11 @@ export const site = {
       },
       {
         company: 'Grupo Exati',
-        brands: 'Área Comercial',
+        brands: '', // vazio = não exibe a linha de marcas
         role: 'Designer Gráfico Pleno',
         period: '2021 — 2024',
         description:
-          'Criação de sites e landing pages (UX/UI), infográficos, e-books, estandes, vídeos e conteúdo para social media, atendendo às demandas comerciais e internas da empresa. Também coordenei outros designers da equipe.',
+          'Criação de sites e landing pages (UX/UI), infográficos, e-books, estandes, vídeos e conteúdo para social media, além de peças para comunicação interna. Também coordenei outros designers da equipe.',
       },
       {
         company: 'Hascunho',
