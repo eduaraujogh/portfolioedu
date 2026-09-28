@@ -82,8 +82,9 @@ img {
   background-size: 100% 1px;
 }
 
-/* Reveal de seções — só esconde se o JS estiver ativo e o movimento permitido */
-.motion [data-reveal] {
+/* Reveal de seções — só esconde depois que o script de movimento carregou de fato
+   (classe .js-reveal); se o script falhar, o conteúdo continua visível. */
+.js-reveal [data-reveal] {
   opacity: 0;
   transform: translateY(28px);
   transition:
@@ -91,25 +92,25 @@ img {
     transform var(--dur-reveal) var(--ease-out);
   transition-delay: var(--reveal-delay, 0s);
 }
-.motion [data-reveal].is-in {
+.js-reveal [data-reveal].is-in {
   opacity: 1;
   transform: none;
 }
 
-.motion [data-reveal='media'] {
+.js-reveal [data-reveal='media'] {
   transform: none;
   clip-path: inset(6% 0 0 0 round var(--radius-media));
   transition:
     opacity var(--dur-reveal) var(--ease-out),
     clip-path 1.4s var(--ease-out);
 }
-.motion [data-reveal='media'] > * {
+.js-reveal [data-reveal='media'] > * {
   transform: scale(1.06);
   transition: transform 1.6s var(--ease-out);
 }
-.motion [data-reveal='media'].is-in {
+.js-reveal [data-reveal='media'].is-in {
   clip-path: inset(0 0 0 0 round var(--radius-media));
 }
-.motion [data-reveal='media'].is-in > * {
+.js-reveal [data-reveal='media'].is-in > * {
   transform: none;
 }

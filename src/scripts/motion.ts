@@ -16,6 +16,7 @@ if (motionOk) {
 
 // Revela cada elemento [data-reveal] uma vez, quando entra na tela.
 if (motionOk) {
+  root.classList.add('js-reveal');
   const io = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
