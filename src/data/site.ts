@@ -46,6 +46,7 @@ export const site = {
     brandsLabel: 'Marcas com quem trabalhei',
     // Mistura empresas e clientes de projetos para não concentrar a lista em um só lugar.
     brands: ['Fense Seguradora', 'Artta', 'Sabores de Curitiba', 'SB Crédito', 'Thalles Consultoria', 'Gedisa', 'Duo Garage', 'Gaslog', 'Golden Vibes', 'Grupo Exati'],
+    brandsMore: '+100', // aparece logo abaixo da lista, em tom secundário
   },
 
   // Página About (ref. max-pratt.webflow.io/about)
@@ -56,9 +57,10 @@ export const site = {
     },
     // Coluna lateral. TODO: confirmar ferramentas, competências e idiomas.
     side: [
-      { label: 'Ferramentas', items: ['Figma', 'Photoshop', 'Illustrator', 'After Effects', 'Premiere Pro', 'Cinema 4D'] },
-      { label: 'Competências', items: ['Direção de arte', 'Liderança de equipe', 'Comunicação com clientes', 'Atenção aos detalhes', 'Resolução de problemas'] },
-      { label: 'Idiomas', items: ['Português, nativo'] },
+      { label: 'Ferramentas', items: ['Figma', 'Photoshop', 'Illustrator', 'After Effects', 'Premiere Pro', 'Cinema 4D', 'Blender'] },
+      { label: 'Inteligência Artificial', items: ['Automações de design', 'Vídeos e imagens profissionais com IA', 'Claude', 'Codex', 'Spaces (Magnific)'] },
+      { label: 'Competências', items: ['Direção de arte', 'Liderança de equipe', 'Metodologias ágeis', 'Comunicação com clientes', 'Atenção aos detalhes', 'Resolução de problemas'] },
+      { label: 'Idiomas', items: ['Português, nativo', 'Inglês, intermediário (em desenvolvimento)'] },
     ],
     // Subtítulo: palavras em `pills` aparecem em pílulas com contorno
     heading: { before: 'Do rascunho à entrega:', pills: ['marcas', 'interfaces', 'campanhas'], after: 'que fazem sentido.' },

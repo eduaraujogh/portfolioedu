@@ -4,7 +4,7 @@
 import { site } from '../data/site';
 import SplitText from './SplitText.astro';
 
-const { label, lead, rest, stats, brandsLabel, brands } = site.about;
+const { label, lead, rest, stats, brandsLabel, brands, brandsMore } = site.about;
 
 ---
 
@@ -34,6 +34,7 @@ const { label, lead, rest, stats, brandsLabel, brands } = site.about;
       <p class="eyebrow muted">{brandsLabel}</p>
       <ul class="brands__list">
         {brands.map((b) => <li>{b}</li>)}
+        <li class="brands__more muted">{brandsMore}</li>
       </ul>
     </div>
   </div>
@@ -100,6 +101,10 @@ const { label, lead, rest, stats, brandsLabel, brands } = site.about;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: var(--col-gap);
     row-gap: 0.25rem;
+  }
+  /* "+100" fica logo abaixo do último nome (Grupo Exati, na 2ª coluna) */
+  .brands__more {
+    grid-column: 2;
   }
 
   @media (max-width: 1023px) {

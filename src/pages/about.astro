@@ -1,6 +1,6 @@
 ---
 // About — referência: max-pratt.webflow.io/about
-// 1. Apresentação grande · 2. Coluna lateral fixa (listas) + subtítulo com pílulas, texto e foto
+// 1. Apresentação grande · 2. Coluna lateral (listas) + subtítulo com pílulas, texto e foto
 // 3. Formação e Experiência (RowList) · 4. Como eu trabalho · CTA
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -37,7 +37,10 @@ const photo = Object.values(photos)[0]?.default;
     <aside class="ab-side">
       <div>
         <p class="eyebrow muted">{site.about.brandsLabel}</p>
-        <ul>{site.about.brands.map((b) => <li>{b}</li>)}</ul>
+        <ul>
+          {site.about.brands.map((b) => <li>{b}</li>)}
+          <li class="muted">{site.about.brandsMore}</li>
+        </ul>
       </div>
       {
         side.map((group) => (
@@ -122,8 +125,6 @@ const photo = Object.values(photos)[0]?.default;
   }
   .ab-side {
     grid-column: 1 / span 3;
-    position: sticky;
-    top: 6rem;
     display: grid;
     gap: 2.25rem;
     font-size: 0.875rem;
@@ -218,7 +219,6 @@ const photo = Object.values(photos)[0]?.default;
       grid-column: 1 / -1;
     }
     .ab-side {
-      position: static;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       margin-bottom: var(--space-m);
       order: 2;
