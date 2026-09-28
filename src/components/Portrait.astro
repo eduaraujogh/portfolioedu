@@ -6,7 +6,7 @@
 //    Sem mouse (toque), o visor fica parado no centro.
 //
 // Para trocar a foto: substitua src/assets/me/portrait.(jpg|png|webp).
-// A atual é provisória (Unsplash, licença livre).
+// Se a nova foto tiver o rosto em outro lugar, ajuste FOCUS_X/FOCUS_Y no script abaixo.
 import { Image } from 'astro:assets';
 import { site } from '../data/site';
 
@@ -59,13 +59,17 @@ const photo = Object.values(photos)[0]?.default;
   const sharp = section?.querySelector<HTMLElement>('.portrait__img--sharp');
   const lens = section?.querySelector<HTMLElement>('.portrait__lens');
 
+  // Onde o visor fica quando o mouse não está sobre a foto (fração da tela). Ajustado ao rosto.
+  const FOCUS_X = 0.52;
+  const FOCUS_Y = 0.36;
+
   if (section && layer && sharp && lens) {
     const motionOk = document.documentElement.classList.contains('motion');
     const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     let visible = false;
     let hovering = false;
-    let mx = innerWidth / 2, my = innerHeight / 2; // alvo do visor
+    let mx = innerWidth * FOCUS_X, my = innerHeight * FOCUS_Y; // alvo do visor
     let lx = mx, ly = my; // posição desenhada (segue com atraso)
 
     new IntersectionObserver(([e]) => {
@@ -92,9 +96,9 @@ const photo = Object.values(photos)[0]?.default;
         layer!.style.translate = `0 ${(0.5 - p) * 16}%`;
       }
 
-      // Visor: segue o mouse; sem mouse, volta ao centro da tela
-      const tx = hovering ? mx : innerWidth / 2;
-      const ty = hovering ? my : innerHeight / 2;
+      // Visor: segue o mouse; sem mouse, repousa sobre o rosto (ponto de foco da foto)
+      const tx = hovering ? mx : innerWidth * FOCUS_X;
+      const ty = hovering ? my : Math.max(innerHeight * FOCUS_Y, lens!.offsetWidth / 2 + 16);
       const k = motionOk ? 0.12 : 1;
       lx += (tx - lx) * k;
       ly += (ty - ly) * k;
@@ -143,7 +147,7 @@ const photo = Object.values(photos)[0]?.default;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 30%;
+    object-position: center 15%; /* preserva a cabeça quando a foto é cortada */
   }
   .portrait__img--blur {
     filter: blur(6px) brightness(0.85);
