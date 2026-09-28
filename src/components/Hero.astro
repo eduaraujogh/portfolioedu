@@ -8,13 +8,14 @@ const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
 ---
 
 <section class="hero grid" aria-labelledby="hero-title">
-  <SplitText
-    as="h1"
-    id="hero-title"
-    class="hero__title"
-    mode="load"
-    parts={[{ text: lead }, { text: rest, class: 'tone-2' }]}
-  />
+  <div class="hero__title">
+    <SplitText
+      as="h1"
+      id="hero-title"
+      mode="load"
+      parts={[{ text: lead }, { text: rest, class: 'tone-2' }]}
+    />
+  </div>
 
   <div class="hero__meta small">
     <p class="hero__about">{about}</p>
@@ -34,7 +35,8 @@ const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
     padding-bottom: clamp(3rem, 6vw, 5rem);
   }
 
-  .hero :global(.hero__title) {
+  /* Wrapper recebe grid e tipografia; o h1 do SplitText herda (reset em base.css) */
+  .hero__title {
     grid-column: 5 / -1;
     grid-row: 1;
     max-width: 17em;
@@ -73,7 +75,7 @@ const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
   }
 
   @media (max-width: 1023px) {
-    .hero :global(.hero__title) {
+    .hero__title {
       grid-column: 1 / -1;
     }
     .hero__meta {

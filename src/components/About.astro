@@ -10,10 +10,9 @@ const { label, lead, rest, stats, brandsLabel, brands } = site.about;
 <section id="sobre" class="about grid" aria-labelledby="about-label">
   <h2 id="about-label" class="about__label eyebrow" data-reveal>{label}</h2>
 
-  <SplitText
-    class="about__statement"
-    parts={[{ text: lead }, { text: rest, class: 'tone-2' }]}
-  />
+  <div class="about__statement">
+    <SplitText parts={[{ text: lead }, { text: rest, class: 'tone-2' }]} />
+  </div>
 
   <div class="about__facts">
     {
@@ -51,7 +50,7 @@ const { label, lead, rest, stats, brandsLabel, brands } = site.about;
     padding-top: 0.6em; /* alinha com a primeira linha do texto grande */
   }
 
-  .about :global(.about__statement) {
+  .about__statement {
     grid-column: 5 / -1;
     max-width: 30em;
     font-size: var(--fs-lead);
@@ -105,7 +104,7 @@ const { label, lead, rest, stats, brandsLabel, brands } = site.about;
       grid-column: 1 / -1;
       padding-top: 0;
     }
-    .about :global(.about__statement),
+    .about__statement,
     .about__facts {
       grid-column: 1 / -1;
     }

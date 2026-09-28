@@ -26,6 +26,12 @@ h1, h2, h3, p, ul {
   margin: 0;
 }
 
+/* Títulos não carregam estilo próprio: tamanho e peso vêm do contexto/componente */
+h1, h2, h3 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
 ul {
   padding: 0;
   list-style: none;
