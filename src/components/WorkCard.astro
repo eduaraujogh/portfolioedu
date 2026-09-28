@@ -1,8 +1,9 @@
 ---
-// Card de projeto. Referência: Max Pratt.
-// Com mouse: o card recua levemente, as informações aparecem sobre a imagem
-// e o cursor vira um círculo "Ver projeto" (ver Cursor.astro).
-// Em telas de toque (sem hover): as informações ficam sempre visíveis abaixo da imagem.
+// Card de projeto. Referências: Max Pratt (pílulas de info) + Maxx (foto recua e desfoca)
+// + o visor de foco usado na foto e no rodapé.
+// Com mouse: o card fica parado; só a foto dentro dele diminui um pouco e desfoca, e um
+// quadrado com "OPEN" no centro segue o cursor mostrando a foto nítida por dentro.
+// Em telas de toque (sem hover): foto nítida e informações visíveis abaixo da imagem.
 import { Image } from 'astro:assets';
 import { coverOf, type Work } from '../data/site';
 import { withBase } from '../utils/url';
@@ -18,21 +19,30 @@ interface Props {
 const { work, href = '/works', wide = false, delay = 0, eager = false } = Astro.props;
 const { name, sector, discipline, slug } = work;
 const focus = 'focus' in work ? work.focus : 'center';
+
+const img = {
+  src: coverOf(slug),
+  widths: [480, 800, 1200, 1600],
+  sizes: wide ? '(max-width: 767px) 100vw, 96vw' : '(max-width: 767px) 100vw, 48vw',
+  loading: eager ? ('eager' as const) : ('lazy' as const),
+  style: `object-position:${focus}`,
+};
 ---
 
 <article class:list={['work', { 'work--wide': wide }]}>
-  <a class="work__link" href={withBase(href)} data-cursor="Open">
+  <a class="work__link" href={withBase(href)}>
     <div class="work__card">
       <div class="work__media" data-reveal="media" style={`--reveal-delay:${delay}s`}>
-        <Image
-          class="work__img"
-          src={coverOf(slug)}
-          alt={`${name}, ${discipline.toLowerCase()} para ${sector.toLowerCase()}`}
-          widths={[480, 800, 1200, 1600]}
-          sizes={wide ? '(max-width: 767px) 100vw, 96vw' : '(max-width: 767px) 100vw, 48vw'}
-          loading={eager ? 'eager' : 'lazy'}
-          style={`object-position:${focus}`}
-        />
+        <div class="work__zoom">
+          <!-- camada de baixo: desfoca no hover -->
+          <Image class="work__img work__img--blur" {...img} alt="" aria-hidden="true" />
+          <!-- camada de cima: nítida, recortada no formato do visor -->
+          <Image
+            class="work__img work__img--sharp"
+            {...img}
+            alt={`${name}, ${discipline.toLowerCase()} para ${sector.toLowerCase()}`}
+          />
+        </div>
       </div>
 
       <div class="work__tags" aria-hidden="true">
@@ -42,6 +52,8 @@ const focus = 'focus' in work ? work.focus : 'center';
           <span class="tag">{discipline}</span>
         </span>
       </div>
+
+      <div class="work__lens" aria-hidden="true"><span>Open</span></div>
     </div>
 
     <div class="work__info small" data-reveal style={`--reveal-delay:${delay}s`}>
@@ -50,6 +62,60 @@ const focus = 'focus' in work ? work.focus : 'center';
     </div>
   </a>
 </article>
+
+<script>
+  // Visor de foco nos cards (só com mouse)
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const motionOk = document.documentElement.classList.contains('motion');
+
+    document.querySelectorAll<HTMLElement>('.work__card').forEach((card) => {
+      const sharp = card.querySelector<HTMLElement>('.work__img--sharp')!;
+      const lens = card.querySelector<HTMLElement>('.work__lens')!;
+      let tx = 0, ty = 0, x = 0, y = 0;
+      let inside = false;
+      let raf = 0;
+
+      const draw = () => {
+        const k = motionOk ? 0.14 : 1;
+        x += (tx - x) * k;
+        y += (ty - y) * k;
+        const size = lens.offsetWidth;
+        const half = size / 2;
+        lens.style.translate = `${x - half}px ${y - half}px`;
+
+        // A foto está com scale: converte a posição da tela para as coordenadas internas dela
+        const c = card.getBoundingClientRect();
+        const r = sharp.getBoundingClientRect();
+        const f = sharp.offsetWidth / r.width;
+        const top = (c.top + y - half - r.top) * f;
+        const left = (c.left + x - half - r.left) * f;
+        const s = size * f;
+        sharp.style.clipPath = `inset(${top}px ${sharp.offsetWidth - left - s}px ${sharp.offsetHeight - top - s}px ${left}px)`;
+
+        raf = inside ? requestAnimationFrame(draw) : 0;
+      };
+
+      card.addEventListener('pointerenter', (e) => {
+        const c = card.getBoundingClientRect();
+        tx = x = e.clientX - c.left;
+        ty = y = e.clientY - c.top;
+        inside = true;
+        card.classList.add('is-focus');
+        if (!raf) raf = requestAnimationFrame(draw);
+      });
+      card.addEventListener('pointermove', (e) => {
+        const c = card.getBoundingClientRect();
+        tx = e.clientX - c.left;
+        ty = e.clientY - c.top;
+      });
+      card.addEventListener('pointerleave', () => {
+        inside = false;
+        card.classList.remove('is-focus');
+        sharp.style.clipPath = '';
+      });
+    });
+  }
+</script>
 
 <style>
   .work__link {
@@ -61,13 +127,15 @@ const focus = 'focus' in work ? work.focus : 'center';
     position: relative;
     overflow: clip;
     border-radius: var(--radius-media);
-    transition:
-      transform 0.7s var(--ease-out),
-      border-radius 0.7s var(--ease-out);
   }
 
   .work__media {
+    overflow: clip;
     background: var(--line); /* fundo enquanto a imagem carrega */
+  }
+  .work__zoom {
+    position: relative;
+    transition: scale 0.9s var(--ease-out);
   }
   .work__media :global(.work__img) {
     display: block;
@@ -79,11 +147,19 @@ const focus = 'focus' in work ? work.focus : 'center';
   .work--wide .work__media :global(.work__img) {
     aspect-ratio: 16 / 8;
   }
+  .work__media :global(.work__img--sharp) {
+    position: absolute;
+    inset: 0;
+  }
+  .work__media :global(.work__img--blur) {
+    transition: filter 0.6s var(--ease-out);
+  }
 
   /* Informações sobre a imagem (só em dispositivos com mouse) */
   .work__tags {
     position: absolute;
     inset: 0 0 auto;
+    z-index: 2;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -113,6 +189,11 @@ const focus = 'focus' in work ? work.focus : 'center';
     white-space: nowrap;
   }
 
+  /* Visor com OPEN no centro */
+  .work__lens {
+    display: none;
+  }
+
   .work__info {
     display: flex;
     gap: 1.5rem;
@@ -128,21 +209,60 @@ const focus = 'focus' in work ? work.focus : 'center';
     .work__info {
       display: none;
     }
-    .work__link:hover .work__card,
-    .work__link:focus-visible .work__card {
-      transform: scale(0.97);
-      border-radius: calc(var(--radius-media) * 2.5);
+    .work__card {
+      cursor: none; /* o visor faz o papel de cursor */
     }
+
+    /* Em repouso a foto fica levemente ampliada; no hover ela recua e desfoca */
+    .work__zoom {
+      scale: 1.06;
+    }
+    .work__link:hover .work__zoom {
+      scale: 1;
+    }
+    .work__card.is-focus .work__media :global(.work__img--blur) {
+      filter: blur(14px);
+    }
+
     .work__link:hover .work__tags,
     .work__link:focus-visible .work__tags {
       opacity: 1;
       transform: none;
     }
+
+    .work__lens {
+      display: grid;
+      place-items: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: clamp(8rem, 13vw, 12rem);
+      aspect-ratio: 1;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      pointer-events: none;
+      scale: 0;
+      transition: scale 0.45s var(--ease-out);
+      will-change: translate;
+    }
+    .work__card.is-focus .work__lens {
+      scale: 1;
+    }
+    .work__lens span {
+      color: #fff;
+      font-size: var(--fs-eyebrow);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .work__card,
-    .work__tags {
+    .work__zoom,
+    .work__tags,
+    .work__lens,
+    .work__media :global(.work__img--blur) {
       transition-duration: 0.01s;
     }
   }
