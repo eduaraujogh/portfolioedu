@@ -158,6 +158,12 @@ const year = new Date().getFullYear();
     }
     .has-lens .footer__cta-sharp {
       clip-path: inset(50%);
+      /* Fundo opaco (cor do rodapé) cobre o texto desfocado por trás dentro do visor,
+         senão o desfoque aparece como um brilho em volta das letras nítidas.
+         Padding + margem negativa: caixa maior que o texto, sem mudar a posição dele. */
+      background: var(--paper);
+      padding: 0.35em;
+      margin: -0.35em;
     }
 
     .footer__lens {
