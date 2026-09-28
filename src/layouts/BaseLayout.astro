@@ -1,5 +1,6 @@
 ---
 import Header from '../components/Header.astro';
+import Cursor from '../components/Cursor.astro';
 import { site } from '../data/site';
 import '../styles/tokens.css';
 import '../styles/base.css';
@@ -40,6 +41,7 @@ const {
     <main id="main">
       <slot />
     </main>
+    <Cursor />
     <script>
       import '../scripts/motion.ts';
     </script>
