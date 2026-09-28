@@ -71,6 +71,18 @@ img {
   color: var(--ink-2);
 }
 
+/* Tema escuro por seção: redefine os tokens; os componentes seguem usando as mesmas variáveis */
+.theme-dark {
+  --paper: #121211;
+  --surface: #1c1c1a;
+  --ink: #f3f2ef;
+  --ink-2: rgba(243, 242, 239, 0.68);
+  --ink-3: rgba(243, 242, 239, 0.4);
+  --line: rgba(243, 242, 239, 0.1);
+  background: var(--paper);
+  color: var(--ink);
+}
+
 /* Rótulo de seção (ex.: SOBRE) */
 .eyebrow {
   font-size: var(--fs-eyebrow);

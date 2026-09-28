@@ -10,7 +10,7 @@ const images = import.meta.glob<{ default: ImageMetadata }>('../assets/services/
 const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.default;
 ---
 
-<section id="servicos" class="svc grid" aria-labelledby="svc-label">
+<section id="servicos" class="svc grid theme-dark" aria-labelledby="svc-label">
   <div class="svc__head">
     <h2 id="svc-label" class="eyebrow" data-reveal>{label}</h2>
     <p class="svc__intro small muted" data-reveal style="--reveal-delay:0.08s">{intro}</p>
@@ -74,19 +74,10 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
 </script>
 
 <style>
-  /* Seção escura: redefine os tokens localmente, o resto do componente segue igual */
+  /* Seção escura via .theme-dark (base.css) */
   .svc {
-    --paper: #121211;
-    --surface: #1c1c1a;
-    --ink: #f3f2ef;
-    --ink-2: rgba(243, 242, 239, 0.68);
-    --ink-3: rgba(243, 242, 239, 0.4);
-    --line: rgba(243, 242, 239, 0.1);
-
     row-gap: var(--space-m);
-    padding-block: var(--space-l) calc(var(--space-l) * 1.5);
-    background: var(--paper);
-    color: var(--ink);
+    padding-block: var(--space-l);
     position: relative;
   }
   .svc__head {
