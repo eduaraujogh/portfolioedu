@@ -130,26 +130,28 @@ const img = {
   }
 
   .work__media {
+    position: relative;
     overflow: clip;
+    aspect-ratio: 4 / 3;
     background: var(--line); /* fundo enquanto a imagem carrega */
   }
+  .work--wide .work__media {
+    aspect-ratio: 16 / 8;
+  }
+  /* As duas camadas são 8% maiores que o card em cada lado: a borda do desfoque
+     (que fica transparente) cai fora da área visível e não aparece como moldura clara. */
   .work__zoom {
-    position: relative;
+    position: absolute;
+    inset: -8%;
     transition: scale 0.9s var(--ease-out);
   }
   .work__media :global(.work__img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-  }
-  .work--wide .work__media :global(.work__img) {
-    aspect-ratio: 16 / 8;
-  }
-  .work__media :global(.work__img--sharp) {
     position: absolute;
     inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .work__media :global(.work__img--blur) {
     transition: filter 0.6s var(--ease-out);
@@ -221,7 +223,7 @@ const img = {
       scale: 1;
     }
     .work__card.is-focus .work__media :global(.work__img--blur) {
-      filter: blur(14px);
+      filter: blur(12px); /* ~3x o raio cabe na folga de 8% das camadas */
     }
 
     .work__link:hover .work__tags,
@@ -268,7 +270,7 @@ const img = {
   }
 
   @media (max-width: 767px) {
-    .work--wide .work__media :global(.work__img) {
+    .work--wide .work__media {
       aspect-ratio: 4 / 3;
     }
     .work__info {
