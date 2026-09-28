@@ -2,7 +2,6 @@
 import { site } from '../data/site';
 
 const { lead, rest, about } = site.hero;
-const [aboutLead, ...aboutRest] = about;
 
 // Cada palavra sobe de dentro de uma máscara, em sequência.
 const words = [
@@ -27,8 +26,7 @@ const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
   </h1>
 
   <div class="hero__meta small">
-    <p>{aboutLead}</p>
-    {aboutRest.map((line) => <p class="muted">{line}</p>)}
+    <p class="hero__about">{about}</p>
     <p class="hero__updated muted">
       <span>Atualizado em</span>
       <time>{updated}</time>
@@ -74,7 +72,10 @@ const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
     align-self: end;
     display: grid;
     gap: 0.75rem;
-    max-width: 24ch;
+    max-width: 38ch;
+  }
+  .hero__about {
+    text-wrap: pretty; /* evita palavra sozinha na última linha */
   }
   .hero__updated {
     display: flex;

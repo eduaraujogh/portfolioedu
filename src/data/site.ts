@@ -25,10 +25,8 @@ export const site = {
     lead: 'Eduardo Araújo — designer gráfico',
     rest: 'que transforma assuntos complexos em marcas, telas e campanhas claras.',
     // Texto conceitual ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
-    about: [
-      'Toda boa ideia nasce torta.',
-      'Começo no rascunho, erro rápido e lapido até sobrar só o que importa — com cuidado no detalhe e sem levar tudo tão a sério.',
-    ],
+    about:
+      'Designer gráfico apaixonado por marcas, interfaces e campanhas bem resolvidas. Há 8 anos ajudo empresas a tirar ideias do papel, seja uma identidade visual, um site ou uma campanha inteira.',
   },
 
   // Placeholders até recebermos os projetos reais.
