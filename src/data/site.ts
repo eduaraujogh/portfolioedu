@@ -55,7 +55,6 @@ export const site = {
     items: [
       {
         company: 'Grupo SBA',
-        brands: 'Artta · SB Crédito',
         role: 'Designer Sênior multidisciplinar',
         period: 'Atual',
         description:
@@ -63,7 +62,6 @@ export const site = {
       },
       {
         company: 'Grupo Ergon',
-        brands: 'Gedisa · Gaslog',
         role: 'Designer multidisciplinar',
         period: '2025 — 2026',
         description:
@@ -71,7 +69,6 @@ export const site = {
       },
       {
         company: 'Grupo Exati',
-        brands: '', // vazio = não exibe a linha de marcas
         role: 'Designer Gráfico Pleno',
         period: '2021 — 2024',
         description:
@@ -79,7 +76,6 @@ export const site = {
       },
       {
         company: 'Hascunho',
-        brands: 'Identidade visual · Ilustração',
         role: 'Designer Gráfico e Ilustrador',
         period: '2018 — 2025',
         description:
