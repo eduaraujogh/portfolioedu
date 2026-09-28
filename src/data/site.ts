@@ -7,7 +7,7 @@ const years = new Date().getFullYear() - startYear;
 
 export const site = {
   name: 'Eduardo Araújo',
-  role: 'Designer gráfico',
+  role: 'Diretor de arte sênior',
   location: 'Curitiba, BR',
   email: 'edujunior254@gmail.com',
 
@@ -26,11 +26,11 @@ export const site = {
 
   hero: {
     // Primeira parte: quem é (tom principal). Segunda: o que diferencia (tom secundário).
-    lead: 'Eduardo Araújo — designer gráfico',
+    lead: 'Eduardo Araújo — designer digital e diretor de arte sênior',
     rest: 'que transforma assuntos complexos em marcas, telas e campanhas claras.',
-    // Texto conceitual ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
+    // Apresentação ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
     about:
-      `Designer gráfico apaixonado por marcas, interfaces e campanhas bem resolvidas. Há ${years} anos ajudo empresas a tirar ideias do papel, seja uma identidade visual, um site ou uma campanha inteira.`,
+      `Designer apaixonado por marcas, interfaces e campanhas bem resolvidas. Há ${years} anos ajudo empresas a tirar ideias do papel, seja uma identidade visual, um site ou uma campanha inteira.`,
   },
 
   // Placeholders até recebermos os projetos reais.
