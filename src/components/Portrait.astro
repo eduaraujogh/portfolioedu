@@ -1,0 +1,86 @@
+---
+// Foto em tela cheia com revelação "janela" — referência: primeira imagem da Norwalk.
+// A moldura rola normalmente; a foto fica presa à tela (position: fixed recortada pelo
+// clip-path do pai) e ainda sobe devagar (parallax), então a janela vai revelando a imagem.
+//
+// Para trocar a foto: coloque o arquivo em src/assets/me/ com o nome portrait.(jpg|png|webp).
+import { Image } from 'astro:assets';
+
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/me/portrait.{jpg,jpeg,png,webp}', {
+  eager: true,
+});
+const photo = Object.values(photos)[0]?.default;
+---
+
+<section class="portrait" aria-label="Foto de Eduardo Araújo">
+  <div class="portrait__pin">
+    {
+      photo ? (
+        <Image
+          class="portrait__img"
+          src={photo}
+          alt="Eduardo Araújo"
+          widths={[768, 1280, 1920, 2560]}
+          sizes="100vw"
+        />
+      ) : (
+        <div class="portrait__img portrait__placeholder">
+          <span class="eyebrow">Sua foto aqui · src/assets/me/portrait.jpg</span>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<script>
+  // Parallax leve: a foto sobe mais devagar que a moldura enquanto a seção cruza a tela.
+  const section = document.querySelector<HTMLElement>('.portrait');
+  const img = section?.querySelector<HTMLElement>('.portrait__img');
+  const motionOk = document.documentElement.classList.contains('motion');
+
+  if (section && img && motionOk) {
+    let visible = false;
+    new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(section);
+
+    const update = () => {
+      if (!visible) return;
+      const r = section.getBoundingClientRect();
+      const p = (innerHeight - r.top) / (innerHeight + r.height); // 0 → 1 enquanto atravessa a tela
+      img.style.translate = `0 ${(0.5 - p) * 16}%`;
+    };
+    addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
+</script>
+
+<style>
+  .portrait {
+    position: relative;
+    height: 100svh;
+    clip-path: inset(0); /* recorta o conteúdo fixo: é a "janela" */
+    background: var(--ink);
+  }
+  .portrait__pin {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+  }
+  .portrait__img {
+    display: block;
+    width: 100%;
+    height: 116%; /* folga para o parallax */
+    margin-top: -8%;
+    object-fit: cover;
+    object-position: center 30%;
+    will-change: translate;
+  }
+  .portrait__placeholder {
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(60% 70% at 50% 40%, #3a3935 0%, #1a1a18 70%),
+      var(--ink);
+    color: rgba(255, 255, 255, 0.55);
+  }
+</style>
