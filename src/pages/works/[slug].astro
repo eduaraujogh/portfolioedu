@@ -1,0 +1,349 @@
+---
+// Página de case — referências: Max Pratt (/cases: título + ficha técnica + capa grande + próximo
+// projeto) e Maxx (/project: ficha Cliente/Serviço em linha). Textos e galeria: data/cases.ts.
+// 1. Título + ficha · 2. Capa · 3. Desafio / Solução · 4. Galeria (uma cheia, dois pares)
+// 5. Conceito · 6. Próximo projeto · CTA
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SplitText from '../../components/SplitText.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import Cta from '../../components/Cta.astro';
+import { site, coverOf, type Work } from '../../data/site';
+import { cases, galleryOf, nextOf } from '../../data/cases';
+import { withBase } from '../../utils/url';
+
+export function getStaticPaths() {
+  return site.works.map((work) => ({ params: { slug: work.slug }, props: { work } }));
+}
+
+const { work } = Astro.props as { work: Work };
+const data = cases[work.slug];
+const next = nextOf(work.slug);
+const index = site.works.findIndex((w) => w.slug === work.slug);
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const meta = [
+  { label: 'Cliente', value: data.client },
+  { label: 'Setor', value: work.sector },
+  { label: 'Serviços', value: data.services },
+];
+
+const texts = [
+  { label: 'O desafio', text: data.challenge },
+  { label: 'A solução', text: data.solution },
+].filter((t) => t.text);
+
+// Ritmo da galeria: uma imagem cheia, depois dois pares lado a lado, e repete.
+// Só imagem horizontal (≥ 1.6:1) ocupa a largura toda; as mais quadradas vão em par,
+// senão ficariam mais altas que a tela.
+const images = galleryOf(work.slug);
+const isWide = (img: ImageMetadata) => img.width / img.height >= 1.6;
+const rows: { pair: boolean; imgs: ImageMetadata[] }[] = [];
+for (let k = 0, step = 0; k < images.length; step++) {
+  const full = step % 3 === 0 && isWide(images[k]);
+  const n = full ? 1 : 2;
+  rows.push({ pair: !full, imgs: images.slice(k, k + n) });
+  k += n;
+}
+const alt = (n: number) => `${work.name}, ${work.discipline.toLowerCase()} (${n} de ${images.length})`;
+---
+
+<BaseLayout
+  title={`${work.name} — ${site.name}`}
+  description={`${work.name}: ${work.discipline.toLowerCase()} para ${work.sector.toLowerCase()}. ${data.challenge ?? ''}`.trim()}
+>
+  <article class="cs">
+    <header class="cs-head grid">
+      <div class="cs-head__top small">
+        <a class="link-line" href={withBase('/works')}>← Todos os projetos</a>
+        <span class="muted">{pad(index + 1)} / {pad(site.works.length)}</span>
+      </div>
+
+      <div class="cs-head__title">
+        <SplitText as="h1" mode="load" parts={[
+            { text: `${work.name},` },
+            { text: `${work.discipline.toLowerCase()} para ${work.sector.toLowerCase()}.`, class: 'tone-2' },
+          ]}
+        />
+      </div>
+
+      <dl class="cs-meta">
+        {
+          meta.map((m, i) => (
+            <div data-reveal style={`--reveal-delay:${0.25 + i * 0.06}s`}>
+              <dt class="eyebrow muted">{m.label}</dt>
+              <dd>{m.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </header>
+
+    <div class="cs-cover" data-reveal="media">
+      <Image
+        src={coverOf(work.slug)}
+        alt={`${work.name}, ${work.discipline.toLowerCase()} para ${work.sector.toLowerCase()}`}
+        widths={[800, 1280, 1920]}
+        sizes="100vw"
+        loading="eager"
+      />
+    </div>
+
+    {
+      texts.length > 0 && (
+        <section class="cs-text grid" aria-label="Sobre o projeto">
+          {texts.map((t) => (
+            <div class="cs-text__row" data-reveal>
+              <h2 class="eyebrow">{t.label}</h2>
+              <p>{t.text}</p>
+            </div>
+          ))}
+        </section>
+      )
+    }
+
+    {
+      rows.length > 0 && (
+        <section class="cs-gallery" aria-label="Galeria do projeto">
+          {(() => {
+            let n = 0;
+            return rows.map((row) => (
+              <div class:list={['cs-gallery__row', { 'cs-gallery__row--pair': row.pair }]}>
+                {row.imgs.map((img, j) => {
+                  n += 1;
+                  return (
+                    <div
+                      class="cs-gallery__item"
+                      data-reveal="media"
+                      style={`--reveal-delay:${j * 0.1}s;--ar:${(img.width / img.height).toFixed(3)}`}
+                    >
+                      <Image
+                        src={img}
+                        alt={alt(n)}
+                        widths={row.pair ? [640, 960, 1338] : [800, 1338, 1600]}
+                        sizes={row.pair ? '(max-width: 767px) 100vw, 50vw' : '100vw'}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            ));
+          })()}
+        </section>
+      )
+    }
+
+    {
+      data.concept && (
+        <section class="cs-concept grid" aria-labelledby="cs-concept-label">
+          <p id="cs-concept-label" class="cs-concept__label eyebrow muted" data-reveal>
+            Conceito
+          </p>
+          <div class="cs-concept__text">
+            <SplitText as="p" parts={[{ text: `“${data.concept}”` }]} />
+          </div>
+        </section>
+      )
+    }
+
+    <nav class="cs-next" aria-label="Próximo projeto">
+      <div class="cs-next__head" data-reveal>
+        <div class="cs-next__title">
+          <span class="eyebrow muted">Próximo projeto</span>
+          <a href={withBase(`/works/${next.slug}`)}>{next.name}</a>
+        </div>
+        <a class="link-line small" href={withBase('/works')}>Todos os projetos ({site.works.length}) ↗</a>
+      </div>
+      <WorkCard work={next} wide />
+    </nav>
+  </article>
+
+  <Cta />
+</BaseLayout>
+
+<style>
+  /* 1. Título + ficha técnica */
+  .cs-head {
+    row-gap: var(--space-m);
+    padding-top: clamp(7rem, 16vh, 10rem);
+    padding-bottom: var(--space-m);
+  }
+  .cs-head__top {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    font-variant-numeric: tabular-nums;
+  }
+  .cs-head__title {
+    grid-column: 1 / -1;
+    max-width: 16em;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  .cs-meta {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+  .cs-meta > div {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 1rem;
+  }
+  .cs-meta dd {
+    margin: 0;
+    font-size: 0.9375rem;
+  }
+
+  /* 2. Capa */
+  .cs-cover {
+    margin-inline: var(--gutter);
+    overflow: clip;
+    border-radius: var(--radius-media);
+    aspect-ratio: 16 / 9;
+    background: var(--line);
+  }
+  .cs-cover :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* 3. Desafio / Solução: rótulo | texto (mesmo ritmo do "Como eu trabalho") */
+  .cs-text {
+    padding-block: var(--space-l);
+  }
+  .cs-text__row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    padding-block: 1.75rem;
+    border-top: 1px solid var(--line);
+  }
+  .cs-text__row h2 {
+    grid-column: 1 / span 3;
+    padding-top: 0.55em;
+  }
+  .cs-text__row p {
+    grid-column: 5 / -1;
+    max-width: 30em;
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-lead);
+    letter-spacing: var(--tracking-lead);
+  }
+  .cs-text__row + .cs-text__row p {
+    color: var(--ink-2);
+  }
+
+  /* 4. Galeria */
+  .cs-gallery {
+    display: grid;
+    gap: var(--col-gap);
+    margin-block: var(--col-gap) var(--space-l);
+    padding-inline: var(--gutter);
+  }
+  /* Par: cada imagem cresce na proporção do seu formato, então as duas ficam com a
+     mesma altura sem recorte (mesmo quando uma é quadrada e a outra horizontal). */
+  .cs-gallery__row--pair {
+    display: flex;
+    gap: var(--col-gap);
+  }
+  .cs-gallery__row--pair > .cs-gallery__item {
+    flex: var(--ar) 1 0%;
+  }
+  .cs-gallery__row--pair > .cs-gallery__item:only-child {
+    flex: 0 1 calc(50% - var(--col-gap) / 2);
+  }
+  .cs-gallery__item {
+    overflow: clip;
+    border-radius: var(--radius-media);
+    background: var(--line);
+  }
+  .cs-gallery__item :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* 5. Conceito */
+  .cs-concept {
+    row-gap: var(--space-m);
+    padding-bottom: var(--space-l); /* o espaço de cima vem da galeria */
+  }
+  .cs-concept__label {
+    grid-column: 1 / span 3;
+    padding-top: 0.9em;
+  }
+  .cs-concept__text {
+    grid-column: 5 / -1;
+    max-width: 20em;
+    font-size: clamp(1.75rem, 1rem + 2.2vw, 3rem);
+    font-weight: var(--fw-medium);
+    line-height: 1.15;
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* 6. Próximo projeto */
+  .cs-next {
+    display: grid;
+    gap: 1rem;
+    padding: 0 var(--gutter) var(--space-l);
+  }
+  .cs-next__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .cs-next__title {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .cs-next__title a {
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    line-height: 1.1;
+    letter-spacing: var(--tracking-lead);
+  }
+
+  @media (max-width: 1023px) {
+    .cs-text__row h2,
+    .cs-text__row p,
+    .cs-concept__label,
+    .cs-concept__text {
+      grid-column: 1 / -1;
+    }
+    .cs-text__row {
+      row-gap: 0.75rem;
+    }
+    .cs-text__row h2,
+    .cs-concept__label {
+      padding-top: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .cs-meta {
+      grid-template-columns: 1fr;
+      row-gap: 1rem;
+    }
+    .cs-cover {
+      aspect-ratio: 4 / 3;
+    }
+    .cs-gallery__row--pair {
+      flex-direction: column;
+    }
+    .cs-gallery__row--pair > .cs-gallery__item,
+    .cs-gallery__row--pair > .cs-gallery__item:only-child {
+      flex: none;
+    }
+  }
+</style>

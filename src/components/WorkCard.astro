@@ -10,7 +10,7 @@ import { withBase } from '../utils/url';
 
 interface Props {
   work: Work;
-  href?: string;
+  href?: string; // padrão: /works/<slug>
   wide?: boolean;
   delay?: number;
   eager?: boolean;
@@ -18,8 +18,9 @@ interface Props {
   variant?: 'default' | 'grid';
 }
 
-const { work, href = '/works', wide = false, delay = 0, eager = false, variant = 'default' } = Astro.props;
+const { work, href: hrefProp, wide = false, delay = 0, eager = false, variant = 'default' } = Astro.props;
 const { name, sector, discipline, slug } = work;
+const href = hrefProp ?? `/works/${slug}`; // página do case
 const focus = 'focus' in work ? work.focus : 'center';
 
 const img = {
