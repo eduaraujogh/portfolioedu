@@ -30,7 +30,7 @@ const year = new Date().getFullYear();
   <div class="footer__row footer__row--bottom small">
     <p class="muted">© {year} {site.name}</p>
     <ul class="footer__socials footer__center">
-      {site.socials.map((s) => <li><a class="pill-link" href={s.href}>{s.label}</a></li>)}
+      {site.socials.map((s) => <li><a class="pill-link" href={s.href} target="_blank" rel="noopener">{s.label}</a></li>)}
     </ul>
     <a class="link-line footer__end" href="#main">Voltar ao topo ↑</a>
   </div>

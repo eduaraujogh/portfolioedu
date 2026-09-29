@@ -46,7 +46,7 @@ const { intro, submit } = site.contact;
     </form>
 
     <div class="contact__bottom small">
-      {site.socials.map((s) => <a class="link-line" href={s.href}>{s.label}</a>)}
+      {site.socials.map((s) => <a class="link-line" href={s.href} target="_blank" rel="noopener">{s.label}</a>)}
       <a class="link-line" href={`mailto:${site.email}`}>{site.email}</a>
     </div>
   </div>

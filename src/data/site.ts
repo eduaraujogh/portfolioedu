@@ -19,9 +19,11 @@ export const site = {
 
   // TODO: preencher as URLs reais
   socials: [
+    // TODO: URL do LinkedIn (não achei o perfil com segurança na busca)
     { label: 'LinkedIn', href: '#' },
-    { label: 'Behance', href: '#' },
-    { label: 'Instagram', href: '#' },
+    // Perfis do Hascunho Studio
+    { label: 'Behance', href: 'https://www.behance.net/edu_ardoara85a' },
+    { label: 'Instagram', href: 'https://www.instagram.com/hascunho/' },
   ],
 
   hero: {
