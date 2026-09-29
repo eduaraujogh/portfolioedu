@@ -47,7 +47,7 @@ export const site = {
     // Mistura empresas e clientes de projetos para não concentrar a lista em um só lugar.
     // Exibidas em ordem alfabética (ordenadas automaticamente abaixo)
     brands: [
-      'Artta', 'Bioerde', 'Duo Garage', 'Fense Seguradora', 'Gaslog', 'Gedisa', 'Golden Vibes', 'Grupo Exati',
+      'Artta', 'Bioerde', 'Duo Garage', 'Fense Seguradora', 'Four Pink', 'Gaslog', 'Gedisa', 'Golden Vibes', 'Grupo Exati',
       'Leque', 'Lepistache', 'Lomarco', 'Marozi', 'MKA Transportes', 'Sabores de Curitiba', 'SB Crédito', 'Thalles Consultoria',
     ].sort((a, b) => a.localeCompare(b, 'pt-BR')),
     brandsMore: '+100', // aparece logo abaixo da lista, em tom secundário
@@ -214,6 +214,9 @@ export const site = {
     { slug: 'fense', name: 'Fense Seguradora', sector: 'Seguros', discipline: 'Identidade Visual', featured: true },
     { slug: 'duo', name: 'Duo Garage', sector: 'Automotivo', discipline: 'Identidade Visual', featured: true },
     { slug: 'golden-vibes', name: 'Golden Vibes', sector: 'Semijoias', discipline: 'Branding', featured: true },
+    // Hascunho Studio (Behance)
+    { slug: 'four-pink', name: 'Four Pink', sector: 'Moda', discipline: 'Branding', featured: false },
+    { slug: 'marozi', name: 'Marozi', sector: 'Moda', discipline: 'Identidade Visual', featured: false },
     { slug: 'bioerde', name: 'Bioerde', sector: 'Agronegócio', discipline: 'Branding', featured: false },
     { slug: 'riverside', name: 'Riverside', sector: 'Outdoor', discipline: 'Identidade Visual', featured: false },
   ],
