@@ -14,9 +14,11 @@ interface Props {
   wide?: boolean;
   delay?: number;
   eager?: boolean;
+  // grid: card quadrado com nome e disciplina sempre visíveis na base (ref. Maxx, página Works)
+  variant?: 'default' | 'grid';
 }
 
-const { work, href = '/works', wide = false, delay = 0, eager = false } = Astro.props;
+const { work, href = '/works', wide = false, delay = 0, eager = false, variant = 'default' } = Astro.props;
 const { name, sector, discipline, slug } = work;
 const focus = 'focus' in work ? work.focus : 'center';
 
@@ -29,7 +31,7 @@ const img = {
 };
 ---
 
-<article class:list={['work', { 'work--wide': wide }]}>
+<article class:list={['work', { 'work--wide': wide, 'work--grid': variant === 'grid' }]}>
   <a class="work__link" href={withBase(href)}>
     <div class="work__card">
       <div class="work__media" data-reveal="media" style={`--reveal-delay:${delay}s`}>
@@ -52,6 +54,15 @@ const img = {
           <span class="tag">{discipline}</span>
         </span>
       </div>
+
+      {
+        variant === 'grid' && (
+          <div class="work__caption" aria-hidden="true">
+            <span>{name}</span>
+            <span>{discipline}</span>
+          </div>
+        )
+      }
 
       <div class="work__lens" aria-hidden="true"><span>Open</span></div>
     </div>
@@ -194,6 +205,31 @@ const img = {
   /* Visor com OPEN no centro */
   .work__lens {
     display: none;
+  }
+
+  /* Variante grid (página Works): quadrado, legenda fixa na base, sem pílulas nem info abaixo */
+  .work--grid .work__media {
+    aspect-ratio: 1;
+  }
+  .work--grid .work__tags,
+  .work--grid .work__info {
+    display: none;
+  }
+  .work__caption {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 3rem clamp(0.9rem, 1.6vw, 1.4rem) clamp(0.9rem, 1.6vw, 1.25rem);
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.45));
+    color: #fff;
+    font-size: var(--fs-eyebrow);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    pointer-events: none;
   }
 
   .work__info {
