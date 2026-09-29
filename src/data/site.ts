@@ -26,8 +26,8 @@ export const site = {
 
   hero: {
     // Primeira parte: quem é (tom principal). Segunda: o que diferencia (tom secundário).
-    lead: 'Designer Sênior multidisciplinar,',
-    rest: 'à frente de todas as áreas de design de uma marca: identidade visual, UX/UI, campanhas, no-code e motion design.',
+    lead: 'Designer Sênior multidisciplinar:',
+    rest: 'identidade visual, UX/UI, campanhas, sites e motion design.',
     // Apresentação ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
     about:
       `Apaixonado por marcas, interfaces e campanhas bem resolvidas. Há ${years} anos ajudo empresas a tirar ideias do papel, seja uma identidade visual, um aplicativo ou uma campanha inteira.`,
