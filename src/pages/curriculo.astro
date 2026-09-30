@@ -76,21 +76,15 @@ const avatar = Object.values(avatars)[0]?.default;
             </div>
             <div>
               <h2 class="eyebrow">{tools.label}</h2>
-              <p>{tools.items.join(' · ')}</p>
+              <ul>{tools.items.map((i) => <li>{i}</li>)}</ul>
             </div>
             <div>
               <h2 class="eyebrow">{ai.label}</h2>
-              <p>{ai.items.join(' · ')}</p>
+              <ul>{ai.items.map((i) => <li>{i}</li>)}</ul>
             </div>
             <div>
               <h2 class="eyebrow">{languages.label}</h2>
               <ul>{languages.items.map((i) => <li>{i.replace(' (em desenvolvimento)', '')}</li>)}</ul>
-            </div>
-            <div>
-              <h2 class="eyebrow">Marcas atendidas</h2>
-              <p>
-                {about.brands.join(' · ')} <span class="muted">· {about.brandsMore}</span>
-              </p>
             </div>
           </aside>
 
