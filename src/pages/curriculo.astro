@@ -205,7 +205,7 @@ const avatar = Object.values(avatars)[0]?.default;
   /* Folha A4: papel claro com cantos inferiores arredondados sobre a faixa escura,
      o mesmo efeito do conteúdo do site subindo sobre o rodapé */
   .sheet {
-    --side: 36mm; /* coluna lateral: foto, número e listas */
+    --side: 33mm; /* coluna lateral: foto, número e listas */
     --gap: 8mm;
     width: 210mm;
     height: 297mm;
@@ -228,7 +228,7 @@ const avatar = Object.values(avatars)[0]?.default;
   .paper {
     display: grid;
     grid-template-rows: auto auto auto 1fr;
-    padding: 11mm 14mm 10mm;
+    padding: 10mm 14mm 8mm;
     background: var(--paper);
     border-radius: 0 0 7mm 7mm;
   }
@@ -269,7 +269,7 @@ const avatar = Object.values(avatars)[0]?.default;
     grid-template-columns: var(--side) 1fr;
     align-items: end;
     gap: var(--gap);
-    padding-top: 12mm;
+    padding-top: 8.5mm;
   }
   .hero__photo {
     display: block;
@@ -292,7 +292,7 @@ const avatar = Object.values(avatars)[0]?.default;
     grid-template-columns: var(--side) 1fr;
     gap: var(--gap);
     align-items: start;
-    padding: 7mm 0;
+    padding: 5.5mm 0 6mm;
     border-bottom: 0.5pt solid var(--line);
   }
   .intro__stat {
@@ -320,7 +320,7 @@ const avatar = Object.values(avatars)[0]?.default;
     display: grid;
     grid-template-columns: var(--side) 1fr;
     gap: var(--gap);
-    padding-top: 6.5mm;
+    padding-top: 5.5mm;
   }
   .side {
     display: grid;
@@ -333,11 +333,14 @@ const avatar = Object.values(avatars)[0]?.default;
   .side .eyebrow {
     margin-bottom: 1.3mm;
   }
+  .side li {
+    white-space: nowrap; /* item em uma linha só; o espaço entre colunas absorve */
+  }
 
   .main {
     display: grid;
     align-content: start;
-    gap: 7mm;
+    gap: 5.5mm;
   }
   .label {
     padding-bottom: 1.8mm;
@@ -347,7 +350,7 @@ const avatar = Object.values(avatars)[0]?.default;
     display: grid;
     grid-template-columns: 30mm 1fr;
     gap: 4mm;
-    padding: 2.4mm 0 2.6mm;
+    padding: 2mm 0 2.2mm;
     border-bottom: 0.5pt solid var(--line);
   }
   .row__title {
@@ -393,7 +396,7 @@ const avatar = Object.values(avatars)[0]?.default;
     grid-template-columns: 1fr auto;
     align-items: end;
     gap: 6mm;
-    padding: 7mm 14mm 8mm;
+    padding: 6mm 14mm 7mm;
     color: #f3f2ef;
   }
   .end .eyebrow {

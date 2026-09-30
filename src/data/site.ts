@@ -70,8 +70,8 @@ export const site = {
     // Subtítulo: palavras em `pills` aparecem em pílulas com contorno
     heading: { before: 'Do rascunho à entrega:', pills: ['marcas', 'interfaces', 'campanhas'], after: 'que fazem sentido.' },
     paragraphs: [
-      'Sou formado em Publicidade e Propaganda pela Universidade Positivo e me especializei em Design Gráfico e UX/UI na EBAC. Trabalho com design desde 2015 e, ao longo desse caminho, passei por estúdio próprio e por diferentes grupos empresariais.',
-      'Na Hascunho, meu estúdio, desenvolvi identidades visuais e ilustrações para marcas de diferentes segmentos. Com o tempo, assumi frentes cada vez mais amplas: coordenei designers, criei sites, landing pages, estandes e vídeos, e passei a responder por todas as áreas de design das empresas em que atuo.',
+      'Sou formado em Publicidade e Propaganda pela Universidade Positivo e me especializei em Design Gráfico e UX/UI na EBAC. Trabalho com design desde 2015 e, ao longo desse caminho, passei por agência, estúdio próprio e diferentes grupos empresariais.',
+      'Comecei na Agência Allano, com identidade visual, arte-final e ilustração. Na Hascunho, meu estúdio, passei a conduzir projetos de branding, sites e campanhas. Com o tempo, assumi frentes cada vez mais amplas: coordenei designers, criei sites, landing pages, estandes e vídeos, e passei a responder por todas as áreas de design das empresas em que atuo.',
       'Trabalho com foco no detalhe, mas sem complicar as coisas. Meu objetivo é criar marcas que façam sentido, se conectem com as pessoas e causem aquele “é isso!”.',
     ],
     // Rascunho do processo. TODO: revisar com o Eduardo.
@@ -156,10 +156,17 @@ export const site = {
       },
       {
         company: 'Hascunho',
-        role: 'Designer Gráfico e Ilustrador',
+        role: 'Fundador e Designer',
         period: '2018 — 2025',
         description:
-          'Estúdio próprio de identidade visual e ilustração. Desenvolvi marcas para empresas de diferentes segmentos, do conceito ao sistema visual, com foco em comunicação autêntica e atenção aos detalhes.',
+          'Estúdio próprio, conduzido em paralelo. Projetos de branding, sites e campanhas para marcas de diferentes segmentos, do conceito à entrega: identidade e sistema visual, sites institucionais e peças para redes sociais e mídia.',
+      },
+      {
+        company: 'Agência Allano',
+        role: 'Designer e Ilustrador',
+        period: '2015 — 2018',
+        description:
+          'Criação de identidades visuais para clientes da agência, do logotipo às aplicações, além de arte-final de peças impressas e digitais e ilustrações para marcas de diferentes segmentos.',
       },
     ],
   },
