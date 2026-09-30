@@ -6,6 +6,7 @@
 // linhas de Experiência/Formação (About) · faixa escura no fim, como o rodapé.
 import { Image } from 'astro:assets';
 import { site, startYear } from '../data/site';
+import { noWidow } from '../utils/text';
 import '../styles/tokens.css';
 
 const year = new Date().getFullYear();
@@ -65,7 +66,7 @@ const avatar = Object.values(avatars)[0]?.default;
             <span>{years}+</span>
             <small class="muted">anos de experiência</small>
           </p>
-          <p class="intro__text">{about.rest}</p>
+          <p class="intro__text">{noWidow(about.rest)}</p>
         </section>
 
         <div class="body">
@@ -101,7 +102,7 @@ const avatar = Object.values(avatars)[0]?.default;
                           <span>{x.role}</span>
                           <span class="row__period">{x.period}</span>
                         </p>
-                        <p class="row__text">{x.description}</p>
+                        <p class="row__text">{noWidow(x.description)}</p>
                       </div>
                     </li>
                   ))

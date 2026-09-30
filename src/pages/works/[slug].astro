@@ -11,6 +11,7 @@ import Cta from '../../components/Cta.astro';
 import { site, coverOf, type Work } from '../../data/site';
 import { cases, galleryOf, nextOf } from '../../data/cases';
 import { withBase } from '../../utils/url';
+import { noWidow } from '../../utils/text';
 
 export function getStaticPaths() {
   return site.works.map((work) => ({ params: { slug: work.slug }, props: { work } }));
@@ -95,7 +96,7 @@ const alt = (n: number) => `${work.name}, ${work.discipline.toLowerCase()} (${n}
           {texts.map((t) => (
             <div class="cs-text__row" data-reveal>
               <h2 class="eyebrow">{t.label}</h2>
-              <p>{t.text}</p>
+              <p>{noWidow(t.text!)}</p>
             </div>
           ))}
         </section>

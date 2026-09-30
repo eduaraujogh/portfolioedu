@@ -3,6 +3,7 @@
 // Tudo começa fechado; o clique abre um card (descrição, entregas e imagem) e fecha o anterior.
 import { Image } from 'astro:assets';
 import { site } from '../data/site';
+import { noWidow } from '../utils/text';
 
 const { label, intro, items } = site.services;
 
@@ -13,7 +14,7 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
 <section id="servicos" class="svc grid theme-dark" aria-labelledby="svc-label">
   <div class="svc__head">
     <h2 id="svc-label" class="eyebrow" data-reveal>{label}</h2>
-    <p class="svc__intro small muted" data-reveal style="--reveal-delay:0.08s">{intro}</p>
+    <p class="svc__intro small muted" data-reveal style="--reveal-delay:0.08s">{noWidow(intro)}</p>
   </div>
 
   <ol class="svc__list">
@@ -31,7 +32,7 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
             <div class="svc__panel" id={`svc-panel-${i}`} role="region" aria-label={item.title}>
               <div class="svc__panel-inner">
                 <div class="svc__body">
-                  <p class="svc__desc">{item.description}</p>
+                  <p class="svc__desc">{noWidow(item.description)}</p>
                   <ul class="svc__tags">
                     {item.tags.map((t) => <li class="chip">{t}</li>)}
                   </ul>

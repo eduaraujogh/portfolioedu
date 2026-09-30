@@ -5,6 +5,7 @@
 // Linhas com `description` abrem com a descrição: no hover (mouse) ou no clique/toque/teclado.
 // Uma aberta por vez; abrir e fechar acontecem juntos, então a lista não "pula" sob o mouse.
 // Linhas sem descrição são estáticas.
+import { noWidow } from '../utils/text';
 
 export interface Row {
   title: string;
@@ -53,7 +54,7 @@ const { id, label, items, continued = false } = Astro.props;
                 <div class="rows__panel" id={panelId} role="region" aria-label={item.title}>
                   <div class="rows__panel-inner">
                     {item.meta && <p class="eyebrow muted">{item.meta}</p>}
-                    <p class="rows__desc">{item.description}</p>
+                    <p class="rows__desc">{noWidow(item.description)}</p>
                   </div>
                 </div>
               </>

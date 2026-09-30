@@ -8,6 +8,7 @@ import SplitText from '../components/SplitText.astro';
 import RowList from '../components/RowList.astro';
 import Cta from '../components/Cta.astro';
 import { site } from '../data/site';
+import { noWidow } from '../utils/text';
 
 const { intro, side, heading, paragraphs, approachLabel, approach } = site.aboutPage;
 const { experience, education } = site;
@@ -58,7 +59,7 @@ const photo = Object.values(photos)[0]?.default;
       </h2>
 
       <div class="ab-text">
-        {paragraphs.map((p, i) => <p data-reveal style={`--reveal-delay:${i * 0.05}s`}>{p}</p>)}
+        {paragraphs.map((p, i) => <p data-reveal style={`--reveal-delay:${i * 0.05}s`}>{noWidow(p)}</p>)}
       </div>
 
       {
@@ -93,7 +94,7 @@ const photo = Object.values(photos)[0]?.default;
             <h3>
               <span class="ab-approach__num">{String(i + 1).padStart(2, '0')}</span> {a.title}
             </h3>
-            <p>{a.text}</p>
+            <p>{noWidow(a.text)}</p>
           </li>
         ))
       }

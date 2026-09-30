@@ -1,6 +1,7 @@
 ---
 import { site } from '../data/site';
 import SplitText from './SplitText.astro';
+import { noWidow } from '../utils/text';
 
 const { lead, rest, about } = site.hero;
 
@@ -18,7 +19,7 @@ const updated = new Date().toLocaleDateString('pt-BR').replaceAll('/', '.');
   </div>
 
   <div class="hero__meta small">
-    <p class="hero__about">{about}</p>
+    <p class="hero__about">{noWidow(about)}</p>
     <p class="hero__updated muted">
       <span>Atualizado em</span>
       <time>{updated}</time>
