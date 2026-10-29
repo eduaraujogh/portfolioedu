@@ -68,9 +68,9 @@ export const cases: Record<Work['slug'], Case> = {
         ],
       },
       {
-        id: 'site',
-        title: 'Site e simulador',
-        kicker: 'Landing page · Aquisição de parceiros',
+        id: 'landing-page',
+        title: 'Landing page',
+        kicker: 'Aquisição de parceiros',
         // Sem detalhar regras ou números do simulador (ferramenta comercial).
         text: 'Página para atrair empresas que querem oferecer serviços financeiros com a própria marca. O centro dela é um simulador: em quatro etapas curtas, o visitante informa como opera, vê quanto pode ganhar e já pede uma proposta ao time comercial. Dividir a conta em etapas fez uma simulação financeira parecer uma conversa, não um formulário.',
         shots: [
