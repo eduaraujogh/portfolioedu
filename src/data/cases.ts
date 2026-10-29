@@ -4,16 +4,145 @@
 // Regra: nada de número, depoimento ou cliente inventado. Sem texto real, o bloco não aparece.
 import { site, type Work } from './site';
 
+// Imagem prevista para o case. Enquanto o arquivo não existe, a página mostra um espaço
+// reservado com este rótulo e esta proporção (largura / altura) — serve de lista do que exportar.
+export interface Shot {
+  label: string;
+  ratio?: number; // padrão 16:9
+}
+
+// Capítulo de um case com várias entregas (ex.: Artta). Imagens em
+// src/assets/cases/<slug>/<id>/01.webp, 02.webp…
+export interface Chapter {
+  id: string; // âncora e pasta das imagens
+  title: string;
+  kicker: string; // o que é a entrega, em poucas palavras
+  text: string;
+  // Número de destaque (só com valor real, informado pelo Eduardo)
+  result?: { from: string; to: string; label: string };
+  // Decisões de UX: título curto + por quê
+  decisions?: { title: string; text: string }[];
+  shots?: Shot[];
+}
+
 export interface Case {
   client: string;
+  clientLabel?: string; // padrão "Cliente"; "Empresa" quando é onde trabalho
+  role?: string; // meu papel no projeto
   services: string;
   challenge?: string;
   solution?: string;
+  // Rótulos de desafio/solução, quando o case não é um projeto único (ex.: "A empresa", "Meu papel")
+  labels?: [string, string];
   // Frase de conceito da marca, em destaque no fim do case
   concept?: string;
+  shots?: Shot[]; // galeria prevista do case (sem capítulos)
+  chapters?: Chapter[];
 }
 
 export const cases: Record<Work['slug'], Case> = {
+  // TODO: textos de rascunho escritos a partir do material enviado; confirmar com o Eduardo
+  // o que está marcado com (confirmar).
+  artta: {
+    client: 'Artta',
+    clientLabel: 'Empresa',
+    role: 'Designer Sênior',
+    services: 'Branding, UX/UI, landing page, apresentações',
+    labels: ['A empresa', 'Meu papel'],
+    challenge:
+      'A Artta é uma Sociedade de Crédito Direto autorizada pelo Banco Central desde 2021. Oferece infraestrutura financeira para empresas: crédito, contas, Pix, TED e boleto, que os parceiros operam com a própria marca ou integram por API.',
+    solution:
+      'Cuido do design da Artta de ponta a ponta: da marca e do manual que organiza o seu uso às telas dos produtos digitais, passando pelo site e pelas apresentações da empresa. Nos produtos, trabalho em parceria com o time de produto.',
+    chapters: [
+      {
+        id: 'marca',
+        title: 'Marca',
+        kicker: 'Manual de marca',
+        // (confirmar) ângulo de 70° como origem do elemento gráfico
+        text: 'Organizei a marca em um manual completo: propósito, tom de voz, logo, cores, tipografia, elementos gráficos, fotografia e aplicações. O elemento gráfico nasce de um ângulo de 70°, a inclinação do crescimento, e acompanha a assinatura “Para negócios que não param”.',
+        shots: [
+          { label: 'Capa do manual' },
+          { label: 'Logo e área de proteção' },
+          { label: 'Cores e tipografia' },
+          { label: 'Elementos gráficos ou aplicações' },
+        ],
+      },
+      {
+        id: 'site',
+        title: 'Site e simulador',
+        kicker: 'Landing page · Aquisição de parceiros',
+        // Sem detalhar regras ou números do simulador (ferramenta comercial).
+        text: 'Página para atrair empresas que querem oferecer serviços financeiros com a própria marca. O centro dela é um simulador: em quatro etapas curtas, o visitante informa como opera, vê quanto pode ganhar e já pede uma proposta ao time comercial. Dividir a conta em etapas fez uma simulação financeira parecer uma conversa, não um formulário.',
+        shots: [
+          { label: 'Landing page: topo com o simulador', ratio: 16 / 10 },
+          { label: 'Simulador: uma das etapas', ratio: 16 / 10 },
+          { label: 'Simulador: resultado', ratio: 16 / 10 },
+        ],
+      },
+      {
+        id: 'onboarding',
+        title: 'Onboarding PJ',
+        kicker: 'Produto · Em parceria com o time de produto',
+        text: 'Abrir conta para uma empresa levava até 7 dias. Junto com o time de produto, redesenhamos o processo para que o cliente faça tudo sozinho, no computador ou no celular.',
+        result: { from: '7 dias', to: '2 min', label: 'para uma empresa abrir conta' },
+        decisions: [
+          {
+            title: 'Uma coisa por tela',
+            text: 'Cada tela pede uma informação só. O fluxo tem mais telas, mas exige menos esforço em cada uma.',
+          },
+          {
+            title: 'Computador e celular, lado a lado',
+            text: 'Os dois fluxos foram desenhados juntos, com a mesma sequência, cada um adaptado ao seu formato.',
+          },
+          {
+            title: 'Variações no mesmo mapa',
+            text: 'Cada etapa tem o caminho principal e, logo abaixo, as variações: erros, pendências e casos especiais. Nada fica para ser resolvido no desenvolvimento.',
+          },
+        ],
+        shots: [
+          { label: 'Fluxo completo: recorte do mapa no Figma' },
+          { label: 'Tela-chave 1 (computador)', ratio: 16 / 10 },
+          { label: 'Tela-chave 2 (computador)', ratio: 16 / 10 },
+          { label: 'Celular: 3 telas lado a lado num quadro 16:10', ratio: 16 / 10 },
+          { label: 'Tela final: conta aberta', ratio: 16 / 10 },
+        ],
+      },
+      {
+        id: 'apresentacoes',
+        title: 'Apresentações',
+        kicker: 'Institucional e comercial',
+        text: 'Apresentações institucionais e comerciais da empresa, construídas sobre o sistema visual do manual, para apresentar a Artta e cada um dos seus produtos com a mesma linguagem.',
+        shots: [
+          { label: 'Slide de capa' },
+          { label: 'Slide' },
+          { label: 'Slide' },
+          { label: 'Slide' },
+          { label: 'Slide' },
+          { label: 'Slide' },
+        ],
+      },
+    ],
+  },
+  // TODO: (confirmar) leitura do símbolo e foco no público interno.
+  sba: {
+    client: 'Grupo SBA',
+    services: 'Identidade visual, endomarketing',
+    challenge:
+      'Criar a marca do grupo que reúne duas empresas do mercado financeiro, a Artta e a SBcrédito, sem competir com nenhuma delas. A marca precisava unir as duas e ganhar vida principalmente no dia a dia de quem trabalha no grupo.',
+    solution:
+      'Um símbolo de anéis que se encaixam, num degradê do azul ao verde-água, com a tipografia Figtree. O sistema vai da assinatura ao lado das duas marcas até o kit de boas-vindas: carta, crachá, caneca, garrafa, ecobag e camiseta.',
+    concept: 'Uma estrutura. Duas marcas. Um propósito.',
+    shots: [
+      { label: 'Assinatura do grupo com as duas marcas' },
+      { label: 'Variações de capa', ratio: 4 / 3 },
+      { label: 'Carta de boas-vindas', ratio: 4 / 3 },
+      { label: 'Crachás', ratio: 4 / 3 },
+      { label: 'Caneca e garrafa', ratio: 4 / 3 },
+      { label: 'Camiseta “Mais fortes juntos”' },
+      { label: 'Ecobag', ratio: 4 / 3 },
+      { label: 'Cordão e mousepad', ratio: 4 / 3 },
+    ],
+  },
   sabores: {
     client: 'Sabores de Curitiba',
     services: 'Identidade visual, sistema de marca',
@@ -91,14 +220,27 @@ export const cases: Record<Work['slug'], Case> = {
   },
 };
 
-const gallery = import.meta.glob<{ default: ImageMetadata }>('../assets/cases/*/*.webp', { eager: true });
+const gallery = import.meta.glob<{ default: ImageMetadata }>('../assets/cases/**/*.webp', { eager: true });
 
-// Imagens da galeria de um case, em ordem de nome de arquivo
-export const galleryOf = (slug: string) =>
+// Imagens de uma pasta (sem subpastas), em ordem de nome de arquivo
+const imagesIn = (dir: string) =>
   Object.entries(gallery)
-    .filter(([path]) => path.startsWith(`../assets/cases/${slug}/`))
+    .filter(([path]) => path.startsWith(`../assets/cases/${dir}/`) && !path.slice(`../assets/cases/${dir}/`.length).includes('/'))
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([, mod]) => mod.default);
+
+// Galeria de um case: src/assets/cases/<slug>/01.webp…
+export const galleryOf = (slug: string) => imagesIn(slug);
+
+export type GalleryItem = { img: ImageMetadata; label?: string } | { img?: undefined; label: string; ratio: number };
+
+// Imagens existentes + espaços reservados para as que ainda faltam (na ordem prevista)
+export const itemsOf = (dir: string, planned: Shot[] = []): GalleryItem[] => {
+  const imgs = imagesIn(dir);
+  return Array.from({ length: Math.max(imgs.length, planned.length) }, (_, i) =>
+    imgs[i] ? { img: imgs[i], label: planned[i]?.label } : { label: planned[i].label, ratio: planned[i].ratio ?? 16 / 9 },
+  );
+};
 
 // Próximo projeto (circular), na ordem de site.works
 export const nextOf = (slug: string) => {

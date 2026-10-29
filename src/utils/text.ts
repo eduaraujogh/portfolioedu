@@ -12,3 +12,10 @@ export const noWidow = (text: string) => {
   const n = words.slice(-3).join(' ').length <= 28 ? 3 : 2;
   return [...words.slice(0, -n), words.slice(-n).join(NBSP)].join(' ');
 };
+
+// Minúsculas para usar no meio da frase, preservando siglas ("Branding e UX/UI" → "branding e UX/UI").
+export const lower = (text: string) =>
+  text
+    .split(' ')
+    .map((w) => (/[A-Z]{2}/.test(w) ? w : w.toLowerCase()))
+    .join(' ');

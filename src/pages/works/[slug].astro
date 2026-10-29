@@ -3,15 +3,18 @@
 // projeto) e Maxx (/project: ficha Cliente/Serviço em linha). Textos e galeria: data/cases.ts.
 // 1. Título + ficha · 2. Capa · 3. Desafio / Solução · 4. Galeria (uma cheia, dois pares)
 // 5. Conceito · 6. Próximo projeto · CTA
+// Case com capítulos (ex.: Artta): no lugar da galeria única entram um índice e um bloco por
+// entrega (título, texto, resultado, decisões e galeria própria).
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SplitText from '../../components/SplitText.astro';
 import WorkCard from '../../components/WorkCard.astro';
+import CaseGallery from '../../components/CaseGallery.astro';
 import Cta from '../../components/Cta.astro';
 import { site, coverOf, type Work } from '../../data/site';
-import { cases, galleryOf, nextOf } from '../../data/cases';
+import { cases, itemsOf, nextOf } from '../../data/cases';
 import { withBase } from '../../utils/url';
-import { noWidow } from '../../utils/text';
+import { noWidow, lower } from '../../utils/text';
 
 export function getStaticPaths() {
   return site.works.map((work) => ({ params: { slug: work.slug }, props: { work } }));
@@ -24,34 +27,27 @@ const index = site.works.findIndex((w) => w.slug === work.slug);
 const pad = (n: number) => String(n).padStart(2, '0');
 
 const meta = [
-  { label: 'Cliente', value: data.client },
+  { label: data.clientLabel ?? 'Cliente', value: data.client },
+  ...(data.role ? [{ label: 'Papel', value: data.role }] : []),
   { label: 'Setor', value: work.sector },
   { label: 'Serviços', value: data.services },
 ];
 
+const [challengeLabel, solutionLabel] = data.labels ?? ['O desafio', 'A solução'];
 const texts = [
-  { label: 'O desafio', text: data.challenge },
-  { label: 'A solução', text: data.solution },
+  { label: challengeLabel, text: data.challenge },
+  { label: solutionLabel, text: data.solution },
 ].filter((t) => t.text);
 
-// Ritmo da galeria: uma imagem cheia, depois dois pares lado a lado, e repete.
-// Só imagem horizontal (≥ 1.6:1) ocupa a largura toda; as mais quadradas vão em par,
-// senão ficariam mais altas que a tela.
-const images = galleryOf(work.slug);
-const isWide = (img: ImageMetadata) => img.width / img.height >= 1.6;
-const rows: { pair: boolean; imgs: ImageMetadata[] }[] = [];
-for (let k = 0, step = 0; k < images.length; step++) {
-  const full = step % 3 === 0 && isWide(images[k]);
-  const n = full ? 1 : 2;
-  rows.push({ pair: !full, imgs: images.slice(k, k + n) });
-  k += n;
-}
-const alt = (n: number) => `${work.name}, ${work.discipline.toLowerCase()} (${n} de ${images.length})`;
+const discipline = lower(work.discipline);
+const sector = lower(work.sector);
+const items = itemsOf(work.slug, data.shots);
+const chapters = data.chapters ?? [];
 ---
 
 <BaseLayout
   title={`${work.name} — ${site.name}`}
-  description={`${work.name}: ${work.discipline.toLowerCase()} para ${work.sector.toLowerCase()}. ${data.challenge ?? ''}`.trim()}
+  description={`${work.name}: ${discipline} para ${sector}. ${data.challenge ?? ''}`.trim()}
 >
   <article class="cs">
     <header class="cs-head grid">
@@ -63,12 +59,12 @@ const alt = (n: number) => `${work.name}, ${work.discipline.toLowerCase()} (${n}
       <div class="cs-head__title">
         <SplitText as="h1" mode="load" parts={[
             { text: `${work.name},` },
-            { text: `${work.discipline.toLowerCase()} para ${work.sector.toLowerCase()}.`, class: 'tone-2' },
+            { text: `${discipline} para ${sector}.`, class: 'tone-2' },
           ]}
         />
       </div>
 
-      <dl class="cs-meta">
+      <dl class="cs-meta" style={`--cols:${meta.length}`}>
         {
           meta.map((m, i) => (
             <div data-reveal style={`--reveal-delay:${0.25 + i * 0.06}s`}>
@@ -83,7 +79,7 @@ const alt = (n: number) => `${work.name}, ${work.discipline.toLowerCase()} (${n}
     <div class="cs-cover" data-reveal="media">
       <Image
         src={coverOf(work.slug)}
-        alt={`${work.name}, ${work.discipline.toLowerCase()} para ${work.sector.toLowerCase()}`}
+        alt={`${work.name}, ${discipline} para ${sector}`}
         widths={[800, 1280, 1920]}
         sizes="100vw"
         loading="eager"
@@ -104,33 +100,79 @@ const alt = (n: number) => `${work.name}, ${work.discipline.toLowerCase()} (${n}
     }
 
     {
-      rows.length > 0 && (
-        <section class="cs-gallery" aria-label="Galeria do projeto">
-          {(() => {
-            let n = 0;
-            return rows.map((row) => (
-              <div class:list={['cs-gallery__row', { 'cs-gallery__row--pair': row.pair }]}>
-                {row.imgs.map((img, j) => {
-                  n += 1;
-                  return (
-                    <div
-                      class="cs-gallery__item"
-                      data-reveal="media"
-                      style={`--reveal-delay:${j * 0.1}s;--ar:${(img.width / img.height).toFixed(3)}`}
-                    >
-                      <Image
-                        src={img}
-                        alt={alt(n)}
-                        widths={row.pair ? [640, 960, 1338] : [800, 1338, 1600]}
-                        sizes={row.pair ? '(max-width: 767px) 100vw, 50vw' : '100vw'}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            ));
-          })()}
+      chapters.length > 0 && (
+        <nav class="cs-index grid" aria-label="Neste case">
+          <p class="cs-index__label eyebrow muted" data-reveal>Neste case</p>
+          <ol class="cs-index__list">
+            {chapters.map((c, i) => (
+              <li data-reveal style={`--reveal-delay:${i * 0.06}s`}>
+                <a href={`#${c.id}`}>
+                  <span class="muted">{pad(i + 1)}</span>
+                  <span class="cs-index__title">{c.title}</span>
+                  <span class="cs-index__kicker muted">{c.kicker}</span>
+                  <span aria-hidden="true">↓</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
+    {
+      chapters.map((c, i) => (
+        <section id={c.id} class="cs-ch" aria-labelledby={`${c.id}-title`}>
+          <header class="cs-ch__head grid">
+            <p class="cs-ch__meta eyebrow" data-reveal>
+              <span class="muted">{pad(i + 1)}</span>
+              <span>{c.kicker}</span>
+            </p>
+            <h2 id={`${c.id}-title`} class="cs-ch__title" data-reveal>{c.title}</h2>
+            <p class="cs-ch__text" data-reveal>{noWidow(c.text)}</p>
+          </header>
+
+          {c.result && (
+            <div class="cs-result grid" data-reveal>
+              <p class="cs-result__value">
+                <span class="cs-result__from">{c.result.from}</span>
+                <span class="cs-result__arrow" aria-label="para">→</span>
+                <span>{c.result.to}</span>
+              </p>
+              <p class="cs-result__label muted">{c.result.label}</p>
+            </div>
+          )}
+
+          {c.decisions && (
+            <div class="cs-dec grid">
+              <p class="cs-dec__label eyebrow muted" data-reveal>Decisões</p>
+              <ol class="cs-dec__list">
+                {c.decisions.map((d, j) => (
+                  <li data-reveal style={`--reveal-delay:${j * 0.08}s`}>
+                    <span class="eyebrow muted">{pad(j + 1)}</span>
+                    <h3>{d.title}</h3>
+                    <p class="small muted">{noWidow(d.text)}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+
+          <div class="cs-ch__gallery">
+            <CaseGallery
+              items={itemsOf(`${work.slug}/${c.id}`, c.shots)}
+              alt={`${work.name}, ${c.title.toLowerCase()}`}
+              label={`Imagens: ${c.title}`}
+            />
+          </div>
         </section>
+      ))
+    }
+
+    {
+      items.length > 0 && (
+        <div class="cs-gallery">
+          <CaseGallery items={items} alt={`${work.name}, ${discipline}`} />
+        </div>
       )
     }
 
@@ -186,7 +228,7 @@ const alt = (n: number) => `${work.name}, ${work.discipline.toLowerCase()} (${n}
   .cs-meta {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
     column-gap: var(--col-gap);
     margin: 0;
     border-top: 1px solid var(--line);
@@ -243,34 +285,140 @@ const alt = (n: number) => `${work.name}, ${work.discipline.toLowerCase()} (${n}
     color: var(--ink-2);
   }
 
-  /* 4. Galeria */
+  /* 4. Galeria (case sem capítulos) */
   .cs-gallery {
-    display: grid;
-    gap: var(--col-gap);
     margin-block: var(--col-gap) var(--space-l);
-    padding-inline: var(--gutter);
   }
-  /* Par: cada imagem cresce na proporção do seu formato, então as duas ficam com a
-     mesma altura sem recorte (mesmo quando uma é quadrada e a outra horizontal). */
-  .cs-gallery__row--pair {
+
+  /* 4b. Índice dos capítulos */
+  .cs-index {
+    row-gap: var(--space-s);
+    padding-bottom: var(--space-l);
+  }
+  .cs-index__label {
+    grid-column: 1 / span 3;
+    padding-top: 1.1rem;
+  }
+  .cs-index__list {
+    grid-column: 5 / -1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .cs-index__list a {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto 1.5rem;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--line);
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s var(--ease-out);
+  }
+  .cs-index__list li:last-child a {
+    border-bottom: 1px solid var(--line);
+  }
+  .cs-index__title {
+    font-size: 1.25rem;
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-lead);
+  }
+  .cs-index__kicker {
+    font-size: var(--fs-small);
+  }
+  @media (hover: hover) {
+    .cs-index__list a:hover .cs-index__title {
+      color: var(--ink-2);
+    }
+  }
+
+  /* 4c. Capítulo */
+  .cs-ch {
+    display: grid;
+    gap: var(--space-m);
+    padding-bottom: var(--space-l);
+    scroll-margin-top: 5rem;
+  }
+  .cs-ch__head {
+    row-gap: var(--space-s);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    margin-inline: var(--gutter);
+    padding-inline: 0;
+  }
+  .cs-ch__meta {
+    grid-column: 1 / span 4;
     display: flex;
+    gap: 1rem;
+    padding-top: 0.9rem;
+  }
+  .cs-ch__title {
+    grid-column: 5 / -1;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  .cs-ch__text {
+    grid-column: 5 / -1;
+    max-width: 30em;
+    color: var(--ink-2);
+    font-size: clamp(1.125rem, 0.95rem + 0.5vw, 1.375rem);
+    line-height: 1.4;
+  }
+
+  /* Resultado: antes → depois */
+  .cs-result {
+    row-gap: 0.25rem;
+  }
+  .cs-result__value,
+  .cs-result__label {
+    grid-column: 5 / -1;
+  }
+  .cs-result__value {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.4em;
+    font-size: var(--fs-stat);
+    font-weight: var(--fw-medium);
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+    font-variant-numeric: tabular-nums;
+  }
+  .cs-result__from {
+    color: var(--ink-3);
+    text-decoration: line-through;
+    text-decoration-thickness: 0.06em;
+  }
+  .cs-result__arrow {
+    color: var(--ink-3);
+  }
+
+  /* Decisões */
+  .cs-dec__label {
+    grid-column: 1 / span 4;
+    padding-top: 1.1rem;
+  }
+  .cs-dec__list {
+    grid-column: 5 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--col-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
-  .cs-gallery__row--pair > .cs-gallery__item {
-    flex: var(--ar) 1 0%;
+  .cs-dec__list li {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
   }
-  .cs-gallery__row--pair > .cs-gallery__item:only-child {
-    flex: 0 1 calc(50% - var(--col-gap) / 2);
-  }
-  .cs-gallery__item {
-    overflow: clip;
-    border-radius: var(--radius-media);
-    background: var(--line);
-  }
-  .cs-gallery__item :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
+  .cs-dec__list h3 {
+    font-size: 1.0625rem;
+    font-weight: var(--fw-medium);
   }
 
   /* 5. Conceito */
@@ -320,8 +468,26 @@ const alt = (n: number) => `${work.name}, ${work.discipline.toLowerCase()} (${n}
     .cs-text__row h2,
     .cs-text__row p,
     .cs-concept__label,
-    .cs-concept__text {
+    .cs-concept__text,
+    .cs-index__label,
+    .cs-index__list,
+    .cs-ch__meta,
+    .cs-ch__title,
+    .cs-ch__text,
+    .cs-result__value,
+    .cs-result__label,
+    .cs-dec__label,
+    .cs-dec__list {
       grid-column: 1 / -1;
+    }
+    .cs-index__label,
+    .cs-ch__meta,
+    .cs-dec__label {
+      padding-top: 0;
+    }
+    .cs-meta {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 1rem;
     }
     .cs-text__row {
       row-gap: 0.75rem;
@@ -334,17 +500,18 @@ const alt = (n: number) => `${work.name}, ${work.discipline.toLowerCase()} (${n}
   @media (max-width: 767px) {
     .cs-meta {
       grid-template-columns: 1fr;
-      row-gap: 1rem;
     }
     .cs-cover {
       aspect-ratio: 4 / 3;
     }
-    .cs-gallery__row--pair {
-      flex-direction: column;
+    .cs-dec__list {
+      grid-template-columns: 1fr;
     }
-    .cs-gallery__row--pair > .cs-gallery__item,
-    .cs-gallery__row--pair > .cs-gallery__item:only-child {
-      flex: none;
+    .cs-index__list a {
+      grid-template-columns: 2rem 1fr 1.25rem;
+    }
+    .cs-index__kicker {
+      display: none;
     }
   }
 </style>

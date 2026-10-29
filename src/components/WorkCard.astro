@@ -7,6 +7,7 @@
 import { Image } from 'astro:assets';
 import { coverOf, type Work } from '../data/site';
 import { withBase } from '../utils/url';
+import { lower } from '../utils/text';
 
 interface Props {
   work: Work;
@@ -43,7 +44,7 @@ const img = {
           <Image
             class="work__img work__img--sharp"
             {...img}
-            alt={`${name}, ${discipline.toLowerCase()} para ${sector.toLowerCase()}`}
+            alt={`${name}, ${lower(discipline)} para ${lower(sector)}`}
           />
         </div>
       </div>

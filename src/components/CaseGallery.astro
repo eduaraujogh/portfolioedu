@@ -1,0 +1,127 @@
+---
+// Galeria de case. Ritmo: uma imagem cheia, depois dois pares lado a lado, e repete.
+// Só imagem horizontal (≥ 1.6:1) ocupa a largura toda; as mais quadradas vão em par,
+// senão ficariam mais altas que a tela.
+// Item sem arquivo ainda vira um espaço reservado com o rótulo do que vai ali.
+import { Image } from 'astro:assets';
+import type { GalleryItem } from '../data/cases';
+
+interface Props {
+  items: GalleryItem[];
+  alt: string; // prefixo do texto alternativo
+  label?: string; // aria-label da seção
+}
+
+const { items, alt, label = 'Galeria do projeto' } = Astro.props;
+
+const ratio = (it: GalleryItem) => (it.img ? it.img.width / it.img.height : it.ratio);
+const isWide = (it: GalleryItem) => ratio(it) >= 1.6;
+
+const rows: { pair: boolean; items: GalleryItem[] }[] = [];
+for (let k = 0, step = 0; k < items.length; step++) {
+  const full = step % 3 === 0 && isWide(items[k]);
+  const n = full ? 1 : 2;
+  rows.push({ pair: !full, items: items.slice(k, k + n) });
+  k += n;
+}
+// Imagem horizontal sozinha no fim não fica pela metade: ocupa a largura toda.
+const last = rows.at(-1);
+if (last && last.pair && last.items.length === 1 && isWide(last.items[0])) last.pair = false;
+
+const total = items.length;
+---
+
+{
+  rows.length > 0 && (
+    <section class="cg" aria-label={label}>
+      {(() => {
+        let n = 0;
+        return rows.map((row) => (
+          <div class:list={['cg__row', { 'cg__row--pair': row.pair }]}>
+            {row.items.map((it, j) => {
+              n += 1;
+              return (
+                <div
+                  class:list={['cg__item', { 'cg__item--slot': !it.img }]}
+                  data-reveal="media"
+                  style={`--reveal-delay:${j * 0.1}s;--ar:${ratio(it).toFixed(3)}`}
+                >
+                  {it.img ? (
+                    <Image
+                      src={it.img}
+                      alt={`${alt} (${n} de ${total})${it.label ? `: ${it.label.toLowerCase()}` : ''}`}
+                      widths={row.pair ? [640, 960, 1338] : [800, 1338, 1600]}
+                      sizes={row.pair ? '(max-width: 767px) 100vw, 50vw' : '100vw'}
+                    />
+                  ) : (
+                    <div class="cg__slot">
+                      <span class="eyebrow">Imagem {String(n).padStart(2, '0')}</span>
+                      <span>{it.label}</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ));
+      })()}
+    </section>
+  )
+}
+
+<style>
+  .cg {
+    display: grid;
+    gap: var(--col-gap);
+    padding-inline: var(--gutter);
+  }
+  /* Par: cada imagem cresce na proporção do seu formato, então as duas ficam com a
+     mesma altura sem recorte (mesmo quando uma é quadrada e a outra horizontal). */
+  .cg__row--pair {
+    display: flex;
+    gap: var(--col-gap);
+  }
+  .cg__row--pair > .cg__item {
+    flex: var(--ar) 1 0%;
+  }
+  .cg__row--pair > .cg__item:only-child {
+    flex: 0 1 calc(50% - var(--col-gap) / 2);
+  }
+  .cg__item {
+    overflow: clip;
+    border-radius: var(--radius-media);
+    background: var(--line);
+  }
+  .cg__item :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Espaço reservado: mesma proporção da imagem que vai entrar */
+  .cg__item--slot {
+    aspect-ratio: var(--ar);
+    background: transparent;
+    border: 1px dashed rgba(18, 18, 17, 0.22);
+  }
+  .cg__slot {
+    display: grid;
+    place-content: center;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--ink-2);
+    font-size: var(--fs-small);
+  }
+
+  @media (max-width: 767px) {
+    .cg__row--pair {
+      flex-direction: column;
+    }
+    .cg__row--pair > .cg__item,
+    .cg__row--pair > .cg__item:only-child {
+      flex: none;
+    }
+  }
+</style>

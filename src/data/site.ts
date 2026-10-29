@@ -215,6 +215,10 @@ export const site = {
   // Projetos (mesmos da Slowexe). Capa: src/assets/works/<slug>.webp
   // featured: aparece na home. O primeiro em destaque ocupa a largura toda.
   works: [
+    // Artta: um case só, em capítulos (marca, site, onboarding, apresentações), para não
+    // repetir a mesma empresa várias vezes na grade. Capas provisórias até chegar o material.
+    { slug: 'artta', name: 'Artta', sector: 'Mercado financeiro', discipline: 'Branding e UX/UI', featured: true },
+    { slug: 'sba', name: 'Grupo SBA', sector: 'Mercado financeiro', discipline: 'Identidade Visual', featured: true },
     { slug: 'sabores', name: 'Sabores de Curitiba', sector: 'Gastronomia', discipline: 'Identidade Visual', featured: true },
     // Opcional: focus: 'left center' — ponto da imagem que fica visível quando a capa é recortada.
     // Gedisa fica fora até ter uma capa boa (a atual é print de site).
