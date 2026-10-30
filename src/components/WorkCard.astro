@@ -5,7 +5,7 @@
 // quadrado com "OPEN" no centro segue o cursor mostrando a foto nítida por dentro.
 // Em telas de toque (sem hover): foto nítida e informações visíveis abaixo da imagem.
 import { Image } from 'astro:assets';
-import { coverOf, coverSqOf, type Work } from '../data/site';
+import { coverOf, coverSqOf, coverCardOf, type Work } from '../data/site';
 import { withBase } from '../utils/url';
 import { lower } from '../utils/text';
 import { coverVideos } from '../data/videos';
@@ -30,7 +30,7 @@ const hasVideo = slug in coverVideos;
 const videoName = `${slug}-${variant === 'grid' ? 'sq' : 'card'}`;
 
 const img = {
-  src: variant === 'grid' ? coverSqOf(slug) : coverOf(slug),
+  src: variant === 'grid' ? coverSqOf(slug) : wide ? coverOf(slug) : coverCardOf(slug),
   widths: [480, 800, 1200, 1600],
   sizes: wide ? '(max-width: 767px) 100vw, 96vw' : '(max-width: 767px) 100vw, 48vw',
   loading: eager ? ('eager' as const) : ('lazy' as const),

@@ -4,11 +4,14 @@
 import { Image } from 'astro:assets';
 import { site } from '../data/site';
 import { noWidow } from '../utils/text';
+import { withBase } from '../utils/url';
 
 const { label, intro, items } = site.services;
 
 const images = import.meta.glob<{ default: ImageMetadata }>('../assets/services/*.webp', { eager: true });
 const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.default;
+// Serviço com vídeo em loop no lugar da imagem (a imagem vira o pôster)
+const videoOf: Record<string, string> = { motion: '/videos/sba-card' };
 ---
 
 <section id="servicos" class="svc grid theme-dark" aria-labelledby="svc-label">
@@ -39,6 +42,12 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
                 </div>
                 {img && (
                   <div class="svc__media">
+                    {videoOf[item.slug] && (
+                      <video class="svc__video" muted loop playsinline preload="none" aria-hidden="true" data-svc-video>
+                        <source src={withBase(`${videoOf[item.slug]}.mp4`)} type="video/mp4" />
+                        <source src={withBase(`${videoOf[item.slug]}.webm`)} type="video/webm" />
+                      </video>
+                    )}
                     <Image
                       src={img}
                       alt=""
@@ -58,6 +67,18 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
 </section>
 
 <script>
+  // Vídeo do serviço: toca quando o card abre, pausa quando fecha (e não toca com "reduzir movimento")
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLVideoElement>('[data-svc-video]').forEach((v) => {
+      const btn = v.closest('.svc__item')?.querySelector('.svc__toggle');
+      if (!btn) return;
+      new MutationObserver(() => {
+        if (btn.getAttribute('aria-expanded') === 'true') v.play().catch(() => {});
+        else v.pause();
+      }).observe(btn, { attributes: true, attributeFilter: ['aria-expanded'] });
+    });
+  }
+
   // Um aberto por vez: abrir um fecha o que estava aberto.
   const items = [...document.querySelectorAll<HTMLElement>('.svc__item')];
   const setOpen = (target: HTMLElement | null) =>
@@ -259,6 +280,7 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
   }
 
   .svc__media {
+    position: relative;
     overflow: hidden;
     border-radius: calc(var(--radius-media) - 2px);
     aspect-ratio: 16 / 10;
@@ -274,6 +296,15 @@ const imageOf = (slug: string) => images[`../assets/services/${slug}.webp`]?.def
   }
   .is-open .svc__media :global(img) {
     scale: 1;
+  }
+  /* vídeo por cima da imagem (pôster), mesmo enquadramento */
+  .svc__video {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   @media (prefers-reduced-motion: reduce) {

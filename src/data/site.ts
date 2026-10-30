@@ -241,6 +241,10 @@ const covers = import.meta.glob<{ default: ImageMetadata }>('../assets/works/*.w
 // com a arte menor para caber no recorte); senão, a capa normal.
 export const coverSqOf = (slug: string) => covers[`../assets/works/${slug}-sq.webp`]?.default ?? coverOf(slug);
 
+// Capa para os cards 4:3 (home), quando existe uma versão própria (<slug>-card.webp);
+// senão, a capa normal.
+export const coverCardOf = (slug: string) => covers[`../assets/works/${slug}-card.webp`]?.default ?? coverOf(slug);
+
 export const coverOf = (slug: string) => {
   const img = covers[`../assets/works/${slug}.webp`];
   if (!img) throw new Error(`Capa não encontrada: src/assets/works/${slug}.webp`);
