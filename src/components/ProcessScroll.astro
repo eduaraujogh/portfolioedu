@@ -1,0 +1,410 @@
+---
+// "Como eu trabalho" guiado pela rolagem (ref. roadmap com hexágonos).
+// A seção tem a altura de várias telas e o conteúdo fica fixo (sticky) enquanto se rola:
+// · régua vertical no estilo Figma/Illustrator desliza com a rolagem, com marcador de posição;
+// · a etapa da vez acende (número em destaque, título claro, texto aberto);
+// · a estrela de hexágonos gira e vai se preenchendo a cada etapa.
+// Sem JS ou com "reduzir movimento": tudo aparece aberto, sem fixar.
+import { noWidow } from '../utils/text';
+
+interface Props {
+  id?: string;
+  label: string;
+  title: string;
+  intro?: string;
+  steps: { title: string; text: string }[];
+}
+const { id = 'processo', label, title, intro, steps } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// Régua: 0 a 3000 "px", marca a cada 10, média a cada 50, número a cada 100
+const RULER = 3000;
+const ticks = Array.from({ length: RULER / 10 + 1 }, (_, i) => i * 10);
+
+// Estrela: 6 hexágonos (ponta para cima) em anel em volta do centro
+const R = 64, D = 2 * R * 0.97;
+const hex = (cx: number, cy: number) =>
+  Array.from({ length: 6 }, (_, k) => {
+    const a = ((-90 + 60 * k) * Math.PI) / 180;
+    return `${(cx + R * Math.cos(a)).toFixed(1)},${(cy + R * Math.sin(a)).toFixed(1)}`;
+  }).join(' ');
+const hexes = Array.from({ length: 6 }, (_, k) => {
+  const a = ((-90 + 60 * k) * Math.PI) / 180;
+  return hex(D * Math.cos(a), D * Math.sin(a));
+});
+// quantos hexágonos acesos em cada etapa e em que ordem acendem
+const FILL_ORDER = [0, 3, 4, 1, 2, 5];
+const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(((i + 1) * 6) / (steps.length + 0.5))));
+---
+
+<section id={id} class="ps theme-dark" style={`--steps:${steps.length}`} data-ps data-fills={JSON.stringify(fillCounts)} data-order={JSON.stringify(FILL_ORDER)}>
+  <div class="ps__sticky">
+    <header class="ps__head grid">
+      <div class="ps__title">
+        <p class="ps__tag eyebrow"><span class="ps__tag-dot" aria-hidden="true"></span>{label}</p>
+        <h2>{title}</h2>
+      </div>
+      {intro && <p class="ps__intro small">{noWidow(intro)}</p>}
+    </header>
+
+    <div class="ps__body grid">
+      <!-- Régua: desliza com a rolagem; o marcador fica parado e mostra a posição -->
+      <div class="ps__ruler" aria-hidden="true">
+        <svg class="ps__ruler-track" viewBox={`0 0 40 ${RULER}`} width="40" height={RULER}>
+          {
+            ticks.map((y) => {
+              const big = y % 100 === 0, mid = y % 50 === 0;
+              return (
+                <>
+                  <line x1="0" x2={big ? 16 : mid ? 10 : 6} y1={y} y2={y} />
+                  {big && (
+                    <text x="24" y={y} transform={`rotate(-90 24 ${y})`} text-anchor="middle">{y}</text>
+                  )}
+                </>
+              );
+            })
+          }
+        </svg>
+        <div class="ps__marker"><span class="ps__readout">Y 0</span></div>
+      </div>
+
+      <ol class="ps__steps">
+        {
+          steps.map((s, i) => (
+            <li class="ps__step" data-step={i}>
+              <span class="ps__num">{pad(i + 1)}</span>
+              <h3>{s.title}</h3>
+              <div class="ps__text"><p>{noWidow(s.text)}</p></div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="ps__star" aria-hidden="true">
+        <svg viewBox="-260 -260 520 520">
+          <g class="ps__star-g">
+            {hexes.map((pts, k) => <polygon class="ps__hex" data-hex={k} points={pts} />)}
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const motionOk = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-ps]').forEach((sec) => {
+    if (!motionOk) return; // sem movimento: fica tudo aberto (CSS padrão)
+    sec.classList.add('is-live');
+    const steps = [...sec.querySelectorAll<HTMLElement>('.ps__step')];
+    const hexes = [...sec.querySelectorAll<SVGPolygonElement>('.ps__hex')];
+    const fills: number[] = JSON.parse(sec.dataset.fills!);
+    const order: number[] = JSON.parse(sec.dataset.order!);
+    const track = sec.querySelector<SVGElement>('.ps__ruler-track')!;
+    const ruler = sec.querySelector<HTMLElement>('.ps__ruler')!;
+    const readout = sec.querySelector<HTMLElement>('.ps__readout')!;
+    const star = sec.querySelector<SVGGElement>('.ps__star-g')!;
+    const n = steps.length;
+    let active = -1, smooth = 0, raf = 0;
+
+    const setActive = (k: number) => {
+      if (k === active) return;
+      active = k;
+      steps.forEach((s, i) => s.classList.toggle('is-active', i === k));
+      const lit = new Set(order.slice(0, fills[k]));
+      hexes.forEach((h, i) => h.classList.toggle('is-lit', lit.has(i)));
+    };
+
+    const frame = () => {
+      const r = sec.getBoundingClientRect();
+      const total = r.height - innerHeight;
+      const p = Math.min(1, Math.max(0, -r.top / total));
+      smooth += (p - smooth) * 0.12; // a estrela e a régua seguem com leve inércia
+      setActive(Math.min(n - 1, Math.floor(p * n)));
+      star.style.transform = `rotate(${smooth * 120}deg)`;
+      const h = ruler.clientHeight;
+      const y = smooth * (3000 - h);
+      track.style.transform = `translateY(${-y}px)`;
+      readout.textContent = `Y ${Math.round(y + h / 2)}`;
+      raf = Math.abs(p - smooth) > 0.0005 ? requestAnimationFrame(frame) : 0;
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    addEventListener('scroll', kick, { passive: true });
+    addEventListener('resize', kick);
+    kick();
+  });
+</script>
+
+<style>
+  .ps {
+    --accent: #0d99ff; /* azul de seleção do Figma */
+    position: relative;
+  }
+  .ps.is-live {
+    height: calc(var(--steps) * 85vh + 100vh);
+  }
+  .ps__sticky {
+    position: relative;
+    padding-block: var(--space-l);
+  }
+  .ps.is-live .ps__sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    padding-block: clamp(5rem, 11vh, 7rem) clamp(1.5rem, 4vh, 3rem);
+    overflow: hidden;
+  }
+
+  /* Cabeçalho */
+  .ps__head {
+    row-gap: 1.25rem;
+    align-items: end;
+  }
+  .ps__title {
+    grid-column: 1 / span 7;
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .ps__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 6px;
+    background: var(--surface);
+  }
+  .ps__tag-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--accent);
+    transform: rotate(45deg);
+  }
+  .ps__title h2 {
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  .ps__intro {
+    grid-column: 9 / -1;
+    max-width: 34ch;
+    color: var(--ink-2);
+  }
+
+  /* Corpo: régua | etapas | estrela */
+  .ps__body {
+    align-items: center;
+    min-height: 0;
+    margin-top: var(--space-m);
+  }
+  .ps__ruler {
+    grid-column: 1;
+    position: relative;
+    align-self: stretch;
+    max-height: 62vh;
+    margin-block: auto;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(transparent, #000 15%, #000 85%, transparent);
+    mask-image: linear-gradient(transparent, #000 15%, #000 85%, transparent);
+  }
+  .ps__ruler-track {
+    display: block;
+    will-change: transform;
+  }
+  .ps__ruler-track line {
+    stroke: var(--ink-3);
+    stroke-width: 1;
+  }
+  .ps__ruler-track text {
+    fill: var(--ink-3);
+    font-size: 9px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    dominant-baseline: middle;
+  }
+  .ps__marker {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--accent);
+  }
+  .ps__readout {
+    position: absolute;
+    left: 0;
+    top: 6px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    background: var(--accent);
+    color: #fff;
+    font: 600 9px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: nowrap;
+  }
+
+  .ps__steps {
+    grid-column: 2 / span 5;
+    display: grid;
+    gap: clamp(1rem, 2.5vh, 1.75rem);
+    margin: 0;
+    padding: 0 0 0 clamp(1rem, 3vw, 3rem);
+    list-style: none;
+  }
+  .ps__step {
+    display: grid;
+    gap: 0.6rem;
+    justify-items: start;
+  }
+  .ps__num {
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    color: var(--ink-3);
+    font: 500 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    transition: background-color 0.4s, color 0.4s;
+  }
+  .ps__step h3 {
+    font-size: clamp(1.5rem, 1rem + 1.6vw, 2.5rem);
+    font-weight: var(--fw-medium);
+    line-height: 1.08;
+    letter-spacing: var(--tracking-display);
+  }
+  .ps__text p {
+    max-width: 34em;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+
+  /* Estado ao vivo: só a etapa ativa acende e abre o texto */
+  .ps.is-live .ps__step h3 {
+    color: var(--ink-3);
+    transition: color 0.5s var(--ease-out);
+  }
+  .ps.is-live .ps__text {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 0.6s var(--ease-out),
+      opacity 0.4s;
+  }
+  .ps.is-live .ps__text > p {
+    overflow: hidden;
+  }
+  .ps.is-live .ps__step.is-active h3 {
+    color: var(--ink);
+  }
+  .ps.is-live .ps__step.is-active .ps__num {
+    background: var(--accent);
+    color: #fff;
+  }
+  .ps.is-live .ps__step.is-active .ps__text {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  /* Estrela */
+  .ps__star {
+    grid-column: 8 / -1;
+    display: grid;
+    place-items: center;
+  }
+  .ps__star svg {
+    width: min(100%, 52vh);
+    height: auto;
+    overflow: visible;
+  }
+  .ps__star-g {
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+  .ps__hex {
+    fill: var(--accent);
+    fill-opacity: 1;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+    transition: fill-opacity 0.6s var(--ease-out);
+  }
+  .ps.is-live .ps__hex {
+    fill-opacity: 0;
+  }
+  .ps.is-live .ps__hex.is-lit {
+    fill-opacity: 1;
+  }
+
+  @media (max-width: 1023px) {
+    .ps__title,
+    .ps__intro {
+      grid-column: 1 / -1;
+    }
+    .ps__steps {
+      grid-column: 2 / span 7;
+    }
+    .ps__star {
+      grid-column: 9 / -1;
+    }
+  }
+  @media (max-width: 767px) {
+    .ps__intro {
+      display: none;
+    }
+    .ps__title {
+      grid-column: 1 / span 8;
+    }
+    .ps__title h2 {
+      font-size: 1.875rem;
+      max-width: 8em;
+    }
+    .ps__body {
+      grid-template-columns: 28px minmax(0, 1fr);
+      column-gap: 1rem;
+      align-items: start;
+      margin-top: 1.5rem;
+    }
+    .ps__ruler {
+      grid-column: 1;
+      max-height: none;
+    }
+    /* estrela pequena no canto, ao lado do título */
+    .ps__star {
+      position: absolute;
+      top: 4.75rem;
+      right: var(--gutter);
+      width: 34vw;
+    }
+    .ps:not(.is-live) .ps__star {
+      position: static;
+      grid-column: 2;
+      width: 50vw;
+      margin-bottom: 1.5rem;
+    }
+    .ps__star svg {
+      width: 100%;
+    }
+    .ps__steps {
+      grid-column: 2;
+      padding-left: 0;
+      gap: 0.85rem;
+    }
+    .ps__step {
+      gap: 0.45rem;
+    }
+    .ps__step h3 {
+      font-size: 1.4rem;
+    }
+    .ps__text p {
+      font-size: 0.9375rem;
+      line-height: 1.5;
+    }
+    /* espaço para o menu flutuante no rodapé da tela */
+    .ps.is-live .ps__sticky {
+      padding-top: 5rem;
+      padding-bottom: 6rem;
+    }
+  }
+</style>

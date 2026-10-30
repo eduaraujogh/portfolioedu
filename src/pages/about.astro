@@ -7,6 +7,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SplitText from '../components/SplitText.astro';
 import RowList from '../components/RowList.astro';
 import Cta from '../components/Cta.astro';
+import ProcessScroll from '../components/ProcessScroll.astro';
 import { site } from '../data/site';
 import { noWidow } from '../utils/text';
 
@@ -85,21 +86,13 @@ const photo = Object.values(photos)[0]?.default;
     continued
   />
 
-  <section class="ab-approach grid" aria-labelledby="ab-approach-label">
-    <h2 id="ab-approach-label" class="ab-approach__label eyebrow" data-reveal>{approachLabel}</h2>
-    <ol class="ab-approach__list">
-      {
-        approach.map((a, i) => (
-          <li data-reveal style={`--reveal-delay:${i * 0.06}s`}>
-            <h3>
-              <span class="ab-approach__num">{String(i + 1).padStart(2, '0')}</span> {a.title}
-            </h3>
-            <p>{noWidow(a.text)}</p>
-          </li>
-        ))
-      }
-    </ol>
-  </section>
+  <ProcessScroll
+    id="como-eu-trabalho"
+    label={approachLabel}
+    title="Do briefing à entrega"
+    intro="Um caminho claro, em quatro etapas, do primeiro contato aos arquivos finais."
+    steps={approach}
+  />
 
   <Cta />
 </BaseLayout>
