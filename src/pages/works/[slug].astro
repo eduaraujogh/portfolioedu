@@ -127,7 +127,7 @@ const chapters = data.chapters ?? [];
               <span class="muted">{pad(i + 1)}</span>
               <span>{c.kicker}</span>
             </p>
-            <h2 id={`${c.id}-title`} class="cs-ch__title" data-reveal>{c.title}</h2>
+            <h2 id={`${c.id}-title`} class="cs-ch__title" data-reveal>{noWidow(c.title)}</h2>
             <p class="cs-ch__text" data-reveal>{noWidow(c.text)}</p>
           </header>
 
@@ -354,6 +354,7 @@ const chapters = data.chapters ?? [];
   }
   .cs-ch__title {
     grid-column: 5 / -1;
+    text-wrap: balance;
     font-size: var(--fs-display);
     font-weight: var(--fw-medium);
     line-height: var(--lh-display);
