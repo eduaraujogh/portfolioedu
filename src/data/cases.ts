@@ -79,9 +79,9 @@ export const cases: Record<Work['slug'], Case> = {
         // Sem detalhar regras ou números do simulador (ferramenta comercial).
         text: 'Página para atrair empresas que querem oferecer serviços financeiros com a própria marca. O centro dela é um simulador: em quatro etapas curtas, o visitante informa como opera, vê quanto pode ganhar e já pede uma proposta ao time comercial. Dividir a conta em etapas fez uma simulação financeira parecer uma conversa, não um formulário.',
         shots: [
-          { label: 'Landing page: topo com o simulador', ratio: 16 / 10 },
-          { label: 'Simulador: uma das etapas', ratio: 16 / 10 },
-          { label: 'Simulador: resultado', ratio: 16 / 10 },
+          { label: 'Landing page no computador' },
+          { label: 'Simulador: etapas e resultado', full: true },
+          { label: 'Landing page no celular' },
         ],
       },
       {
