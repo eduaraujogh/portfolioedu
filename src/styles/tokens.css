@@ -26,7 +26,10 @@
   --fw-medium: 500;
 
   /* Espaço e grid */
-  --gutter: clamp(1rem, 2.5vw, 2.5rem);
+  /* Largura máxima do conteúdo: em telas muito largas a margem lateral cresce e o conteúdo
+     fica centralizado (fundos e fotos de tela cheia continuam de ponta a ponta). */
+  --content-max: 1440px;
+  --gutter: max(clamp(1rem, 2.5vw, 2.5rem), calc((100vw - var(--content-max)) / 2));
   --col-gap: 1.25rem;
   --space-xs: 0.5rem;
   --space-s: 1rem;
