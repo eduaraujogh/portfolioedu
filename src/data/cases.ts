@@ -41,6 +41,8 @@ export interface Case {
   chapters?: Chapter[];
   // Fechamento do case: o que o projeto entregou. Só fatos, sem número inventado.
   results?: string[];
+  // Imagem(ns) depois dos resultados, fechando o case: src/assets/cases/<slug>/fim/
+  closing?: Shot[];
 }
 
 export const cases: Record<Work['slug'], Case> = {
@@ -104,7 +106,7 @@ export const cases: Record<Work['slug'], Case> = {
         title: 'Apresentações',
         kicker: 'Institucional e comercial',
         text: 'Apresentações institucionais e comerciais da empresa, construídas sobre o sistema visual do manual, para apresentar a Artta e cada um dos seus produtos com a mesma linguagem.',
-        shots: [{ label: 'Apresentação institucional', full: true }],
+        shots: [{ label: 'Slides das apresentações', full: true }],
       },
     ],
     results: [
@@ -114,6 +116,7 @@ export const cases: Record<Work['slug'], Case> = {
       'Internet banking, portal do parceiro e onboarding com a mesma linguagem visual da marca.',
       'Apresentações institucionais e comerciais construídas sobre o mesmo sistema visual.',
     ],
+    closing: [{ label: 'Apresentação em evento', full: true }],
   },
   // TODO: (confirmar) leitura do símbolo e foco no público interno.
   sba: {

@@ -187,6 +187,18 @@ const chapters = data.chapters ?? [];
     }
 
     {
+      data.closing && (
+        <div class="cs-closing">
+          <CaseGallery
+            items={itemsOf(`${work.slug}/fim`, data.closing)}
+            alt={`${work.name}, encerramento`}
+            label="Encerramento"
+          />
+        </div>
+      )
+    }
+
+    {
       items.length > 0 && (
         <div class="cs-gallery">
           <CaseGallery items={items} alt={`${work.name}, ${discipline}`} />
@@ -483,6 +495,10 @@ const chapters = data.chapters ?? [];
   .cs-results__list p {
     font-size: clamp(1.0625rem, 0.95rem + 0.35vw, 1.25rem);
     line-height: 1.5;
+  }
+
+  .cs-closing {
+    padding-bottom: var(--space-l);
   }
 
   /* 5. Conceito */
