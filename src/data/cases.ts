@@ -138,8 +138,8 @@ export const cases: Record<Work['slug'], Case> = {
       { label: 'Cordão e mousepad', ratio: 4 / 3 },
     ],
   },
-  // RASCUNHO PARA REVISÃO (30/10): histórias e resultados escritos a partir do briefing do
-  // Eduardo e das imagens. Resultados qualitativos, sem números; trocar por dados reais se houver.
+  // Histórias e resultados a partir do briefing do Eduardo e das imagens (aprovados em 30/10).
+  // Resultados qualitativos, sem números; trocar por dados reais se houver.
   sabores: {
     client: 'Sabores de Curitiba',
     services: 'Identidade visual, sistema de marca',
@@ -171,10 +171,10 @@ export const cases: Record<Work['slug'], Case> = {
     ],
   },
   fense: {
-    client: 'Fense Seguradora',
+    client: 'Fense Corretora de Seguros',
     services: 'Identidade visual, sistema de marca',
     challenge:
-      'A Fense é uma seguradora que queria se aproximar das pessoas, e não só dos números. O desafio era comunicar proteção em um mercado saturado de escudos genéricos, com uma marca que funcionasse em materiais muito diferentes, da apólice às redes sociais.',
+      'A Fense é uma corretora de seguros que queria se aproximar das pessoas, e não só dos números. O desafio era comunicar proteção em um mercado saturado de escudos genéricos, com uma marca que funcionasse em materiais muito diferentes, da apólice às redes sociais.',
     solution:
       'Em vez do escudo inteiro, trabalhei apenas a parte dele que forma o F de Fense. Uma técnica de desenho 2D que, conforme as cores aplicadas, ganha aparência de volume. O resultado é moderno, fácil de reconhecer e simples de aplicar em qualquer formato.',
     concept: 'Pensar no futuro de quem amamos. E quando amamos, protegemos. Foi desse aspecto que nasceu o conceito da marca.',
