@@ -41,7 +41,7 @@ const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(
   <div class="ps__sticky">
     <header class="ps__head grid">
       <div class="ps__title">
-        <p class="ps__tag eyebrow"><span class="ps__tag-dot" aria-hidden="true"></span>{label}</p>
+        <p class="eyebrow">{label}</p>
         <h2>{title}</h2>
       </div>
       {intro && <p class="ps__intro small">{noWidow(intro)}</p>}
@@ -168,21 +168,6 @@ const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(
     display: grid;
     gap: 1.25rem;
     justify-items: start;
-  }
-  .ps__tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.45rem 0.7rem;
-    border-radius: 6px;
-    background: var(--surface);
-  }
-  .ps__tag-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 2px;
-    background: var(--accent);
-    transform: rotate(45deg);
   }
   .ps__title h2 {
     font-size: var(--fs-display);
