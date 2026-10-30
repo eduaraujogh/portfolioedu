@@ -335,12 +335,13 @@ const chapters = data.chapters ?? [];
   /* 4c. Capítulo */
   .cs-ch {
     display: grid;
-    gap: var(--space-m);
+    /* respiro entre texto, resultado, decisões e imagens do capítulo */
+    gap: clamp(3rem, 2rem + 3vw, 5.5rem);
     padding-bottom: var(--space-l);
     scroll-margin-top: 5rem;
   }
   .cs-ch__head {
-    row-gap: var(--space-s);
+    row-gap: 1.5rem;
     padding-top: 1.25rem;
     border-top: 1px solid var(--line);
     margin-inline: var(--gutter);
