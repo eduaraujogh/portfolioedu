@@ -104,8 +104,9 @@ const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(
     const ruler = sec.querySelector<HTMLElement>('.ps__ruler')!;
     const readout = sec.querySelector<HTMLElement>('.ps__readout')!;
     const star = sec.querySelector<SVGGElement>('.ps__star-g')!;
+    const marker = sec.querySelector<HTMLElement>('.ps__marker')!;
     const n = steps.length;
-    let active = -1, smooth = 0, raf = 0;
+    let active = -1, smooth = 0, raf = 0, my = -1;
 
     const setActive = (k: number) => {
       if (k === active) return;
@@ -125,8 +126,15 @@ const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(
       const h = ruler.clientHeight;
       const y = smooth * (3000 - h);
       track.style.transform = `translateY(${-y}px)`;
-      readout.textContent = `Y ${Math.round(y + h / 2)}`;
-      raf = Math.abs(p - smooth) > 0.0005 ? requestAnimationFrame(frame) : 0;
+      // marcador desliza até a altura do número da etapa ativa
+      const rr = ruler.getBoundingClientRect();
+      const num = steps[active].querySelector<HTMLElement>('.ps__num')!.getBoundingClientRect();
+      const target = Math.min(h - 1, Math.max(0, num.top + num.height / 2 - rr.top));
+      my = my < 0 ? target : my + (target - my) * 0.18;
+      marker.style.transform = `translateY(${my}px)`;
+      readout.textContent = `Y ${Math.round(y + my)}`;
+      const moving = Math.abs(p - smooth) > 0.0005 || Math.abs(target - my) > 0.3;
+      raf = moving ? requestAnimationFrame(frame) : 0;
     };
     const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
     addEventListener('scroll', kick, { passive: true });
@@ -137,7 +145,8 @@ const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(
 
 <style>
   .ps {
-    --accent: #0d99ff; /* azul de seleção do Figma */
+    --accent: var(--ink); /* destaque em tons de cinza, como o resto do site */
+    --accent-ink: var(--paper);
     position: relative;
   }
   .ps.is-live {
@@ -213,11 +222,12 @@ const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(
   }
   .ps__marker {
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 0;
     width: 100%;
     height: 1px;
     background: var(--accent);
+    will-change: transform;
   }
   .ps__readout {
     position: absolute;
@@ -226,7 +236,7 @@ const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(
     padding: 2px 5px;
     border-radius: 3px;
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-ink);
     font: 600 9px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
     white-space: nowrap;
   }
@@ -285,7 +295,7 @@ const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(
   }
   .ps.is-live .ps__step.is-active .ps__num {
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-ink);
   }
   .ps.is-live .ps__step.is-active .ps__text {
     grid-template-rows: 1fr;
@@ -308,9 +318,9 @@ const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(
     will-change: transform;
   }
   .ps__hex {
-    fill: var(--accent);
-    fill-opacity: 1;
-    stroke: var(--accent);
+    fill: var(--ink);
+    fill-opacity: 0.92;
+    stroke: var(--ink-3);
     stroke-width: 1.5;
     vector-effect: non-scaling-stroke;
     transition: fill-opacity 0.6s var(--ease-out);
@@ -319,7 +329,8 @@ const fillCounts = steps.map((_, i) => (i === steps.length - 1 ? 6 : Math.round(
     fill-opacity: 0;
   }
   .ps.is-live .ps__hex.is-lit {
-    fill-opacity: 1;
+    fill-opacity: 0.92;
+    stroke: var(--ink);
   }
 
   @media (max-width: 1023px) {
