@@ -57,14 +57,17 @@ export const cases: Record<Work['slug'], Case> = {
       {
         id: 'marca',
         title: 'Marca',
-        kicker: 'Manual de marca',
+        kicker: 'Manual e aplicações',
         // (confirmar) ângulo de 70° como origem do elemento gráfico
-        text: 'Organizei a marca em um manual completo: propósito, tom de voz, logo, cores, tipografia, elementos gráficos, fotografia e aplicações. O elemento gráfico nasce de um ângulo de 70°, a inclinação do crescimento, e acompanha a assinatura “Para negócios que não param”.',
+        text: 'Organizei a marca em um manual completo, do tom de voz às aplicações, e levei a marca a todos os pontos de contato: crachás, cartões, papelaria, brindes, eventos e app. O elemento gráfico nasce de um ângulo de 70°, a inclinação do crescimento, e acompanha a assinatura “Para negócios que não param”.',
         shots: [
-          { label: 'Capa do manual' },
-          { label: 'Logo e área de proteção' },
-          { label: 'Cores e tipografia' },
-          { label: 'Elementos gráficos ou aplicações' },
+          { label: 'Crachás' },
+          { label: 'Cartões' },
+          { label: 'Ecobag e caneca' },
+          { label: 'Papelaria' },
+          { label: 'Banners de evento' },
+          { label: 'Cartazes' },
+          { label: 'App e notificação' },
         ],
       },
       {
