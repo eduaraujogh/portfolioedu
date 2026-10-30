@@ -121,21 +121,42 @@ export const cases: Record<Work['slug'], Case> = {
   // TODO: (confirmar) leitura do símbolo e foco no público interno.
   sba: {
     client: 'Grupo SBA',
-    services: 'Identidade visual, endomarketing',
+    services: 'Identidade visual, comunicação interna',
+    labels: ['O grupo', 'O projeto'],
     challenge:
-      'Criar a marca do grupo que reúne duas empresas do mercado financeiro, a Artta e a SBcrédito, sem competir com nenhuma delas. A marca precisava unir as duas e ganhar vida principalmente no dia a dia de quem trabalha no grupo.',
+      'O Grupo SBA reúne duas empresas do mercado financeiro, a Artta e a SBcrédito. Com as duas crescendo, faltava uma marca que representasse o grupo sem competir com nenhuma delas e que desse a quem trabalha nas duas empresas o sentimento de fazer parte de uma coisa só.',
     solution:
-      'Um símbolo de anéis que se encaixam, num degradê do azul ao verde-água, com a tipografia Figtree. O sistema vai da assinatura ao lado das duas marcas até o kit de boas-vindas: carta, crachá, caneca, garrafa, ecobag e camiseta.',
+      'Criei a marca do grupo e a levei para dentro de casa: a identidade institucional, que convive ao lado das duas marcas, e um programa de comunicação interna que coloca a marca no dia a dia do time.',
+    chapters: [
+      {
+        id: 'marca',
+        title: 'Marca',
+        kicker: 'Identidade institucional',
+        text: 'Um símbolo de anéis que se encaixam, num degradê do azul ao verde-água, com a tipografia Figtree. A assinatura aparece ao lado da Artta e da SBcrédito e se desdobra em capas, fundos e padrões que dão unidade às duas empresas.',
+        shots: [{ label: 'Capas e fundos da marca', full: true }, { label: 'Padrão aplicado no cordão', full: true }],
+      },
+      {
+        id: 'interna',
+        title: 'Comunicação interna',
+        kicker: 'Endomarketing · Mais fortes juntos',
+        text: 'Para quem trabalha no grupo, a marca virou kit de boas-vindas e campanha interna. O conceito “Mais fortes juntos” estampa as camisetas, e a identidade chega às peças que o time usa todos os dias: crachá, caneca, garrafa, ecobag, mousepad e até meias.',
+        shots: [
+          { label: 'Time com as camisetas do grupo' },
+          { label: 'Crachás' },
+          { label: 'Canecas' },
+          { label: 'Garrafas' },
+          { label: 'Ecobag' },
+          { label: 'Mousepad' },
+          { label: 'Meias' },
+          { label: 'Ensaio com o kit' },
+        ],
+      },
+    ],
     concept: 'Uma estrutura. Duas marcas. Um propósito.',
-    shots: [
-      { label: 'Assinatura do grupo com as duas marcas' },
-      { label: 'Variações de capa', ratio: 4 / 3 },
-      { label: 'Carta de boas-vindas', ratio: 4 / 3 },
-      { label: 'Crachás', ratio: 4 / 3 },
-      { label: 'Caneca e garrafa', ratio: 4 / 3 },
-      { label: 'Camiseta “Mais fortes juntos”' },
-      { label: 'Ecobag', ratio: 4 / 3 },
-      { label: 'Cordão e mousepad', ratio: 4 / 3 },
+    results: [
+      'Uma marca de grupo que une a Artta e a SBcrédito sem competir com nenhuma das duas.',
+      'Um kit de boas-vindas e uma campanha interna que levam a marca para o dia a dia do time.',
+      'Um sistema simples de aplicar, do crachá à camiseta, com o mesmo símbolo, degradê e padrão.',
     ],
   },
   // Histórias e resultados a partir do briefing do Eduardo e das imagens (aprovados em 30/10).

@@ -188,6 +188,19 @@ const video = coverVideos[work.slug];
       ))
     }
 
+    {
+      data.concept && chapters.length > 0 && (
+        <section class="cs-concept grid" aria-labelledby="cs-concept-label-ch">
+          <p id="cs-concept-label-ch" class="cs-concept__label eyebrow muted" data-reveal>
+            Conceito
+          </p>
+          <div class="cs-concept__text">
+            <SplitText as="p" parts={[{ text: `“${data.concept}”` }]} />
+          </div>
+        </section>
+      )
+    }
+
     {data.results && chapters.length > 0 && <CaseResults items={data.results} />}
 
     {
@@ -211,7 +224,7 @@ const video = coverVideos[work.slug];
     }
 
     {
-      data.concept && (
+      data.concept && chapters.length === 0 && (
         <section class="cs-concept grid" aria-labelledby="cs-concept-label">
           <p id="cs-concept-label" class="cs-concept__label eyebrow muted" data-reveal>
             Conceito
