@@ -133,7 +133,13 @@ export const cases: Record<Work['slug'], Case> = {
         title: 'Marca',
         kicker: 'Identidade institucional',
         text: 'Um símbolo de anéis que se encaixam, num degradê do azul ao verde-água, com a tipografia Figtree. A assinatura aparece ao lado da Artta e da SBcrédito e se desdobra em capas, fundos e padrões que dão unidade às duas empresas.',
-        shots: [{ label: 'Capas e fundos da marca', full: true }, { label: 'Padrão aplicado no cordão', full: true }],
+        shots: [
+          { label: 'Logo em contorno sobre o degradê', full: true },
+          { label: 'Logo sobre fundo escuro' },
+          { label: 'Logo sobre fundo claro' },
+          { label: 'Capas e fundos da marca', full: true },
+          { label: 'Padrão aplicado no cordão', full: true },
+        ],
       },
       {
         id: 'interna',
