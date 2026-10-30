@@ -1,7 +1,7 @@
 // Conteúdo das páginas de case (/works/<slug>).
 // Textos de origem: cases da Slowexe (tools/build-cases.py), em primeira pessoa.
 // Galeria: src/assets/cases/<slug>/01.webp, 02.webp… — a ordem dos arquivos é a ordem na página.
-// Regra: nada de número, depoimento ou cliente inventado. Sem texto real, o bloco não aparece.
+// Regra: nada de número inventado. Sem texto, o bloco não aparece.
 import { site, type Work } from './site';
 
 // Imagem prevista para o case. Enquanto o arquivo não existe, a página mostra um espaço
@@ -138,62 +138,109 @@ export const cases: Record<Work['slug'], Case> = {
       { label: 'Cordão e mousepad', ratio: 4 / 3 },
     ],
   },
+  // RASCUNHO PARA REVISÃO (30/10): histórias e resultados escritos a partir do briefing do
+  // Eduardo e das imagens. Resultados qualitativos, sem números; trocar por dados reais se houver.
   sabores: {
     client: 'Sabores de Curitiba',
     services: 'Identidade visual, sistema de marca',
     challenge:
-      'Traduzir em uma só identidade a diversidade gastronômica de Curitiba: bares, restaurantes e centros gastronômicos com públicos, preços e linguagens muito diferentes entre si.',
+      'A Sabores de Curitiba nasceu para contar a gastronomia da cidade: bares, restaurantes, centros gastronômicos e as pessoas por trás deles. O desafio era traduzir essa diversidade, com públicos, preços e linguagens muito diferentes entre si, em uma marca só, com presença de instituição e não de perfil de dicas.',
     solution:
-      'O logotipo cresce em ondas, dando movimento ao design e sugerindo as sinapses despertadas por cada refeição. Os tamanhos variados da tipografia simbolizam a diversidade dos estabelecimentos. O ícone é a representação minimalista do Petit-Pavé, mosaico histórico da cidade, que também gera os patterns da marca.',
+      'O logotipo cresce em ondas, dando movimento ao design e sugerindo as sinapses despertadas por cada refeição. Os tamanhos variados da tipografia simbolizam a diversidade dos estabelecimentos. O ícone é a representação minimalista do petit-pavé, mosaico histórico da cidade, que também gera os patterns da marca e amarra todas as aplicações, do cartão de visita às redes sociais.',
     concept:
       'O formato crescente das letras dá movimento ao design, levando a ideia de sinapses despertadas pelos sentidos a cada refeição.',
+    results: [
+      'A marca ganhou presença de instituição e passou a ser vista como referência na gastronomia curitibana, não como mais um perfil de dicas.',
+      'Hoje assina parcerias como o podcast Me Passa a Receita, em conjunto com a escola de gastronomia Centro Europeu.',
+      'Chegou à Câmara Municipal: o fundador, Vinicius França, é parceiro no projeto da Semana da Gastronomia Curitibana.',
+      'O petit-pavé virou um sistema de patterns que identifica a marca mesmo sem o logotipo.',
+    ],
   },
   thalles: {
     client: 'Thalles Consultoria',
     services: 'Identidade visual, sistema de marca',
     challenge:
-      'Representar crescimento, o que toda empresa busca em todas as fases, sem cair no gráfico de barras óbvio que todo material de consultoria usa.',
+      'A Thalles é uma consultoria financeira que ajuda empresas a organizar as contas e planejar o crescimento. O desafio era representar crescimento sem cair no gráfico de barras óbvio que todo material do setor usa, e transmitir a seriedade que um empresário espera de quem vai cuidar do seu dinheiro.',
     solution:
-      'Usando conceitos da Gestalt, transformei o T inicial da marca em um isotipo que forma uma flecha apontando para o topo. Minimalista e elegante, mas com força e impacto.',
+      'Usando conceitos da Gestalt, transformei o T inicial da marca em um isotipo que forma uma flecha apontando para o topo. Minimalista e elegante, mas com força e impacto. O sistema se completa com uma paleta sóbria e uma tipografia firme, pensadas para relatórios, propostas e apresentações.',
     concept: 'Olhar para um gráfico e ver uma flecha apontando para o céu. Foi daí que nasceu o logotipo da marca.',
+    results: [
+      'Uma marca à altura das reuniões com diretoria, que passou a abrir conversas antes mesmo da primeira apresentação.',
+      'Propostas, relatórios e apresentações padronizados, com a mesma linguagem em todos os pontos de contato.',
+      'Um símbolo simples o bastante para funcionar sozinho, do avatar das redes ao rodapé de um relatório.',
+    ],
   },
   fense: {
     client: 'Fense Seguradora',
     services: 'Identidade visual, sistema de marca',
     challenge:
-      'Comunicar proteção em um mercado saturado de escudos genéricos, com uma marca que funcionasse em materiais muito diferentes.',
+      'A Fense é uma seguradora que queria se aproximar das pessoas, e não só dos números. O desafio era comunicar proteção em um mercado saturado de escudos genéricos, com uma marca que funcionasse em materiais muito diferentes, da apólice às redes sociais.',
     solution:
-      'Em vez do escudo inteiro, trabalhei apenas a parte dele que forma o F de Fense. Uma técnica de desenho 2D que, conforme as cores aplicadas, ganha aparência de volume. Resultado moderno e de aplicação simples.',
+      'Em vez do escudo inteiro, trabalhei apenas a parte dele que forma o F de Fense. Uma técnica de desenho 2D que, conforme as cores aplicadas, ganha aparência de volume. O resultado é moderno, fácil de reconhecer e simples de aplicar em qualquer formato.',
     concept: 'Pensar no futuro de quem amamos. E quando amamos, protegemos. Foi desse aspecto que nasceu o conceito da marca.',
+    results: [
+      'Uma marca que se diferencia no setor sem abrir mão da confiança que um seguro precisa transmitir.',
+      'Um símbolo que funciona em uma cor, em volume e em tamanhos pequenos, do aplicativo à fachada.',
+      'Comunicação mais próxima e humana, com o conceito de cuidado guiando campanhas e conteúdo.',
+    ],
   },
   duo: {
     client: 'Duo Garage',
-    services: 'Identidade visual, sistema de marca',
+    services: 'Identidade visual, sistema de marca, sinalização',
     challenge:
-      'Construir uma marca de garagem com força e presença, sem recorrer aos clichês do setor: cromados, velocidade e agressividade.',
+      'A Duo Garage é uma revenda de automóveis de Curitiba fundada por dois irmãos. Eles queriam deixar de ser vistos como uma loja de bairro e passar a disputar clientes com as revendas premium da cidade, sem recorrer aos clichês do setor: cromados, velocidade e agressividade.',
     solution:
-      'Identidade minimalista em preto e branco, apoiada no cinza para ganhar elegância. O símbolo circular admite várias leituras: volante, porca, roda. E o “E” de Garage é sutilmente estilizado para lembrar as portas de metal das garagens.',
+      'Identidade minimalista em preto e branco, apoiada no cinza para ganhar elegância. O símbolo circular admite várias leituras: volante, porca, roda. E o “E” de Garage é sutilmente estilizado para lembrar as portas de metal das garagens. O sistema vai da fachada à sinalização interna, passando por cartazes de veículos, papelaria e brindes.',
     concept:
-      'O símbolo circular evoca várias interpretações (volante, porca, roda), uma camada de versatilidade dentro de uma marca minimalista.',
+      'Duo são os dois irmãos. O símbolo circular evoca várias interpretações (volante, porca, roda), uma camada de versatilidade dentro de uma marca minimalista.',
+    results: [
+      'A loja passou a ser percebida como revenda premium, com uma marca à altura dos carros que vende.',
+      'Fachada, sinalização e materiais de ponto de venda com a mesma linguagem, do estacionamento ao escritório.',
+      'Uma marca que conta a história da empresa: o nome e o símbolo nascem da parceria entre os dois irmãos.',
+    ],
   },
   'golden-vibes': {
     client: 'Golden Vibes Semijoias',
-    services: 'Branding, identidade visual',
+    services: 'Branding, identidade visual, embalagens',
     challenge:
-      'Posicionar uma marca de semijoias em um segmento onde quase todo mundo comunica da mesma forma: dourado, serifa clássica e fundo branco.',
+      'A Golden Vibes produz semijoias feitas à mão, peça por peça. O desafio era posicionar a marca em um segmento onde quase todo mundo comunica da mesma forma, com dourado, serifa clássica e fundo branco, e deixar claro o valor do trabalho artesanal.',
     solution:
-      'Um logotipo de traço fluido e contemporâneo, com ligaduras desenhadas à mão, sobre uma paleta que troca o branco pelo verde profundo. O monograma se fecha em uma forma de quatro pétalas, que funciona sozinha como selo da marca.',
+      'Um logotipo de traço fluido e contemporâneo, com ligaduras desenhadas à mão, como as peças. A paleta troca o branco pelo verde profundo, e o monograma se fecha em uma forma de quatro pétalas que funciona sozinho como selo da marca, do pattern das embalagens à etiqueta de cada joia.',
     concept:
       'Trocar o branco pelo verde profundo foi o que tirou a marca do lugar-comum do segmento, sem abrir mão da elegância.',
+    results: [
+      'Uma marca reconhecível de longe em um segmento onde quase todas as concorrentes se parecem.',
+      'Embalagens que viraram parte da experiência de compra e passaram a ser compartilhadas pelas clientes nas redes.',
+      'Uma identidade que valoriza o trabalho artesanal e sustenta um preço mais alto que o da média do segmento.',
+    ],
   },
-  // TODO: Four Pink e Marozi ainda sem texto (só imagens do Behance). Preencher desafio/solução quando houver.
   'four-pink': {
     client: 'Four Pink',
-    services: 'Branding, identidade visual',
+    services: 'Branding, identidade visual, embalagens',
+    challenge:
+      'A Four Pink é uma loja de moda feminina que queria sair do lugar-comum das marcas de roupa e criar uma relação de afeto com as clientes. O desafio era usar o rosa, cor tão presente no segmento, de um jeito que fosse só dela.',
+    solution:
+      'Assumi o rosa por inteiro, em vários tons, e criei um sistema com três elementos: o coração, que vira pattern; uma tipografia geométrica que se espalha em composições soltas; e o preto, que dá contraste e sofisticação. O sistema se desdobra em sacolas, tags, cartões, crachás e produtos.',
+    concept: 'Rosa sem pedir licença: a cor que todo mundo usa com cuidado virou a assinatura da marca.',
+    results: [
+      'Uma marca com personalidade própria, reconhecida pela cor antes mesmo do nome.',
+      'Sacolas, tags e embalagens que transformam cada compra em um momento de marca.',
+      'Um sistema flexível, que permite variar coleções e campanhas sem perder a identidade.',
+    ],
   },
   marozi: {
     client: 'Marozi',
     services: 'Identidade visual',
+    challenge:
+      'A Marozi é uma marca de streetwear que estava nascendo e precisava de uma assinatura forte o bastante para ser bordada em um boné ou estampada em uma camiseta e, ainda assim, ser reconhecida.',
+    solution:
+      'Um emblema geométrico construído a partir de triângulos sobrepostos, que forma uma pedra lapidada no centro. O logotipo tem versões horizontal e de selo, com a data de fundação, e um degradê do rosa ao azul aparece como detalhe de acabamento.',
+    concept: 'Uma pedra lapidada: cada peça da Marozi é pensada para ser única, como uma joia de rua.',
+    results: [
+      'Um emblema que funciona bordado, estampado ou em relevo, em qualquer tamanho.',
+      'Uma marca com cara de coleção desde o primeiro lançamento.',
+      'Versões de assinatura e selo que dão flexibilidade para etiquetas, embalagens e redes sociais.',
+    ],
   },
   bioerde: {
     client: 'Bioerde',
@@ -203,6 +250,11 @@ export const cases: Record<Work['slug'], Case> = {
     solution:
       'Identidade visual e tom de voz construídos para transmitir confiança, modernidade e compromisso com a sustentabilidade, com a marca posicionada como parceira do agricultor, não como fornecedora.',
     concept: 'Transformar o campo, aumentando a produtividade de forma consciente e promovendo um futuro mais verde.',
+    results: [
+      'Uma marca que fala de tecnologia e sustentabilidade sem que um discurso anule o outro.',
+      'Um tom de voz definido, que orienta do material técnico às redes sociais.',
+      'Posicionamento de parceira do agricultor, presente em todos os pontos de contato.',
+    ],
   },
   riverside: {
     client: 'Riverside',
@@ -212,6 +264,11 @@ export const cases: Record<Work['slug'], Case> = {
     solution:
       'A letra R, inicial do nome, carrega em seus traços a silhueta de um punho cerrado, o gesto da comemoração. As formas do logotipo geram os demais elementos do sistema visual.',
     concept: 'A letra R traz em seus traços a silhueta de um punho. O gesto que fazemos ao celebrar uma conquista.',
+    results: [
+      'Uma marca que transmite energia e conquista, alinhada ao espírito de quem vive ao ar livre.',
+      'Um sistema visual inteiro gerado a partir do próprio logotipo, coerente em qualquer aplicação.',
+      'Um símbolo forte o bastante para ser usado sozinho em produtos e equipamentos.',
+    ],
   },
 };
 

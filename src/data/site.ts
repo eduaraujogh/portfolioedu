@@ -221,9 +221,9 @@ export const site = {
     { slug: 'sabores', name: 'Sabores de Curitiba', sector: 'Gastronomia', discipline: 'Identidade Visual', featured: true },
     // Opcional: focus: 'left center' — ponto da imagem que fica visível quando a capa é recortada.
     // Gedisa fica fora até ter uma capa boa (a atual é print de site).
-    { slug: 'thalles', name: 'Thalles Consultoria', sector: 'Consultoria', discipline: 'Identidade Visual', featured: true },
+    { slug: 'thalles', name: 'Thalles Consultoria', sector: 'Consultoria financeira', discipline: 'Identidade Visual', featured: true },
     { slug: 'fense', name: 'Fense Seguradora', sector: 'Seguros', discipline: 'Identidade Visual', featured: true },
-    { slug: 'duo', name: 'Duo Garage', sector: 'Automotivo', discipline: 'Identidade Visual', featured: true },
+    { slug: 'duo', name: 'Duo Garage', sector: 'Revenda de veículos', discipline: 'Identidade Visual', featured: true },
     { slug: 'golden-vibes', name: 'Golden Vibes', sector: 'Semijoias', discipline: 'Branding', featured: true },
     // Hascunho Studio (Behance)
     { slug: 'four-pink', name: 'Four Pink', sector: 'Moda', discipline: 'Branding', featured: false },

@@ -1,0 +1,79 @@
+---
+// Bloco "Resultados" que fecha o case: título à esquerda, lista com check à direita.
+import { noWidow } from '../utils/text';
+
+interface Props {
+  items: readonly string[];
+}
+const { items } = Astro.props;
+---
+
+<section class="cs-results grid" aria-labelledby="cs-results-title">
+  <h2 id="cs-results-title" class="cs-results__title" data-reveal>Resultados</h2>
+  <ul class="cs-results__list">
+    {
+      items.map((r, i) => (
+        <li data-reveal style={`--reveal-delay:${i * 0.06}s`}>
+          <span class="cs-results__check" aria-hidden="true">
+            <svg viewBox="0 0 16 16" width="10" height="10">
+              <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <p>{noWidow(r)}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .cs-results {
+    row-gap: var(--space-m);
+    margin-inline: var(--gutter);
+    padding: 1.25rem 0 var(--space-l);
+    border-top: 1px solid var(--line);
+  }
+  .cs-results__title {
+    grid-column: 1 / span 4;
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    line-height: 1.1;
+    letter-spacing: var(--tracking-lead);
+  }
+  .cs-results__list {
+    grid-column: 5 / -1;
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0.4rem 0 0;
+    list-style: none;
+  }
+  .cs-results__list li {
+    display: grid;
+    grid-template-columns: 1.25rem 1fr;
+    gap: 0.9rem;
+    align-items: start;
+    max-width: 38em;
+  }
+  .cs-results__check {
+    display: grid;
+    place-items: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.2em;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper, #fff);
+  }
+  .cs-results__list p {
+    font-size: clamp(1.0625rem, 0.95rem + 0.35vw, 1.25rem);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 1023px) {
+    .cs-results__title,
+    .cs-results__list {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
