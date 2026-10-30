@@ -206,9 +206,8 @@ export const site = {
 
   // Texto sobre a foto em tela cheia (canto superior esquerdo)
   portrait: {
-    // Adaptado do "Sobre" do currículo ("criar identidades que façam sentido, que se conectem
-    // e que causem aquele impacto de 'é isso!'").
-    title: 'Marcas que fazem sentido, se conectam e causam aquele “é isso!”.',
+    // Posicionamento: marca e produto digital como uma linguagem só.
+    title: 'Da identidade visual à interface: uma marca só, do primeiro contato ao último clique.',
     cta: 'Entrar em contato',
   },
 

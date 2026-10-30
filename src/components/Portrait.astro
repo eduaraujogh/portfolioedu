@@ -7,6 +7,7 @@
 //
 // Para trocar a foto: substitua src/assets/me/portrait.(jpg|png|webp).
 // Se a nova foto tiver o rosto em outro lugar, ajuste FOCUS_X/FOCUS_Y no script abaixo.
+import { noWidow } from '../utils/text';
 import { Image } from 'astro:assets';
 import { site } from '../data/site';
 
@@ -47,7 +48,7 @@ const photo = Object.values(photos)[0]?.default;
     <div class="portrait__lens" aria-hidden="true"></div>
 
     <div class="portrait__cta">
-      <h2 class="portrait__title">{site.portrait.title}</h2>
+      <h2 class="portrait__title">{noWidow(site.portrait.title)}</h2>
       <a class="portrait__link" href="#contato" data-contact>{site.portrait.cta} ↗</a>
     </div>
   </div>
