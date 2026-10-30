@@ -45,7 +45,6 @@ const videoOf: Record<string, string> = { motion: '/videos/sba-card' };
                     {videoOf[item.slug] && (
                       <video class="svc__video" muted loop playsinline preload="none" aria-hidden="true" data-svc-video>
                         <source src={withBase(`${videoOf[item.slug]}.mp4`)} type="video/mp4" />
-                        <source src={withBase(`${videoOf[item.slug]}.webm`)} type="video/webm" />
                       </video>
                     )}
                     <Image
@@ -73,7 +72,7 @@ const videoOf: Record<string, string> = { motion: '/videos/sba-card' };
       const btn = v.closest('.svc__item')?.querySelector('.svc__toggle');
       if (!btn) return;
       new MutationObserver(() => {
-        if (btn.getAttribute('aria-expanded') === 'true') v.play().catch(() => {});
+        if (btn.getAttribute('aria-expanded') === 'true') v.play().then(() => v.classList.add('is-playing')).catch(() => {});
         else v.pause();
       }).observe(btn, { attributes: true, attributeFilter: ['aria-expanded'] });
     });
@@ -299,12 +298,17 @@ const videoOf: Record<string, string> = { motion: '/videos/sba-card' };
   }
   /* vídeo por cima da imagem (pôster), mesmo enquadramento */
   .svc__video {
+    opacity: 0;
+    transition: opacity 0.4s;
     position: absolute;
     inset: 0;
     z-index: 1;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  .svc__video.is-playing {
+    opacity: 1;
   }
 
   @media (prefers-reduced-motion: reduce) {

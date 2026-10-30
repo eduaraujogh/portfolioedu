@@ -80,29 +80,18 @@ const video = coverVideos[work.slug];
     </header>
 
     <div class="cs-cover" data-reveal="media">
+      <Image
+        src={coverOf(work.slug)}
+        alt={`${work.name}, ${discipline} para ${sector}`}
+        widths={[800, 1280, 1920]}
+        sizes="100vw"
+        loading="eager"
+      />
       {
-        video ? (
-          <video
-            class="cs-cover__video"
-            poster={withBase(`/videos/${work.slug}-poster.webp`)}
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="auto"
-            aria-label={video.alt}
-          >
+        video && (
+          <video class="cs-cover__video" autoplay muted loop playsinline preload="auto" aria-label={video.alt}>
             <source src={withBase(`/videos/${work.slug}.mp4`)} type="video/mp4" />
-            <source src={withBase(`/videos/${work.slug}.webm`)} type="video/webm" />
           </video>
-        ) : (
-          <Image
-            src={coverOf(work.slug)}
-            alt={`${work.name}, ${discipline} para ${sector}`}
-            widths={[800, 1280, 1920]}
-            sizes="100vw"
-            loading="eager"
-          />
         )
       }
     </div>
@@ -263,6 +252,7 @@ const video = coverVideos[work.slug];
       v.autoplay = false;
       v.pause();
     } else {
+      v.addEventListener('playing', () => v.classList.add('is-playing'));
       const play = () => { v.muted = true; v.play().catch(() => {}); };
       play();
       v.addEventListener('loadeddata', play);
@@ -317,6 +307,22 @@ const video = coverVideos[work.slug];
     border-radius: var(--radius-media);
     aspect-ratio: 16 / 9;
     background: var(--line);
+  }
+  .cs-cover {
+    position: relative;
+  }
+  .cs-cover__video {
+    position: absolute;
+    inset: 0;
+    opacity: 0; /* só aparece quando estiver tocando; até lá, a imagem estática */
+    transition: opacity 0.5s var(--ease-out);
+  }
+  .cs-cover__video.is-playing {
+    opacity: 1;
+  }
+  .cs-cover__video::-webkit-media-controls,
+  .cs-cover__video::-webkit-media-controls-start-playback-button {
+    display: none !important;
   }
   .cs-cover :global(img),
   .cs-cover__video {

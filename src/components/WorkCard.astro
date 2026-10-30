@@ -55,7 +55,6 @@ const img = {
             hasVideo && (
               <video class="work__video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" data-card-video>
                 <source src={withBase(`/videos/${videoName}.mp4`)} type="video/mp4" />
-                <source src={withBase(`/videos/${videoName}.webm`)} type="video/webm" />
               </video>
             )
           }
@@ -112,6 +111,7 @@ const img = {
       { threshold: 0.2 },
     );
     videos.forEach((v) => {
+      v.addEventListener('playing', () => v.classList.add('is-playing'));
       io.observe(v);
       v.addEventListener('loadeddata', () => play(v));
       const card = v.closest('.work__card');
@@ -225,7 +225,15 @@ const img = {
     height: 100%;
     object-fit: cover;
     pointer-events: none;
+    opacity: 0; /* só aparece quando estiver tocando: sem tela cinza nem botão de play no iPhone */
     transition: opacity 0.6s var(--ease-out);
+  }
+  .work__video:global(.is-playing) {
+    opacity: 1;
+  }
+  .work__video::-webkit-media-controls,
+  .work__video::-webkit-media-controls-start-playback-button {
+    display: none !important;
   }
   .work__video:global(.is-hover),
   .work__video:global(.is-hidden) {
