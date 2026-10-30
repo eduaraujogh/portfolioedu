@@ -85,6 +85,7 @@ const video = coverVideos[work.slug];
           <video
             class="cs-cover__video"
             poster={withBase(`/videos/${work.slug}-poster.webp`)}
+            autoplay
             muted
             loop
             playsinline
@@ -254,10 +255,19 @@ const video = coverVideos[work.slug];
 </BaseLayout>
 
 <script>
-  // Capa animada em loop (entrada, pausa no logo e saída). Com "reduzir movimento", fica no pôster.
+  // Capa animada em loop. Com "reduzir movimento", fica no pôster. Se o navegador recusar tocar
+  // de primeira, tenta de novo no primeiro toque/rolagem.
   const v = document.querySelector<HTMLVideoElement>('.cs-cover__video');
-  if (v && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    v.play().catch(() => {});
+  if (v) {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      v.autoplay = false;
+      v.pause();
+    } else {
+      const play = () => { v.muted = true; v.play().catch(() => {}); };
+      play();
+      v.addEventListener('loadeddata', play);
+      ['touchstart', 'pointerdown', 'scroll'].forEach((ev) => addEventListener(ev, play, { passive: true, once: true }));
+    }
   }
 </script>
 

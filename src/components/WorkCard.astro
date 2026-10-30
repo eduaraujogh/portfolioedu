@@ -53,7 +53,7 @@ const img = {
           />
           {
             hasVideo && (
-              <video class="work__video" muted loop playsinline preload="auto" aria-hidden="true" data-card-video>
+              <video class="work__video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" data-card-video>
                 <source src={withBase(`/videos/${videoName}.mp4`)} type="video/mp4" />
                 <source src={withBase(`/videos/${videoName}.webm`)} type="video/webm" />
               </video>
@@ -90,36 +90,41 @@ const img = {
 </article>
 
 <script>
-  // Capas em movimento: rodam em loop só enquanto o card está na tela. Com o mouse em cima,
-  // o vídeo pausa e some, deixando a capa estática com o visor de foco.
-  const videos = document.querySelectorAll<HTMLVideoElement>('[data-card-video]');
+  // Capas em movimento: loop só enquanto o card está na tela. Com o mouse em cima, o vídeo pausa
+  // e some, deixando a capa estática com o visor de foco. Se o navegador recusar tocar (Safari com
+  // o card ainda entrando, modo economia de energia…), tenta de novo na próxima chance em vez de
+  // desistir; enquanto isso a capa estática por baixo continua aparecendo.
+  const videos = [...document.querySelectorAll<HTMLVideoElement>('[data-card-video]')];
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    videos.forEach((v) => v.classList.add('is-hidden'));
+    videos.forEach((v) => { v.autoplay = false; v.pause(); v.classList.add('is-hidden'); });
   } else if (videos.length) {
-    const visible = new WeakSet<HTMLVideoElement>();
-    const play = (v: HTMLVideoElement) => v.play().catch(() => v.classList.add('is-hidden'));
+    const visible = new Set<HTMLVideoElement>();
+    const play = (v: HTMLVideoElement) => {
+      if (!visible.has(v) || v.classList.contains('is-hover')) return;
+      v.muted = true;
+      v.play().catch(() => {});
+    };
     const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          const v = e.target as HTMLVideoElement;
-          if (e.isIntersecting) { visible.add(v); if (!v.classList.contains('is-hover')) play(v); }
-          else { visible.delete(v); v.pause(); }
-        });
-      },
-      { threshold: 0.25 },
+      (entries) => entries.forEach((e) => {
+        const v = e.target as HTMLVideoElement;
+        if (e.isIntersecting) { visible.add(v); play(v); } else { visible.delete(v); v.pause(); }
+      }),
+      { threshold: 0.2 },
     );
     videos.forEach((v) => {
       io.observe(v);
+      v.addEventListener('loadeddata', () => play(v));
       const card = v.closest('.work__card');
       card?.addEventListener('pointerenter', (e) => {
         if ((e as PointerEvent).pointerType !== 'mouse') return;
         v.classList.add('is-hover'); v.pause();
       });
-      card?.addEventListener('pointerleave', () => {
-        v.classList.remove('is-hover');
-        if (visible.has(v)) play(v);
-      });
+      card?.addEventListener('pointerleave', () => { v.classList.remove('is-hover'); play(v); });
     });
+    // nova tentativa no primeiro toque/rolagem (alguns celulares só liberam depois de interação)
+    const retry = () => videos.forEach(play);
+    ['touchstart', 'pointerdown', 'scroll'].forEach((ev) => addEventListener(ev, retry, { passive: true, once: true }));
+    addEventListener('pageshow', retry);
   }
 
   // Visor de foco nos cards (só com mouse)
