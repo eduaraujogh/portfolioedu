@@ -24,7 +24,7 @@ const { work, href: hrefProp, wide = false, delay = 0, eager = false, variant = 
 const { name, sector, discipline, slug } = work;
 const href = hrefProp ?? `/works/${slug}`; // página do case
 const focus = 'focus' in work ? work.focus : 'center';
-// Logo em movimento: toca uma vez quando o card aparece e some, revelando a capa (último quadro)
+// Logo em movimento em loop por cima da capa (a capa é o quadro com o logo completo)
 const hasVideo = slug in coverVideos;
 
 const img = {
@@ -51,7 +51,7 @@ const img = {
           />
           {
             hasVideo && (
-              <video class="work__video" muted playsinline preload="auto" aria-hidden="true" data-card-video>
+              <video class="work__video" muted loop playsinline preload="auto" aria-hidden="true" data-card-video>
                 <source src={withBase(`/videos/${slug}-card.mp4`)} type="video/mp4" />
                 <source src={withBase(`/videos/${slug}-card.webm`)} type="video/webm" />
               </video>
@@ -88,26 +88,35 @@ const img = {
 </article>
 
 <script>
-  // Capas em movimento: tocam uma vez quando o card entra na tela e depois somem,
-  // deixando a capa estática (que é o último quadro do vídeo) e o visor de foco funcionando.
+  // Capas em movimento: rodam em loop só enquanto o card está na tela. Com o mouse em cima,
+  // o vídeo pausa e some, deixando a capa estática com o visor de foco.
   const videos = document.querySelectorAll<HTMLVideoElement>('[data-card-video]');
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    videos.forEach((v) => v.classList.add('is-done'));
+    videos.forEach((v) => v.classList.add('is-hidden'));
   } else if (videos.length) {
+    const visible = new WeakSet<HTMLVideoElement>();
+    const play = (v: HTMLVideoElement) => v.play().catch(() => v.classList.add('is-hidden'));
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (!e.isIntersecting) return;
           const v = e.target as HTMLVideoElement;
-          io.unobserve(v);
-          v.play().catch(() => v.classList.add('is-done'));
+          if (e.isIntersecting) { visible.add(v); if (!v.classList.contains('is-hover')) play(v); }
+          else { visible.delete(v); v.pause(); }
         });
       },
-      { threshold: 0.5 },
+      { threshold: 0.25 },
     );
     videos.forEach((v) => {
-      v.addEventListener('ended', () => v.classList.add('is-done'), { once: true });
       io.observe(v);
+      const card = v.closest('.work__card');
+      card?.addEventListener('pointerenter', (e) => {
+        if ((e as PointerEvent).pointerType !== 'mouse') return;
+        v.classList.add('is-hover'); v.pause();
+      });
+      card?.addEventListener('pointerleave', () => {
+        v.classList.remove('is-hover');
+        if (visible.has(v)) play(v);
+      });
     });
   }
 
@@ -211,7 +220,8 @@ const img = {
     pointer-events: none;
     transition: opacity 0.6s var(--ease-out);
   }
-  .work__video:global(.is-done) {
+  .work__video:global(.is-hover),
+  .work__video:global(.is-hidden) {
     opacity: 0;
   }
   .work__media :global(.work__img--blur) {
