@@ -19,14 +19,14 @@ const isWide = (it: GalleryItem) => ratio(it) >= 1.6;
 
 const rows: { pair: boolean; items: GalleryItem[] }[] = [];
 for (let k = 0, step = 0; k < items.length; step++) {
-  const full = step % 3 === 0 && isWide(items[k]);
-  const n = full ? 1 : 2;
+  const full = items[k].full || (step % 3 === 0 && isWide(items[k]));
+  // Par não engole a imagem seguinte se ela precisa ficar grande sozinha
+  const n = full || items[k + 1]?.full ? 1 : 2;
   rows.push({ pair: !full, items: items.slice(k, k + n) });
   k += n;
 }
-// Imagem horizontal sozinha no fim não fica pela metade: ocupa a largura toda.
-const last = rows.at(-1);
-if (last && last.pair && last.items.length === 1 && isWide(last.items[0])) last.pair = false;
+// Imagem horizontal sozinha numa linha de par não fica pela metade: ocupa a largura toda.
+for (const row of rows) if (row.pair && row.items.length === 1 && isWide(row.items[0])) row.pair = false;
 
 const total = items.length;
 ---

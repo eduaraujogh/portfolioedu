@@ -9,6 +9,7 @@ import { site, type Work } from './site';
 export interface Shot {
   label: string;
   ratio?: number; // padrão 16:9
+  full?: boolean; // força a imagem a ocupar a largura toda
 }
 
 // Capítulo de um case com várias entregas (ex.: Artta). Imagens em
@@ -68,6 +69,7 @@ export const cases: Record<Work['slug'], Case> = {
           { label: 'Banners de evento' },
           { label: 'Cartazes' },
           { label: 'App e notificação' },
+          { label: 'Manual de marca', full: true },
         ],
       },
       {
@@ -235,13 +237,18 @@ const imagesIn = (dir: string) =>
 // Galeria de um case: src/assets/cases/<slug>/01.webp…
 export const galleryOf = (slug: string) => imagesIn(slug);
 
-export type GalleryItem = { img: ImageMetadata; label?: string } | { img?: undefined; label: string; ratio: number };
+export type GalleryItem = { full?: boolean } & (
+  | { img: ImageMetadata; label?: string }
+  | { img?: undefined; label: string; ratio: number }
+);
 
 // Imagens existentes + espaços reservados para as que ainda faltam (na ordem prevista)
 export const itemsOf = (dir: string, planned: Shot[] = []): GalleryItem[] => {
   const imgs = imagesIn(dir);
   return Array.from({ length: Math.max(imgs.length, planned.length) }, (_, i) =>
-    imgs[i] ? { img: imgs[i], label: planned[i]?.label } : { label: planned[i].label, ratio: planned[i].ratio ?? 16 / 9 },
+    imgs[i]
+      ? { img: imgs[i], label: planned[i]?.label, full: planned[i]?.full }
+      : { label: planned[i].label, ratio: planned[i].ratio ?? 16 / 9, full: planned[i].full },
   );
 };
 
