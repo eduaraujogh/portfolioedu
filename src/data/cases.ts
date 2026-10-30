@@ -50,7 +50,7 @@ export const cases: Record<Work['slug'], Case> = {
     services: 'Branding, UX/UI, landing page, apresentações',
     labels: ['A empresa', 'Meu papel'],
     challenge:
-      'A Artta é uma Sociedade de Crédito Direto autorizada pelo Banco Central desde 2021. Oferece infraestrutura financeira para empresas: crédito, contas, Pix, TED e boleto, que os parceiros operam com a própria marca ou integram por API.',
+      'A Artta é uma fintech regulada pelo Banco Central que oferece soluções financeiras para empresas, do crédito aos meios de pagamento.',
     solution:
       'Cuido do design da Artta de ponta a ponta: da marca e do manual que organiza o seu uso às telas dos produtos digitais, passando pelo site e pelas apresentações da empresa. Nos produtos, trabalho em parceria com o time de produto.',
     chapters: [
