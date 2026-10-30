@@ -48,7 +48,7 @@ export const cases: Record<Work['slug'], Case> = {
     client: 'Artta',
     clientLabel: 'Empresa',
     role: 'Designer Sênior',
-    services: 'Branding, UX/UI, landing page, apresentações',
+    services: 'Branding, UX/UI, calculadora e landing page, apresentações',
     labels: ['A empresa', 'Meu papel'],
     challenge:
       'A Artta é uma fintech regulada pelo Banco Central que oferece soluções financeiras para empresas, do crédito aos meios de pagamento.',
@@ -73,14 +73,14 @@ export const cases: Record<Work['slug'], Case> = {
         ],
       },
       {
-        id: 'landing-page',
-        title: 'Landing page',
+        id: 'calculadora',
+        title: 'Calculadora de lucro e landing page',
         kicker: 'Aquisição de parceiros',
-        // Sem detalhar regras ou números do simulador (ferramenta comercial).
-        text: 'Página para atrair empresas que querem oferecer serviços financeiros com a própria marca. O centro dela é um simulador: em quatro etapas curtas, o visitante informa como opera, vê quanto pode ganhar e já pede uma proposta ao time comercial. Dividir a conta em etapas fez uma simulação financeira parecer uma conversa, não um formulário.',
+        // Sem detalhar regras ou números da calculadora (ferramenta comercial).
+        text: 'Uma calculadora de lucro e a landing page em volta dela, feitas para atrair empresas que querem oferecer serviços financeiros com a própria marca. Em quatro etapas curtas, a empresa informa como opera, vê quanto pode ganhar e já pede uma proposta ao time comercial. Dividir a conta em etapas fez uma simulação financeira parecer uma conversa, não um formulário.',
         shots: [
           { label: 'Landing page no computador' },
-          { label: 'Simulador: etapas e resultado', full: true },
+          { label: 'Calculadora: etapas e resultado', full: true },
           { label: 'Landing page no celular' },
         ],
       },
