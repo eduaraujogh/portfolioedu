@@ -85,31 +85,16 @@ export const cases: Record<Work['slug'], Case> = {
         ],
       },
       {
-        id: 'onboarding',
-        title: 'Onboarding PJ',
-        kicker: 'Produto · Em parceria com o time de produto',
-        text: 'Abrir conta para uma empresa levava até 7 dias. Junto com o time de produto, redesenhamos o processo para que o cliente conclua a abertura de forma autônoma, no computador ou no celular.',
-        result: { from: '7 dias', to: '2 min', label: 'para uma empresa abrir conta' },
-        decisions: [
-          {
-            title: 'Uma informação por tela',
-            text: 'Cada tela pede um único dado. O fluxo ganha etapas, mas cada uma exige menos esforço do cliente.',
-          },
-          {
-            title: 'Computador e celular, lado a lado',
-            text: 'Os dois fluxos foram desenhados juntos, com a mesma sequência, cada um adaptado ao seu formato.',
-          },
-          {
-            title: 'Variações no mesmo mapa',
-            text: 'Cada etapa tem o caminho principal e, logo abaixo, as variações: erros, pendências e casos especiais. Nada fica para ser resolvido no desenvolvimento.',
-          },
-        ],
+        id: 'plataformas',
+        title: 'Plataformas digitais',
+        kicker: 'UX/UI · Em parceria com o time de produto',
+        // Visão geral, sem entrar a fundo em cada projeto (uma tela de cada).
+        text: 'Junto com o time de produto, desenhei as interfaces das principais plataformas da Artta: o internet banking, o portal do parceiro e o onboarding de novos clientes. No onboarding, a abertura de conta de uma empresa, que levava até 7 dias, passou a ser concluída em 2 minutos.',
+        result: { from: '7 dias', to: '2 min', label: 'para uma empresa abrir conta no onboarding' },
         shots: [
-          { label: 'Fluxo completo: recorte do mapa no Figma' },
-          { label: 'Tela-chave 1 (computador)', ratio: 16 / 10 },
-          { label: 'Tela-chave 2 (computador)', ratio: 16 / 10 },
-          { label: 'Celular: 3 telas lado a lado num quadro 16:10', ratio: 16 / 10 },
-          { label: 'Tela final: conta aberta', ratio: 16 / 10 },
+          { label: 'Internet banking', ratio: 16 / 10 },
+          { label: 'Portal do parceiro', ratio: 16 / 10 },
+          { label: 'Onboarding', ratio: 16 / 10 },
         ],
       },
       {
