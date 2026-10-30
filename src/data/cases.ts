@@ -39,6 +39,8 @@ export interface Case {
   concept?: string;
   shots?: Shot[]; // galeria prevista do case (sem capítulos)
   chapters?: Chapter[];
+  // Fechamento do case: o que o projeto entregou. Só fatos, sem número inventado.
+  results?: string[];
 }
 
 export const cases: Record<Work['slug'], Case> = {
@@ -102,15 +104,15 @@ export const cases: Record<Work['slug'], Case> = {
         title: 'Apresentações',
         kicker: 'Institucional e comercial',
         text: 'Apresentações institucionais e comerciais da empresa, construídas sobre o sistema visual do manual, para apresentar a Artta e cada um dos seus produtos com a mesma linguagem.',
-        shots: [
-          { label: 'Slide de capa' },
-          { label: 'Slide' },
-          { label: 'Slide' },
-          { label: 'Slide' },
-          { label: 'Slide' },
-          { label: 'Slide' },
-        ],
+        shots: [{ label: 'Apresentação institucional', full: true }],
       },
+    ],
+    results: [
+      'Uma identidade única, aplicada do crachá ao app e documentada em um manual completo de marca.',
+      'Uma calculadora de lucro que transforma a visita na landing page em pedido de proposta para o time comercial.',
+      'Abertura de conta de empresas reduzida de até 7 dias para 2 minutos no novo onboarding.',
+      'Internet banking, portal do parceiro e onboarding com a mesma linguagem visual da marca.',
+      'Apresentações institucionais e comerciais construídas sobre o mesmo sistema visual.',
     ],
   },
   // TODO: (confirmar) leitura do símbolo e foco no público interno.
