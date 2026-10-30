@@ -14,6 +14,7 @@ import Cta from '../../components/Cta.astro';
 import { site, coverOf, type Work } from '../../data/site';
 import { cases, itemsOf, nextOf } from '../../data/cases';
 import { withBase } from '../../utils/url';
+import { coverVideos } from '../../data/videos';
 import { noWidow, lower } from '../../utils/text';
 
 export function getStaticPaths() {
@@ -43,6 +44,7 @@ const discipline = lower(work.discipline);
 const sector = lower(work.sector);
 const items = itemsOf(work.slug, data.shots);
 const chapters = data.chapters ?? [];
+const video = coverVideos[work.slug];
 ---
 
 <BaseLayout
@@ -77,13 +79,29 @@ const chapters = data.chapters ?? [];
     </header>
 
     <div class="cs-cover" data-reveal="media">
-      <Image
-        src={coverOf(work.slug)}
-        alt={`${work.name}, ${discipline} para ${sector}`}
-        widths={[800, 1280, 1920]}
-        sizes="100vw"
-        loading="eager"
-      />
+      {
+        video ? (
+          <video
+            class="cs-cover__video"
+            poster={withBase(`/videos/${work.slug}-poster.webp`)}
+            muted
+            playsinline
+            preload="auto"
+            aria-label={video.alt}
+          >
+            <source src={withBase(`/videos/${work.slug}.mp4`)} type="video/mp4" />
+            <source src={withBase(`/videos/${work.slug}.webm`)} type="video/webm" />
+          </video>
+        ) : (
+          <Image
+            src={coverOf(work.slug)}
+            alt={`${work.name}, ${discipline} para ${sector}`}
+            widths={[800, 1280, 1920]}
+            sizes="100vw"
+            loading="eager"
+          />
+        )
+      }
     </div>
 
     {
@@ -234,6 +252,14 @@ const chapters = data.chapters ?? [];
   <Cta />
 </BaseLayout>
 
+<script>
+  // Capa animada: toca uma vez e para no logo completo. Com "reduzir movimento", fica no pôster.
+  const v = document.querySelector<HTMLVideoElement>('.cs-cover__video');
+  if (v && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    v.play().catch(() => {});
+  }
+</script>
+
 <style>
   /* 1. Título + ficha técnica */
   .cs-head {
@@ -281,7 +307,8 @@ const chapters = data.chapters ?? [];
     aspect-ratio: 16 / 9;
     background: var(--line);
   }
-  .cs-cover :global(img) {
+  .cs-cover :global(img),
+  .cs-cover__video {
     display: block;
     width: 100%;
     height: 100%;
