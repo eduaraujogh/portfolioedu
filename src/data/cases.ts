@@ -88,12 +88,12 @@ export const cases: Record<Work['slug'], Case> = {
         id: 'onboarding',
         title: 'Onboarding PJ',
         kicker: 'Produto · Em parceria com o time de produto',
-        text: 'Abrir conta para uma empresa levava até 7 dias. Junto com o time de produto, redesenhamos o processo para que o cliente faça tudo sozinho, no computador ou no celular.',
+        text: 'Abrir conta para uma empresa levava até 7 dias. Junto com o time de produto, redesenhamos o processo para que o cliente conclua a abertura de forma autônoma, no computador ou no celular.',
         result: { from: '7 dias', to: '2 min', label: 'para uma empresa abrir conta' },
         decisions: [
           {
-            title: 'Uma coisa por tela',
-            text: 'Cada tela pede uma informação só. O fluxo tem mais telas, mas exige menos esforço em cada uma.',
+            title: 'Uma informação por tela',
+            text: 'Cada tela pede um único dado. O fluxo ganha etapas, mas cada uma exige menos esforço do cliente.',
           },
           {
             title: 'Computador e celular, lado a lado',
