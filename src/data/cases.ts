@@ -53,11 +53,11 @@ export const cases: Record<Work['slug'], Case> = {
     clientLabel: 'Empresa',
     role: 'Designer Sênior',
     services: 'Branding, UX/UI, calculadora e landing page, apresentações',
-    labels: ['A empresa', 'Meu papel'],
+    labels: ['A empresa', 'O projeto'],
     challenge:
       'A Artta é uma fintech regulada pelo Banco Central que oferece soluções financeiras para empresas, do crédito aos meios de pagamento.',
     solution:
-      'Cuido do design da Artta de ponta a ponta: da marca e do manual que organiza o seu uso às telas dos produtos digitais, passando pelo site e pelas apresentações da empresa. Nos produtos, trabalho em parceria com o time de produto.',
+      'Um projeto de design de ponta a ponta: a marca e o manual que organiza o seu uso, a calculadora de lucro com a sua landing page, as apresentações da empresa e as interfaces das principais plataformas digitais, estas em parceria com o time de produto.',
     chapters: [
       {
         id: 'marca',
