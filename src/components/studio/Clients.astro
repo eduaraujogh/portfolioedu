@@ -1,0 +1,67 @@
+---
+// Marcas atendidas, em linha corrida (sem logos: lista tipográfica, no tom do site).
+import { studio } from '../../data/studio';
+
+const { label, list, more } = studio.clients;
+---
+
+<section class="cl grid" aria-labelledby="cl-label">
+  <h2 id="cl-label" class="cl__label eyebrow" data-reveal>{label}</h2>
+  <p class="cl__list" data-reveal>
+    {
+      list.map((b, i) => (
+        <>
+          <span class="cl__item">{b}{i < list.length - 1 && <span class="cl__dot" aria-hidden="true"> ·</span>}</span>{' '}
+        </>
+      ))
+    }
+    <span class="cl__more">e {more}</span>
+  </p>
+</section>
+
+<style>
+  .cl {
+    row-gap: var(--space-m);
+    padding-block: var(--space-l);
+    border-top: 1px solid var(--line);
+    margin-inline: var(--gutter);
+    padding-inline: 0;
+  }
+  .cl__label {
+    grid-column: 1 / span 3;
+    padding-top: 0.9rem;
+  }
+  .cl__list {
+    grid-column: 5 / -1;
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    line-height: 1.35;
+    letter-spacing: var(--tracking-lead);
+    text-wrap: pretty;
+  }
+  .cl__dot,
+  .cl__more {
+    color: var(--ink-3);
+  }
+  .cl__item {
+    white-space: nowrap; /* o separador anda junto com a marca: nunca abre linha */
+    transition: color 0.3s;
+  }
+  @media (hover: hover) {
+    .cl__list:hover .cl__item {
+      color: var(--ink-3);
+    }
+    .cl__list .cl__item:hover {
+      color: var(--ink);
+    }
+  }
+  @media (max-width: 1023px) {
+    .cl__label,
+    .cl__list {
+      grid-column: 1 / -1;
+    }
+    .cl__label {
+      padding-top: 0;
+    }
+  }
+</style>

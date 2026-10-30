@@ -4,6 +4,10 @@ import { site } from '../data/site';
 import { withBase } from '../utils/url';
 import WorkCard from './WorkCard.astro';
 
+interface Props {
+  base?: string;
+}
+const { base = '' } = Astro.props;
 const [first, ...others] = site.works.filter((w) => w.featured);
 const pairs = [];
 for (let i = 0; i < others.length; i += 2) pairs.push(others.slice(i, i + 2));
@@ -12,17 +16,17 @@ for (let i = 0; i < others.length; i += 2) pairs.push(others.slice(i, i + 2));
 <section class="works" aria-labelledby="works-title">
   <h2 id="works-title" class="visually-hidden">Projetos selecionados</h2>
 
-  <WorkCard work={first} wide eager />
+  <WorkCard work={first} base={base} wide eager />
 
   {
     pairs.map((pair) => (
       <div class="works__row">
-        {pair.map((work, i) => <WorkCard work={work} delay={i * 0.12} />)}
+        {pair.map((work, i) => <WorkCard work={work} base={base} delay={i * 0.12} />)}
       </div>
     ))
   }
 
-  <a class="works__all link-line" href={withBase('/works')} data-reveal>
+  <a class="works__all link-line" href={withBase(`${base}/works`)} data-reveal>
     Todos os projetos ({site.works.length}) ↗
   </a>
 </section>

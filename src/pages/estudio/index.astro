@@ -1,0 +1,35 @@
+---
+// Versão estúdio (/estudio): mesma pessoa e mesmos projetos, falando com quem contrata.
+// Sem experiência em empresas nem formação. Textos em data/studio.ts.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StudioHero from '../../components/studio/StudioHero.astro';
+import WorksPreview from '../../components/WorksPreview.astro';
+import Clients from '../../components/studio/Clients.astro';
+import Services from '../../components/Services.astro';
+import Columns from '../../components/studio/Columns.astro';
+import Portrait from '../../components/Portrait.astro';
+import StudioAbout from '../../components/studio/StudioAbout.astro';
+import Faq from '../../components/studio/Faq.astro';
+import Cta from '../../components/Cta.astro';
+import { site } from '../../data/site';
+import { studio } from '../../data/studio';
+
+const { audiences, process } = studio;
+---
+
+<BaseLayout
+  studio
+  title={`${site.name} — Estúdio de design`}
+  description={`${studio.hero.lead} ${studio.hero.rest} ${studio.hero.about}`}
+>
+  <StudioHero />
+  <WorksPreview base={studio.base} />
+  <Clients />
+  <Services />
+  <Columns id="para-quem" label={audiences.label} intro={audiences.intro} items={audiences.items} cols={3} />
+  <Portrait />
+  <Columns id="processo" label={process.label} intro={process.intro} items={process.steps} cols={4} />
+  <StudioAbout />
+  <Faq />
+  <Cta studio />
+</BaseLayout>

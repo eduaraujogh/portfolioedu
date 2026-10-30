@@ -1,0 +1,32 @@
+---
+// Works — referência: maxx-template.webflow.io/work
+// Só os trabalhos: grade de cards quadrados (2 colunas) com legenda fixa na base.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { site } from '../../data/site';
+import { studio } from '../../data/studio';
+---
+
+<BaseLayout studio title={`Projetos — ${site.name}`}>
+  <h1 class="visually-hidden">Projetos</h1>
+  <section class="wk-grid" aria-label="Todos os projetos">
+    {site.works.map((work, i) => <WorkCard work={work} base={studio.base} variant="grid" delay={(i % 2) * 0.12} eager={i < 2} />)}
+  </section>
+</BaseLayout>
+
+<style>
+  .wk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--col-gap);
+    /* topo livre para o header/menu fixo */
+    padding: clamp(5.5rem, 12vh, 7rem) var(--gutter) var(--space-l);
+  }
+
+  @media (max-width: 767px) {
+    .wk-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+    }
+  }
+</style>

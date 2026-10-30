@@ -1,0 +1,87 @@
+---
+// Abertura do estúdio: o que eu faço por você (dois tons) + quem sou, em uma frase, e as chamadas.
+import { studio } from '../../data/studio';
+import SplitText from '../SplitText.astro';
+import { noWidow } from '../../utils/text';
+import { withBase } from '../../utils/url';
+
+const { lead, rest, about, primary, secondary } = studio.hero;
+---
+
+<section class="sh grid" aria-labelledby="sh-title">
+  <div class="sh__title">
+    <SplitText as="h1" id="sh-title" mode="load" parts={[{ text: lead }, { text: rest, class: 'tone-2' }]} />
+  </div>
+
+  <div class="sh__meta">
+    <p class="sh__about small" data-reveal>{noWidow(about)}</p>
+    <div class="sh__actions" data-reveal style="--reveal-delay:0.1s">
+      <a class="btn" href="#contato" data-contact>{primary} <span aria-hidden="true">↗</span></a>
+      <a class="link-line small" href={withBase(`${studio.base}/works`)}>{secondary}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sh {
+    min-height: 82svh;
+    align-content: end;
+    row-gap: var(--space-m);
+    padding-top: 9rem;
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+  }
+  .sh__title {
+    grid-column: 5 / -1;
+    grid-row: 1;
+    max-width: 15em;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  .sh__meta {
+    grid-column: 1 / span 3;
+    grid-row: 1;
+    align-self: end;
+    display: grid;
+    gap: 1.5rem;
+    max-width: 36ch;
+  }
+  .sh__about {
+    text-wrap: pretty;
+  }
+  .sh__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.25rem;
+    border-radius: var(--radius-pill);
+    background: var(--ink);
+    color: var(--paper);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+    transition: transform 0.4s var(--ease-out), background-color 0.3s;
+  }
+  @media (hover: hover) {
+    .btn:hover {
+      transform: translateY(-2px);
+      background: #2a2a28;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .sh__title,
+    .sh__meta {
+      grid-column: 1 / -1;
+    }
+    .sh__meta {
+      grid-row: 2;
+    }
+  }
+</style>

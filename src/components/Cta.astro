@@ -5,7 +5,13 @@ import { Image } from 'astro:assets';
 import { site } from '../data/site';
 import SplitText from './SplitText.astro';
 
-const { lead, rest, role } = site.cta;
+import { studio } from '../data/studio';
+
+interface Props {
+  studio?: boolean;
+}
+const { lead, rest } = site.cta;
+const role = Astro.props.studio ? studio.role : site.cta.role;
 
 // Recorte quadrado já centralizado no rosto (gerado a partir de portrait.webp)
 const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/me/avatar.{jpg,jpeg,png,webp}', {

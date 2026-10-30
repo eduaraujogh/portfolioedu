@@ -1,0 +1,112 @@
+---
+// Bloco "rótulo à esquerda + colunas numeradas" (Para quem / Processo).
+import { noWidow } from '../../utils/text';
+
+interface Props {
+  id?: string;
+  label: string;
+  intro?: string;
+  items: { title: string; text: string }[];
+  cols?: 3 | 4;
+}
+const { id, label, intro, items, cols = 3 } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section id={id} class="co grid" aria-labelledby={`${id ?? 'co'}-label`} style={`--cols:${cols}`}>
+  <div class="co__head">
+    <h2 id={`${id ?? 'co'}-label`} class="eyebrow" data-reveal>{label}</h2>
+    {intro && <p class="co__intro" data-reveal style="--reveal-delay:0.06s">{noWidow(intro)}</p>}
+  </div>
+  <ol class="co__list">
+    {
+      items.map((it, i) => (
+        <li data-reveal style={`--reveal-delay:${i * 0.07}s`}>
+          <span class="co__num">{pad(i + 1)}</span>
+          <h3>{it.title}</h3>
+          <p>{noWidow(it.text)}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .co {
+    row-gap: var(--space-m);
+    padding-block: var(--space-l);
+    scroll-margin-top: 4rem;
+  }
+  .co__head {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    row-gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+  .co__head .eyebrow {
+    grid-column: 1 / span 3;
+    padding-top: 0.6rem;
+  }
+  .co__intro {
+    grid-column: 5 / -1;
+    max-width: 22em;
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-lead);
+    letter-spacing: var(--tracking-lead);
+  }
+  .co__list {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: var(--col-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .co__list li {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    min-height: 15rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-media);
+    background: rgba(18, 18, 17, 0.04);
+  }
+  .co__num {
+    color: var(--ink-3);
+    font-size: var(--fs-small);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: auto;
+    padding-bottom: 2.5rem;
+  }
+  .co__list h3 {
+    font-size: clamp(1.25rem, 1rem + 0.6vw, 1.5rem);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-lead);
+    line-height: 1.2;
+  }
+  .co__list p {
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  @media (max-width: 1023px) {
+    .co__head .eyebrow,
+    .co__intro {
+      grid-column: 1 / -1;
+    }
+    .co__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 767px) {
+    .co__list {
+      grid-template-columns: 1fr;
+    }
+    .co__list li {
+      min-height: 0;
+    }
+  }
+</style>

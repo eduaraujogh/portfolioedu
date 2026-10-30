@@ -1,17 +1,27 @@
 ---
 import { site } from '../data/site';
+import { studio } from '../data/studio';
 import { stripBase, withBase } from '../utils/url';
 
-const path = stripBase(Astro.url.pathname);
-const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+interface Props {
+  studio?: boolean; // versão estúdio: outro menu, outro subtítulo, nome leva ao início do estúdio
+}
+const isStudio = Astro.props.studio ?? false;
+const nav = isStudio ? studio.nav : site.nav.map((n) => ({ ...n, exact: n.href === '/' }));
+const home = isStudio ? studio.base : '/';
+const detail = isStudio ? studio.detail : `${site.role} · ${site.location}`;
+
+const path = stripBase(Astro.url.pathname).replace(/\/$/, '') || '/';
+const isCurrent = (item: { href: string; exact?: boolean }) =>
+  item.href.includes('#') ? false : item.exact ? path === item.href : path.startsWith(item.href);
 ---
 
 <!-- Laterais: visíveis no topo e ao rolar para cima; recolhem ao descer,
      deixando só a pílula para não disputar com o conteúdo. -->
 <header class="bar">
   <div class="bar__side">
-    <a href={withBase('/')} class="bar__name">{site.name}</a>
-    <p class="bar__detail small">{site.role} · {site.location}</p>
+    <a href={withBase(home)} class="bar__name">{site.name}</a>
+    <p class="bar__detail small">{detail}</p>
   </div>
   <div class="bar__side bar__side--end">
     <a href="#contato" class="link-line" data-contact>Contato ↗</a>
@@ -25,12 +35,12 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
   <span class="nav__indicator" aria-hidden="true"></span>
   <ul class="nav__list">
     {
-      site.nav.map((item) => (
+      nav.map((item) => (
         <li>
           <a
             href={withBase(item.href)}
             class="nav__link"
-            aria-current={isCurrent(item.href) ? 'page' : undefined}
+            aria-current={isCurrent(item) ? 'page' : undefined}
           >
             {item.label}
           </a>

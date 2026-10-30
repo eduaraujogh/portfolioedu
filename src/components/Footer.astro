@@ -4,6 +4,12 @@
 // Faixa superior (período · nome · coordenadas), "Fale comigo" no centro, redes em pílulas.
 // "Fale comigo" abre a gaveta de contato (ContactDrawer); sem JS, vira link de e-mail.
 import { site, startYear } from '../data/site';
+import { studio } from '../data/studio';
+
+interface Props {
+  studio?: boolean;
+}
+const isStudio = Astro.props.studio ?? false;
 
 const { kicker, title, coords } = site.footer;
 const year = new Date().getFullYear();
@@ -11,7 +17,7 @@ const year = new Date().getFullYear();
 
 <footer id="contato" class="footer theme-dark">
   <div class="footer__row small">
-    <p>Portfólio {startYear} — {year}</p>
+    <p>{isStudio ? studio.footerLabel : `Portfólio ${startYear} — ${year}`}</p>
     <p class="footer__center">{site.name}</p>
     <p class="footer__end">{coords}</p>
   </div>

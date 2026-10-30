@@ -12,7 +12,8 @@ import { coverVideos } from '../data/videos';
 
 interface Props {
   work: Work;
-  href?: string; // padrão: /works/<slug>
+  href?: string; // padrão: <base>/works/<slug>
+  base?: string; // prefixo da versão do site ('' ou '/estudio')
   wide?: boolean;
   delay?: number;
   eager?: boolean;
@@ -20,9 +21,9 @@ interface Props {
   variant?: 'default' | 'grid';
 }
 
-const { work, href: hrefProp, wide = false, delay = 0, eager = false, variant = 'default' } = Astro.props;
+const { work, href: hrefProp, base = '', wide = false, delay = 0, eager = false, variant = 'default' } = Astro.props;
 const { name, sector, discipline, slug } = work;
-const href = hrefProp ?? `/works/${slug}`; // página do case
+const href = hrefProp ?? `${base}/works/${slug}`; // página do case
 const focus = 'focus' in work ? work.focus : 'center';
 // Logo em movimento em loop por cima da capa (a capa é o quadro com o logo completo)
 const hasVideo = slug in coverVideos;
