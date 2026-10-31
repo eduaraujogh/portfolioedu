@@ -99,7 +99,21 @@ export const studio = {
   aboutPage: {
     eyebrow: 'Eduardo Araújo',
     title: 'Acredito que design é o maior diferencial de uma marca.',
-    trusted: 'Mais de 100 marcas já passaram por aqui',
+    // Feito por humanos, acelerado por IA
+    ai: {
+      label: 'Como o trabalho acontece',
+      lead: 'Feito por humanos.',
+      rest: 'Acelerado por IA.',
+      human: {
+        title: 'O que fica comigo',
+        items: ['Estratégia e posicionamento', 'Conceito e ideia central', 'Direção de arte', 'Critério e decisões finais', 'A conversa com você'],
+      },
+      machine: {
+        title: 'O que a IA acelera',
+        items: ['Pesquisa e referências', 'Variações e testes', 'Mockups e aplicações', 'Motion e vídeo', 'Protótipos e sites'],
+      },
+      note: 'Menos tempo em tarefa repetitiva, mais tempo pensando no que importa. Você recebe mais rápido, sem abrir mão do critério de quem desenha.',
+    },
     philosophy: {
       label: 'Minha filosofia',
       sub: 'Os princípios por trás de cada projeto.',

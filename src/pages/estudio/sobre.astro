@@ -1,6 +1,6 @@
 ---
 // Sobre do estúdio — referência: Halo Lab /about, traduzida para um estúdio de uma pessoa.
-// 1. Manifesto · 3. Filosofia (2. faixa de logos: volta quando houver os arquivos) (marca + produto, 3 princípios)
+// 1. Manifesto · 2. Feito por humanos, acelerado por IA · 3. Filosofia (marca + produto, 3 princípios)
 // 4. O que eu acredito (3 cartões assinados) · 5. Colagem de projetos (escura)
 // 6. Uma pessoa, duas frentes + na prática · 7. Números · 8. Perguntas · 9. Arco de projetos + convite
 import { Image } from 'astro:assets';
@@ -48,6 +48,26 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     <div class="sb-hero__title">
       <SplitText as="h1" id="sb-title" mode="load" parts={[{ text: A.title }]} />
     </div>
+  </section>
+
+  <!-- 2. Feito por humanos, acelerado por IA -->
+  <section class="sb-ai" aria-labelledby="sb-ai-title">
+    <p class="sb-ai__label small muted">{A.ai.label}</p>
+    <div class="sb-ai__title">
+      <SplitText as="h2" id="sb-ai-title" parts={[{ text: A.ai.lead }, { text: A.ai.rest, class: 'tone-2' }]} />
+    </div>
+    <div class="sb-ai__cols">
+      <div class="sb-ai__col" data-reveal>
+        <p class="sb-ai__head"><span class="sb-ai__dot" aria-hidden="true"></span>{A.ai.human.title}</p>
+        <ul>{A.ai.human.items.map((it) => <li>{it}</li>)}</ul>
+      </div>
+      <span class="sb-ai__plus" aria-hidden="true">+</span>
+      <div class="sb-ai__col sb-ai__col--machine theme-dark" data-reveal style="--reveal-delay:0.08s">
+        <p class="sb-ai__head"><span class="sb-ai__spark" aria-hidden="true">✦</span>{A.ai.machine.title}</p>
+        <ul>{A.ai.machine.items.map((it) => <li>{it}</li>)}</ul>
+      </div>
+    </div>
+    <p class="sb-ai__note" data-reveal>{noWidow(A.ai.note)}</p>
   </section>
 
   <!-- 3. Filosofia -->
@@ -282,6 +302,90 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     font-weight: var(--fw-medium);
     line-height: var(--lh-display);
     letter-spacing: var(--tracking-display);
+  }
+
+  /* 2. Feito por humanos, acelerado por IA */
+  .sb-ai {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-m);
+    padding: 0 var(--gutter) var(--space-l);
+    text-align: center;
+  }
+  .sb-ai__label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+  .sb-ai__label::before,
+  .sb-ai__label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .sb-ai__title {
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-ai__cols {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--col-gap);
+    width: min(100%, 56rem);
+    text-align: left;
+  }
+  .sb-ai__col {
+    display: grid;
+    gap: 1.25rem;
+    height: 100%;
+    padding: 1.75rem;
+    border-radius: var(--radius-media);
+    background: #fff;
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .sb-ai__col--machine {
+    background: var(--paper);
+  }
+  .sb-ai__head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: var(--fw-medium);
+  }
+  .sb-ai__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .sb-ai__spark {
+    font-size: 0.9em;
+    line-height: 1;
+  }
+  .sb-ai__col ul {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sb-ai__col li {
+    padding-block: 0.7rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-2);
+  }
+  .sb-ai__plus {
+    color: var(--ink-3);
+    font-size: 1.5rem;
+  }
+  .sb-ai__note {
+    max-width: 34em;
+    color: var(--ink-2);
+    line-height: 1.6;
   }
 
   /* ícones de traço fino */
@@ -662,6 +766,12 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     }
   }
   @media (max-width: 767px) {
+    .sb-ai__cols {
+      grid-template-columns: 1fr;
+    }
+    .sb-ai__plus {
+      text-align: center;
+    }
     .sb-principles .sb-icon {
       display: none;
     }
