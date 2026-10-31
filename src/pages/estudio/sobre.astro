@@ -1,7 +1,7 @@
 ---
 // Sobre do estúdio — referência: Halo Lab /about, traduzida para um estúdio de uma pessoa.
 // 1. Manifesto · 2. Feito por humanos, acelerado por IA · 3. Filosofia (marca + produto, 3 princípios)
-// 4. O que eu acredito (3 cartões assinados) · 5. Colagem de projetos (escura)
+// 4. O que você pode esperar (3 compromissos) · 5. Colagem de projetos (escura)
 // 6. Uma pessoa, duas frentes + na prática · 7. Números · 8. Perguntas · 9. Arco de projetos + convite
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -14,8 +14,6 @@ import { withBase } from '../../utils/url';
 
 const A = studio.aboutPage;
 
-const avatars = import.meta.glob<{ default: ImageMetadata }>('../../assets/me/avatar.{jpg,jpeg,png,webp}', { eager: true });
-const avatar = Object.values(avatars)[0]?.default;
 
 // Frase da filosofia com {marca} e {produto} em pílulas
 const parts = A.philosophy.statement.split(/(\{marca\}|\{produto\})/);
@@ -125,21 +123,16 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     </div>
   </section>
 
-  <!-- 4. O que eu acredito -->
-  <section class="sb-beliefs" aria-label="O que eu acredito">
+  <!-- 4. O que você pode esperar -->
+  <section class="sb-beliefs" aria-labelledby="sb-expect-label">
+    <p id="sb-expect-label" class="sb-beliefs__label eyebrow">{A.expectLabel}</p>
     <div class="sb-beliefs__row">
       {
         A.beliefs.map((b, i) => (
           <article class="sb-belief" data-reveal style={`--reveal-delay:${i * 0.08}s`}>
+            <span class="sb-belief__num">{String(i + 1).padStart(2, '0')}</span>
             <h3>{b.title}</h3>
-            <p>“{noWidow(b.text)}”</p>
-            <footer>
-              {avatar && <Image src={avatar} alt="" widths={[96]} sizes="40px" />}
-              <span>
-                <strong>{site.name}</strong>
-                <span class="muted">Designer</span>
-              </span>
-            </footer>
+            <p>{noWidow(b.text)}</p>
           </article>
         ))
       }
@@ -472,10 +465,19 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--col-gap);
   }
+  .sb-beliefs__label {
+    margin-bottom: 1.25rem;
+  }
+  .sb-belief__num {
+    color: var(--ink-3);
+    font-size: var(--fs-small);
+    font-variant-numeric: tabular-nums;
+    padding-bottom: 1.5rem;
+  }
   .sb-belief {
     display: grid;
-    grid-template-rows: auto 1fr auto;
-    gap: 1rem;
+    align-content: start;
+    gap: 0.75rem;
     padding: 1.75rem;
     border-radius: var(--radius-media);
     background: #fff;
@@ -490,27 +492,6 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     color: var(--ink-2);
     line-height: 1.6;
   }
-  .sb-belief footer {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--line);
-    font-size: var(--fs-small);
-  }
-  .sb-belief footer :global(img) {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  .sb-belief footer > span {
-    display: grid;
-  }
-  .sb-belief strong {
-    font-weight: var(--fw-medium);
-  }
-
   /* 5. Colagem */
   .sb-collage {
     --p: 0.5;

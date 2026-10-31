@@ -125,10 +125,12 @@ export const studio = {
         { icon: 'rings', title: 'Continuidade', text: 'A promessa do site precisa se cumprir dentro do produto. Conecto marca, site e interface para a experiência ser a mesma do primeiro clique ao uso diário.' },
       ],
     },
+    // O que o cliente pode esperar (compromissos, não autoelogio). Depoimentos reais entram aqui depois.
+    expectLabel: 'O que você pode esperar',
     beliefs: [
-      { title: 'Um parceiro. Uma direção.', text: 'Quem entende o seu negócio é quem desenha. Sem atendimento no meio, as decisões ficam conectadas e o projeto anda com menos idas e vindas.' },
-      { title: 'Trabalho que se destaca.', text: 'Você precisa ser lembrado por um ponto de vista próprio. Se a marca serviria para qualquer concorrente, eu sigo até a ideia ter personalidade.' },
-      { title: 'Feito para crescer.', text: 'Entrego sistemas, não peças soltas: diretrizes, componentes e arquivos organizados para o seu time evoluir a marca com autonomia.' },
+      { title: 'Conversa direta', text: 'Você fala com quem desenha, do briefing à entrega. Sem intermediários, as decisões ficam conectadas e o projeto anda com menos idas e vindas.' },
+      { title: 'Uma marca com cara própria', text: 'O objetivo é você ser reconhecido de longe. Cada proposta parte do seu negócio, não de tendência ou modelo pronto.' },
+      { title: 'Tudo pronto para usar', text: 'Você recebe diretrizes, arquivos organizados e componentes para o seu time aplicar e evoluir a marca com autonomia.' },
     ],
     collage: 'Um designer. Muitas marcas.',
     fronts: {
