@@ -11,7 +11,7 @@ export const studio = {
   nav: [
     { label: 'Início', href: '/estudio', exact: true },
     { label: 'Projetos', href: '/estudio/works' },
-    { label: 'Processo', href: '/estudio#processo' },
+    { label: 'Sobre', href: '/estudio/sobre' },
   ],
   footerLabel: `Estúdio de design · desde ${startYear}`,
 
@@ -93,5 +93,54 @@ export const studio = {
         a: 'Você me conta sobre o projeto pelo formulário. Eu respondo em até um dia útil para marcarmos uma conversa.',
       },
     ],
+  },
+
+  // Página Sobre do estúdio (ref. Halo Lab /about, traduzida para um estúdio de uma pessoa)
+  aboutPage: {
+    eyebrow: 'Eduardo Araújo',
+    title: 'Acredito que design é o maior diferencial de uma marca.',
+    trusted: 'Mais de 100 marcas já passaram por aqui',
+    philosophy: {
+      label: 'Minha filosofia',
+      sub: 'Os princípios por trás de cada projeto.',
+      // {marca} e {produto} viram pílulas no texto
+      statement: 'Design deixa claro o seu valor no jeito como as pessoas reconhecem a sua {marca} e usam o seu {produto}. Juntos, eles dão aos clientes um motivo para escolher você e para voltar.',
+      principles: [
+        { icon: 'eye', title: 'Personalidade', text: 'Todo negócio tem suas forças. Eu as transformo em uma linguagem visual que as pessoas reconhecem como sua, de longe.' },
+        { icon: 'clarity', title: 'Clareza', text: 'As pessoas precisam entender o que você oferece e como usar. Deixo produtos complexos fáceis de navegar e decisões importantes simples de tomar.' },
+        { icon: 'rings', title: 'Continuidade', text: 'A promessa do site precisa se cumprir dentro do produto. Conecto marca, site e interface para a experiência ser a mesma do primeiro clique ao uso diário.' },
+      ],
+    },
+    beliefs: [
+      { title: 'Um parceiro. Uma direção.', text: 'Quem entende o seu negócio é quem desenha. Sem atendimento no meio, as decisões ficam conectadas e o projeto anda com menos idas e vindas.' },
+      { title: 'Trabalho que se destaca.', text: 'Você precisa ser lembrado por um ponto de vista próprio. Se a marca serviria para qualquer concorrente, eu sigo até a ideia ter personalidade.' },
+      { title: 'Feito para crescer.', text: 'Entrego sistemas, não peças soltas: diretrizes, componentes e arquivos organizados para o seu time evoluir a marca com autonomia.' },
+    ],
+    collage: 'Um designer. Muitas marcas.',
+    fronts: {
+      title: ['Uma pessoa.', 'Duas frentes.'],
+      items: [
+        { tag: 'Marca', title: 'Dar às pessoas um motivo para escolher você', text: 'Identidade visual, sites, campanhas e motion, juntos, para a sua marca se destacar e crescer.' },
+        { tag: 'Produto', title: 'Fazer o complexo parecer simples', text: 'Interfaces para web e mobile, de landing pages a plataformas, da descoberta ao lançamento.' },
+      ],
+      practice: 'Na prática',
+      cases: [
+        { slug: 'artta', text: 'Marca, landing page e plataformas digitais de uma fintech', tags: ['Branding', 'UX/UI', 'Landing page'] },
+        { slug: 'sabores', text: 'Identidade e campanhas para a gastronomia de Curitiba', tags: ['Identidade visual', 'Campanhas'] },
+      ],
+    },
+    stats: {
+      label: 'Resultado de uma década de trabalho',
+      items: [
+        { value: `${years} anos`, label: 'desenhando marcas e produtos' },
+        { value: '+100', label: 'marcas atendidas' },
+        { value: '5 frentes', label: 'marca, UX/UI, sites, campanhas e motion' },
+      ],
+    },
+    cta: {
+      title: 'Vamos conversar sobre o seu projeto?',
+      text: 'Me conte o que você precisa. Respondo em até um dia útil.',
+      button: 'Começar um projeto',
+    },
   },
 };

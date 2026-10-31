@@ -1,0 +1,758 @@
+---
+// Sobre do estúdio — referência: Halo Lab /about, traduzida para um estúdio de uma pessoa.
+// 1. Manifesto · 2. Marcas (faixa corrida) · 3. Filosofia (marca + produto, 3 princípios)
+// 4. O que eu acredito (3 cartões assinados) · 5. Colagem de projetos (escura)
+// 6. Uma pessoa, duas frentes + na prática · 7. Números · 8. Perguntas · 9. Arco de projetos + convite
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SplitText from '../../components/SplitText.astro';
+import Faq from '../../components/studio/Faq.astro';
+import { site, coverOf } from '../../data/site';
+import { studio } from '../../data/studio';
+import { noWidow } from '../../utils/text';
+import { withBase } from '../../utils/url';
+
+const A = studio.aboutPage;
+const brands = site.about.brands;
+
+const avatars = import.meta.glob<{ default: ImageMetadata }>('../../assets/me/avatar.{jpg,jpeg,png,webp}', { eager: true });
+const avatar = Object.values(avatars)[0]?.default;
+
+// Frase da filosofia com {marca} e {produto} em pílulas
+const parts = A.philosophy.statement.split(/(\{marca\}|\{produto\})/);
+
+// Colagem e arco: capas dos projetos
+const covers = site.works.map((w) => ({ img: coverOf(w.slug), name: w.name }));
+// posições da colagem (% da largura/altura) e tamanho relativo
+const COLLAGE = [
+  [6, 14, 1], [24, 52, 0.8], [17, 74, 1.1], [38, 18, 0.9], [44, 62, 1.2], [58, 30, 0.85],
+  [63, 76, 0.95], [76, 12, 1.1], [82, 54, 0.9], [92, 30, 0.75], [33, 88, 0.8],
+];
+const arc = covers; // uma foto de cada projeto
+const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
+---
+
+<BaseLayout studio title={`Sobre — ${site.name}`} description={A.title}>
+  <!-- 1. Manifesto -->
+  <section class="sb-hero" aria-labelledby="sb-title">
+    <svg class="sb-hero__arc" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="sb-arc" x1="0" x2="1">
+          <stop offset="0" stop-color="currentColor" stop-opacity="0" />
+          <stop offset="0.5" stop-color="currentColor" stop-opacity="0.5" />
+          <stop offset="1" stop-color="currentColor" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      <path d="M40,500 A460,460 0 0,1 960,500" fill="none" stroke="url(#sb-arc)" stroke-width="1.5" />
+    </svg>
+    <p class="eyebrow muted" data-reveal>{A.eyebrow}</p>
+    <div class="sb-hero__title">
+      <SplitText as="h1" id="sb-title" mode="load" parts={[{ text: A.title }]} />
+    </div>
+  </section>
+
+  <!-- 2. Marcas em faixa corrida -->
+  <section class="sb-trust" aria-label={A.trusted}>
+    <p class="sb-trust__label small muted">{A.trusted}</p>
+    <div class="sb-marquee">
+      <div class="sb-marquee__track">
+        {[0, 1].map((k) => (
+          <ul aria-hidden={k === 1 ? 'true' : undefined}>
+            {brands.map((b) => <li>{b}</li>)}
+          </ul>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Filosofia -->
+  <section class="sb-philo grid" aria-labelledby="sb-philo-label">
+    <div class="sb-philo__side">
+      <svg class="sb-icon sb-icon--lg" viewBox="0 0 64 64" aria-hidden="true">
+        <ellipse cx="32" cy="32" rx="28" ry="11" />
+        <ellipse cx="32" cy="32" rx="28" ry="11" transform="rotate(60 32 32)" />
+        <ellipse cx="32" cy="32" rx="28" ry="11" transform="rotate(-60 32 32)" />
+        <circle cx="32" cy="32" r="3" class="fill" />
+      </svg>
+      <p id="sb-philo-label" class="small">{A.philosophy.label}.<br /><span class="muted">{A.philosophy.sub}</span></p>
+    </div>
+    <div class="sb-philo__main">
+      <p class="sb-philo__statement" data-reveal>
+        {parts.map((p) =>
+          p === '{marca}' ? <span class="sb-pill">Marca</span> : p === '{produto}' ? <span class="sb-pill">Produto</span> : p,
+        )}
+      </p>
+      <ul class="sb-principles">
+        {
+          A.philosophy.principles.map((pr, i) => (
+            <li data-reveal style={`--reveal-delay:${i * 0.06}s`}>
+              <div>
+                <h3>{pr.title}</h3>
+                <p class="small">{noWidow(pr.text)}</p>
+              </div>
+              <svg class="sb-icon" viewBox="0 0 64 64" aria-hidden="true">
+                {pr.icon === 'eye' && (
+                  <>
+                    <path d="M8,32 Q32,10 56,32 Q32,54 8,32Z" />
+                    <circle cx="32" cy="32" r="8" />
+                    <path d="M6,14 V6 H14 M50,6 H58 V14 M58,50 V58 H50 M14,58 H6 V50" />
+                  </>
+                )}
+                {pr.icon === 'clarity' && (
+                  <>
+                    <circle cx="32" cy="32" r="24" />
+                    <path d="M20,36 Q32,48 44,36" />
+                  </>
+                )}
+                {pr.icon === 'rings' && (
+                  <>
+                    <circle cx="32" cy="32" r="24" />
+                    <circle cx="32" cy="32" r="15" />
+                    <circle cx="32" cy="32" r="6" />
+                    <path d="M32,32 H58" />
+                  </>
+                )}
+              </svg>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. O que eu acredito -->
+  <section class="sb-beliefs" aria-label="O que eu acredito">
+    <div class="sb-beliefs__row">
+      {
+        A.beliefs.map((b, i) => (
+          <article class="sb-belief" data-reveal style={`--reveal-delay:${i * 0.08}s`}>
+            <h3>{b.title}</h3>
+            <p>“{noWidow(b.text)}”</p>
+            <footer>
+              {avatar && <Image src={avatar} alt="" widths={[96]} sizes="40px" />}
+              <span>
+                <strong>{site.name}</strong>
+                <span class="muted">Designer</span>
+              </span>
+            </footer>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 5. Colagem de projetos -->
+  <section class="sb-collage theme-dark" aria-label={A.collage} data-collage>
+    {
+      covers.map((c, i) => {
+        const [x, y, s] = COLLAGE[i % COLLAGE.length];
+        return (
+          <div class="sb-collage__item" style={`--x:${x}%;--y:${y}%;--s:${s};--d:${(i % 5) * 0.12}`}>
+            <Image src={c.img} alt="" widths={[320, 480]} sizes="16vw" />
+          </div>
+        );
+      })
+    }
+    <p class="sb-collage__title" data-reveal>{A.collage}</p>
+  </section>
+
+  <!-- 6. Uma pessoa, duas frentes -->
+  <section class="sb-fronts" aria-labelledby="sb-fronts-title">
+    <svg class="sb-icon sb-icon--lg sb-fronts__star" viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M32,4 C34,24 40,30 60,32 C40,34 34,40 32,60 C30,40 24,34 4,32 C24,30 30,24 32,4Z" />
+    </svg>
+    <h2 id="sb-fronts-title" class="sb-fronts__title" data-reveal>
+      {A.fronts.title[0]}<br />{A.fronts.title[1]}
+    </h2>
+    <div class="sb-fronts__tree">
+      <svg class="sb-fronts__lines" viewBox="0 0 600 60" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M300,0 V20 Q300,30 290,30 H160 Q150,30 150,40 V60 M300,20 Q300,30 310,30 H440 Q450,30 450,40 V60" />
+      </svg>
+      <div class="sb-fronts__cols">
+        {
+          A.fronts.items.map((f, i) => (
+            <div class="sb-front" data-reveal style={`--reveal-delay:${i * 0.08}s`}>
+              <span class="sb-chip">{f.tag}</span>
+              <h3>{f.title}</h3>
+              <p class="small">{noWidow(f.text)}</p>
+            </div>
+          ))
+        }
+      </div>
+      <svg class="sb-fronts__lines sb-fronts__lines--down" viewBox="0 0 600 60" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M150,0 V20 Q150,30 160,30 H290 Q300,30 300,40 V60 M450,0 V20 Q450,30 440,30 H310 Q300,30 300,40" />
+      </svg>
+      <span class="sb-chip sb-fronts__practice">{A.fronts.practice}</span>
+    </div>
+
+    <div class="sb-cases">
+      {
+        A.fronts.cases.map((c, i) => {
+          const w = workCase(c.slug);
+          return (
+            <a class="sb-case" href={withBase(`${studio.base}/works/${c.slug}`)} data-reveal style={`--reveal-delay:${i * 0.08}s`}>
+              <div class="sb-case__img">
+                <Image src={coverOf(c.slug)} alt={w.name} widths={[640, 960]} sizes="(max-width: 767px) 100vw, 45vw" />
+              </div>
+              <h3>{w.name}</h3>
+              <p class="small muted">{c.text}</p>
+              <ul>{c.tags.map((t) => <li class="sb-chip">{t}</li>)}</ul>
+            </a>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <!-- 7. Números -->
+  <section class="sb-stats" aria-labelledby="sb-stats-label">
+    <p id="sb-stats-label" class="sb-stats__label small muted">{A.stats.label}</p>
+    <dl>
+      {
+        A.stats.items.map((s, i) => (
+          <div data-reveal style={`--reveal-delay:${i * 0.06}s`}>
+            <dt>{s.value}</dt>
+            <dd class="small muted">{s.label}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- 8. Perguntas -->
+  <Faq />
+
+  <!-- 9. Arco de projetos + convite -->
+  <section class="sb-arc" aria-labelledby="sb-cta-title" data-arc>
+    <div class="sb-arc__ring" aria-hidden="true">
+      {
+        arc.map((c, i) => (
+          <div class="sb-arc__item" style={`--a:${-72 + (144 / (arc.length - 1)) * i}deg`}>
+            <Image src={c.img} alt="" widths={[240, 360]} sizes="12vw" />
+          </div>
+        ))
+      }
+    </div>
+    <div class="sb-arc__cta">
+      <h2 id="sb-cta-title">{A.cta.title}</h2>
+      <p class="muted">{A.cta.text}</p>
+      <a class="sb-btn" href="#contato" data-contact>{A.cta.button} <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Colagem e arco reagem à rolagem (parallax leve e giro do arco)
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const collage = document.querySelector<HTMLElement>('[data-collage]');
+    const arc = document.querySelector<HTMLElement>('[data-arc]');
+    let raf = 0;
+    const frame = () => {
+      raf = 0;
+      const vh = innerHeight;
+      if (collage) {
+        const r = collage.getBoundingClientRect();
+        const p = (vh - r.top) / (vh + r.height); // 0 → 1 enquanto atravessa a tela
+        collage.style.setProperty('--p', String(Math.min(1, Math.max(0, p))));
+      }
+      if (arc) {
+        const r = arc.getBoundingClientRect();
+        const p = (vh - r.top) / (vh + r.height);
+        arc.style.setProperty('--p', String(Math.min(1, Math.max(0, p))));
+      }
+    };
+    const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    addEventListener('scroll', kick, { passive: true });
+    addEventListener('resize', kick);
+    kick();
+  }
+</script>
+
+<style>
+  /* 1. Manifesto */
+  .sb-hero {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 1.5rem;
+    padding: clamp(10rem, 24vh, 14rem) var(--gutter) var(--space-l);
+    text-align: center;
+    overflow: hidden;
+  }
+  .sb-hero__arc {
+    position: absolute;
+    left: 50%;
+    top: clamp(5rem, 11vh, 7rem);
+    width: min(1100px, 120vw);
+    height: auto;
+    aspect-ratio: 2;
+    transform: translateX(-50%);
+    color: var(--ink);
+    pointer-events: none;
+  }
+  .sb-hero__title {
+    position: relative;
+    max-width: 14em;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* 2. Marcas */
+  .sb-trust {
+    display: grid;
+    gap: 1.25rem;
+    padding: 0 var(--gutter) var(--space-l);
+  }
+  .sb-trust__label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    text-align: center;
+  }
+  .sb-trust__label::before,
+  .sb-trust__label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .sb-marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .sb-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: sb-marquee 60s linear infinite;
+  }
+  .sb-marquee ul {
+    display: flex;
+    gap: 3rem;
+    padding-right: 3rem;
+    margin: 0;
+    list-style: none;
+    font-size: 1.25rem;
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-lead);
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  @keyframes sb-marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ícones de traço fino */
+  .sb-icon {
+    width: 56px;
+    height: 56px;
+    fill: none;
+    stroke: var(--ink-3);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .sb-icon .fill {
+    fill: var(--ink-3);
+    stroke: none;
+  }
+  .sb-icon--lg {
+    width: 64px;
+    height: 64px;
+    stroke: var(--ink-2);
+  }
+
+  /* 3. Filosofia */
+  .sb-philo {
+    row-gap: var(--space-m);
+    padding-block: var(--space-l);
+  }
+  .sb-philo__side {
+    grid-column: 1 / span 3;
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+  .sb-philo__main {
+    grid-column: 5 / -1;
+    display: grid;
+    gap: var(--space-m);
+  }
+  .sb-philo__statement {
+    max-width: 21em;
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    line-height: 1.35;
+    letter-spacing: var(--tracking-lead);
+  }
+  .sb-pill {
+    display: inline-block;
+    padding: 0 0.45em 0.05em;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-pill);
+    line-height: 1.2;
+  }
+  .sb-principles {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sb-principles li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding-block: 1.75rem;
+    border-top: 1px solid var(--line);
+  }
+  .sb-principles h3 {
+    margin-bottom: 0.6rem;
+    font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-principles p {
+    max-width: 34em;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+
+  /* 4. O que eu acredito */
+  .sb-beliefs {
+    padding: 0 var(--gutter) var(--space-l);
+  }
+  .sb-beliefs__row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--col-gap);
+  }
+  .sb-belief {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 1rem;
+    padding: 1.75rem;
+    border-radius: var(--radius-media);
+    background: #fff;
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .sb-belief h3 {
+    font-size: 1.25rem;
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-lead);
+  }
+  .sb-belief p {
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+  .sb-belief footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-small);
+  }
+  .sb-belief footer :global(img) {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .sb-belief footer > span {
+    display: grid;
+  }
+  .sb-belief strong {
+    font-weight: var(--fw-medium);
+  }
+
+  /* 5. Colagem */
+  .sb-collage {
+    --p: 0.5;
+    position: relative;
+    height: clamp(30rem, 70vh, 44rem);
+    overflow: hidden;
+  }
+  .sb-collage__item {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: calc(clamp(7rem, 13vw, 12rem) * var(--s));
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 4px;
+    transform: translate(-50%, calc(-50% + (0.5 - var(--p)) * (60px + var(--d) * 220px)));
+    opacity: 0.85;
+    will-change: transform;
+  }
+  .sb-collage__item :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sb-collage__title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-pill);
+    background: rgba(18, 18, 17, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-lead);
+    white-space: nowrap;
+  }
+
+  /* 6. Duas frentes */
+  .sb-fronts {
+    display: grid;
+    justify-items: center;
+    gap: 1.5rem;
+    padding: var(--space-l) var(--gutter);
+    text-align: center;
+  }
+  .sb-fronts__title {
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-fronts__tree {
+    display: grid;
+    justify-items: center;
+    width: min(100%, 52rem);
+  }
+  .sb-fronts__lines {
+    width: 100%;
+    height: 48px;
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+  }
+  .sb-fronts__lines path {
+    stroke: rgba(18, 18, 17, 0.18);
+  }
+  .sb-fronts__cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-m);
+    width: 100%;
+  }
+  .sb-front {
+    display: grid;
+    justify-items: center;
+    gap: 0.9rem;
+  }
+  .sb-front h3 {
+    max-width: 11em;
+    font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+    font-weight: var(--fw-medium);
+    line-height: 1.1;
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-front p {
+    max-width: 28em;
+    color: var(--ink-2);
+  }
+  .sb-chip {
+    display: inline-flex;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-size: var(--fs-small);
+  }
+  .sb-cases {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--col-gap);
+    width: min(100%, 72rem);
+    margin-top: var(--space-m);
+    text-align: left;
+  }
+  .sb-case {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .sb-case__img {
+    overflow: hidden;
+    border-radius: var(--radius-media);
+    aspect-ratio: 16 / 10;
+    margin-bottom: 0.4rem;
+  }
+  .sb-case__img :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s var(--ease-out);
+  }
+  @media (hover: hover) {
+    .sb-case:hover .sb-case__img :global(img) {
+      transform: scale(1.04);
+    }
+  }
+  .sb-case h3 {
+    font-size: 1.125rem;
+    font-weight: var(--fw-medium);
+  }
+  .sb-case ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* 7. Números */
+  .sb-stats {
+    display: grid;
+    gap: var(--space-m);
+    padding: var(--space-m) var(--gutter) var(--space-l);
+  }
+  .sb-stats__label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .sb-stats__label::before,
+  .sb-stats__label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .sb-stats dl {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--col-gap);
+    margin: 0;
+    text-align: center;
+  }
+  .sb-stats dt {
+    font-size: var(--fs-stat);
+    font-weight: var(--fw-medium);
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-stats dd {
+    margin: 0.75rem 0 0;
+  }
+
+  /* 9. Arco + convite: o centro do arco fica na altura do convite; as fotos ficam por cima */
+  .sb-arc {
+    --p: 0.5;
+    --r: clamp(16rem, 36vw, 32rem);
+    --center: calc(var(--space-l) + var(--r) + 4rem); /* altura do centro do arco */
+    --off: -5rem; /* topo do convite em relação ao centro */
+    position: relative;
+    display: grid;
+    justify-items: center;
+    padding: calc(var(--center) + var(--off)) var(--gutter) var(--space-l);
+    overflow: hidden;
+  }
+  .sb-arc__ring {
+    position: absolute;
+    left: 50%;
+    top: var(--center);
+    width: 0;
+    height: 0;
+    transform: rotate(calc((var(--p) - 0.5) * 20deg));
+  }
+  .sb-arc__item {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: clamp(4.5rem, 7.5vw, 7rem);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 4px;
+    transform: rotate(var(--a)) translateY(calc(var(--r) * -1)) translate(-50%, -50%);
+    transform-origin: 0 0;
+    box-shadow: 0 10px 24px rgba(18, 18, 17, 0.15);
+  }
+  .sb-arc__item :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .sb-arc__cta {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    max-width: 26rem;
+    text-align: center;
+  }
+  .sb-arc__cta h2 {
+    font-size: clamp(1.75rem, 1.1rem + 2vw, 3rem);
+    font-weight: var(--fw-medium);
+    line-height: 1.05;
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.8rem 1.25rem;
+    border-radius: var(--radius-pill);
+    background: var(--ink);
+    color: var(--paper);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sb-marquee__track {
+      animation: none;
+    }
+  }
+  @media (max-width: 1023px) {
+    .sb-philo__side,
+    .sb-philo__main {
+      grid-column: 1 / -1;
+    }
+    .sb-beliefs__row {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 767px) {
+    .sb-principles .sb-icon {
+      display: none;
+    }
+    .sb-fronts__lines {
+      display: none;
+    }
+    .sb-fronts__cols,
+    .sb-cases,
+    .sb-stats dl {
+      grid-template-columns: 1fr;
+    }
+    .sb-fronts__practice {
+      margin-top: var(--space-m);
+    }
+    .sb-collage__title {
+      font-size: 1.125rem;
+    }
+    .sb-arc {
+      --r: 10.5rem;
+      --off: 1.5rem;
+    }
+    .sb-arc__item {
+      width: 3.9rem;
+    }
+  }
+</style>
