@@ -18,7 +18,7 @@ export const studio = {
   hero: {
     lead: 'Marcas e produtos digitais',
     rest: 'para empresas que querem ser lembradas.',
-    about: `Sou o Eduardo, designer há ${years} anos. Cuido do seu projeto de ponta a ponta, da identidade visual ao site e às campanhas, sem intermediários.`,
+    about: `Sou o Eduardo, designer há ${years} anos. Conduzo o seu projeto de ponta a ponta, da identidade visual ao site e às campanhas, com uma rede de parceiros quando o projeto pede.`,
     primary: 'Começar um projeto',
     secondary: 'Ver projetos',
   },
@@ -59,7 +59,7 @@ export const studio = {
     lead: 'Oi, eu sou o Eduardo.',
     rest: `Designer há ${years} anos, apaixonado por marcas, interfaces e campanhas bem resolvidas.`,
     text: [
-      'Aqui não tem atendimento intermediando a conversa: quem entende o seu negócio é quem desenha. Isso deixa o processo mais rápido, mais honesto e muito mais próximo.',
+      'Eu conduzo cada projeto de perto e, quando ele pede, trago parceiros de confiança para somar. Você conversa sempre com quem entende o seu negócio, e isso deixa o processo mais rápido, mais honesto e muito mais próximo.',
       'Trabalho com foco no detalhe, mas sem complicar as coisas. Meu objetivo é criar marcas que façam sentido, se conectem com as pessoas e causem aquele “é isso!”.',
     ],
     stats: [
@@ -105,7 +105,7 @@ export const studio = {
       lead: 'Feito por humanos.',
       rest: 'Acelerado por IA.',
       human: {
-        title: 'O que fica comigo',
+        title: 'O que é feito por pessoas',
         items: ['Estratégia e posicionamento', 'Conceito e ideia central', 'Direção de arte', 'Critério e decisões finais', 'A conversa com você'],
       },
       machine: {
@@ -128,15 +128,15 @@ export const studio = {
     // O que o cliente pode esperar (compromissos, não autoelogio). Depoimentos reais entram aqui depois.
     expectLabel: 'O que você pode esperar',
     beliefs: [
-      { title: 'Conversa direta', text: 'Você fala com quem desenha, do briefing à entrega. Sem intermediários, as decisões ficam conectadas e o projeto anda com menos idas e vindas.' },
+      { title: 'Conversa direta', text: 'Você fala direto com quem conduz o projeto, do briefing à entrega. Sem camadas no meio, as decisões ficam conectadas e o projeto anda com menos idas e vindas.' },
       { title: 'Uma marca com cara própria', text: 'O objetivo é você ser reconhecido de longe. Cada proposta parte do seu negócio, não de tendência ou modelo pronto.' },
       { title: 'Tudo pronto para usar', text: 'Você recebe diretrizes, arquivos organizados e componentes para o seu time aplicar e evoluir a marca com autonomia.' },
     ],
-    collage: 'Um designer. Muitas marcas.',
+    collage: 'Uma direção. Muitas mãos.',
     fronts: {
-      title: ['Uma pessoa.', 'Duas frentes.'],
+      title: ['Um estúdio.', 'Duas frentes.'],
       items: [
-        { tag: 'Marca', title: 'Dar às pessoas um motivo para escolher você', text: 'Identidade visual, sites, campanhas e motion, juntos, para a sua marca se destacar e crescer.' },
+        { tag: 'Marca', title: 'Um motivo para escolherem você', text: 'Identidade visual, sites, campanhas e motion, juntos, para a sua marca se destacar e crescer.' },
         { tag: 'Produto', title: 'Fazer o complexo parecer simples', text: 'Interfaces para web e mobile, de landing pages a plataformas, da descoberta ao lançamento.' },
       ],
       practice: 'Na prática',

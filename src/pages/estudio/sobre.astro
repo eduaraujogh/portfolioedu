@@ -1,12 +1,13 @@
 ---
 // Sobre do estúdio — referência: Halo Lab /about, traduzida para um estúdio de uma pessoa.
 // 1. Manifesto · 2. Feito por humanos, acelerado por IA · 3. Filosofia (marca + produto, 3 princípios)
-// 4. O que você pode esperar (3 compromissos) · 5. Colagem de projetos (escura)
-// 6. Uma pessoa, duas frentes + na prática · 7. Números · 8. Perguntas · 9. Arco de projetos + convite
+// 4. O que você pode esperar (3 compromissos) · 5. Parede de projetos (escura)
+// 6. Um estúdio, duas frentes + na prática · 7. Números · 8. Perguntas · Convite
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SplitText from '../../components/SplitText.astro';
 import Faq from '../../components/studio/Faq.astro';
+import Cta from '../../components/Cta.astro';
 import { site, coverOf } from '../../data/site';
 import { studio } from '../../data/studio';
 import { noWidow } from '../../utils/text';
@@ -20,12 +21,6 @@ const parts = A.philosophy.statement.split(/(\{marca\}|\{produto\})/);
 
 // Colagem e arco: capas dos projetos
 const covers = site.works.map((w) => ({ img: coverOf(w.slug), name: w.name }));
-// posições da colagem (% da largura/altura) e tamanho relativo
-const COLLAGE = [
-  [6, 14, 1], [24, 52, 0.8], [17, 74, 1.1], [38, 18, 0.9], [44, 62, 1.2], [58, 30, 0.85],
-  [63, 76, 0.95], [76, 12, 1.1], [82, 54, 0.9], [92, 30, 0.75], [33, 88, 0.8],
-];
-const arc = covers; // uma foto de cada projeto
 const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
 ---
 
@@ -139,22 +134,30 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     </div>
   </section>
 
-  <!-- 5. Colagem de projetos -->
-  <section class="sb-collage theme-dark" aria-label={A.collage} data-collage>
-    {
-      covers.map((c, i) => {
-        const [x, y, s] = COLLAGE[i % COLLAGE.length];
-        return (
-          <div class="sb-collage__item" style={`--x:${x}%;--y:${y}%;--s:${s};--d:${(i % 5) * 0.12}`}>
-            <Image src={c.img} alt="" widths={[320, 480]} sizes="16vw" />
-          </div>
-        );
-      })
-    }
-    <p class="sb-collage__title" data-reveal>{A.collage}</p>
+  <!-- 5. Parede de projetos: três fileiras inclinadas correndo em sentidos alternados -->
+  <section class="sb-wall theme-dark" aria-labelledby="sb-wall-title">
+    <div class="sb-wall__rows" aria-hidden="true">
+      {
+        [0, 1, 2].map((r) => {
+          const row = [...covers.slice(r * 4), ...covers.slice(0, r * 4)];
+          return (
+            <div class="sb-wall__row" style={`--dir:${r % 2 ? 'reverse' : 'normal'};--dur:${70 + r * 12}s`}>
+              <div class="sb-wall__track">
+                {[...row, ...row].map((c) => (
+                  <div class="sb-wall__tile">
+                    <Image src={c.img} alt="" widths={[360, 560]} sizes="22vw" loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+    <h2 id="sb-wall-title" class="sb-wall__title" data-reveal>{A.collage}</h2>
   </section>
 
-  <!-- 6. Uma pessoa, duas frentes -->
+  <!-- 6. Um estúdio, duas frentes -->
   <section class="sb-fronts" aria-labelledby="sb-fronts-title">
     <svg class="sb-icon sb-icon--lg sb-fronts__star" viewBox="0 0 64 64" aria-hidden="true">
       <path d="M32,4 C34,24 40,30 60,32 C40,34 34,40 32,60 C30,40 24,34 4,32 C24,30 30,24 32,4Z" />
@@ -220,51 +223,9 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
   <!-- 8. Perguntas -->
   <Faq />
 
-  <!-- 9. Arco de projetos + convite -->
-  <section class="sb-arc" aria-labelledby="sb-cta-title" data-arc>
-    <div class="sb-arc__ring" aria-hidden="true">
-      {
-        arc.map((c, i) => (
-          <div class="sb-arc__item" style={`--a:${-72 + (144 / (arc.length - 1)) * i}deg`}>
-            <Image src={c.img} alt="" widths={[240, 360]} sizes="12vw" />
-          </div>
-        ))
-      }
-    </div>
-    <div class="sb-arc__cta">
-      <h2 id="sb-cta-title">{A.cta.title}</h2>
-      <p class="muted">{A.cta.text}</p>
-      <a class="sb-btn" href="#contato" data-contact>{A.cta.button} <span aria-hidden="true">↗</span></a>
-    </div>
-  </section>
+  <Cta studio />
 </BaseLayout>
 
-<script>
-  // Colagem e arco reagem à rolagem (parallax leve e giro do arco)
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const collage = document.querySelector<HTMLElement>('[data-collage]');
-    const arc = document.querySelector<HTMLElement>('[data-arc]');
-    let raf = 0;
-    const frame = () => {
-      raf = 0;
-      const vh = innerHeight;
-      if (collage) {
-        const r = collage.getBoundingClientRect();
-        const p = (vh - r.top) / (vh + r.height); // 0 → 1 enquanto atravessa a tela
-        collage.style.setProperty('--p', String(Math.min(1, Math.max(0, p))));
-      }
-      if (arc) {
-        const r = arc.getBoundingClientRect();
-        const p = (vh - r.top) / (vh + r.height);
-        arc.style.setProperty('--p', String(Math.min(1, Math.max(0, p))));
-      }
-    };
-    const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
-    addEventListener('scroll', kick, { passive: true });
-    addEventListener('resize', kick);
-    kick();
-  }
-</script>
 
 <style>
   /* 1. Manifesto */
@@ -492,46 +453,75 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     color: var(--ink-2);
     line-height: 1.6;
   }
-  /* 5. Colagem */
-  .sb-collage {
-    --p: 0.5;
+  /* 5. Parede de projetos */
+  .sb-wall {
     position: relative;
-    height: clamp(30rem, 70vh, 44rem);
+    display: grid;
+    place-items: center;
+    height: clamp(30rem, 78vh, 48rem);
     overflow: hidden;
   }
-  .sb-collage__item {
+  .sb-wall__rows {
     position: absolute;
-    left: var(--x);
-    top: var(--y);
-    width: calc(clamp(7rem, 13vw, 12rem) * var(--s));
+    inset: -15% -10%;
+    display: grid;
+    align-content: center;
+    gap: var(--col-gap);
+    transform: rotate(-6deg);
+  }
+  .sb-wall__row {
+    overflow: hidden;
+  }
+  .sb-wall__track {
+    display: flex;
+    gap: var(--col-gap);
+    width: max-content;
+    animation: sb-wall var(--dur) linear infinite;
+    animation-direction: var(--dir);
+  }
+  .sb-wall__tile {
+    flex: none;
+    width: clamp(14rem, 22vw, 22rem);
     aspect-ratio: 4 / 3;
     overflow: hidden;
-    border-radius: 4px;
-    transform: translate(-50%, calc(-50% + (0.5 - var(--p)) * (60px + var(--d) * 220px)));
-    opacity: 0.85;
-    will-change: transform;
+    border-radius: var(--radius-media);
   }
-  .sb-collage__item :global(img) {
+  .sb-wall__tile :global(img) {
+    opacity: 0.62;
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .sb-collage__title {
+  @keyframes sb-wall {
+    to {
+      transform: translateX(calc(-50% - var(--col-gap) / 2));
+    }
+  }
+  /* escurece o centro e as bordas para o título ler bem */
+  .sb-wall::after {
+    content: '';
     position: absolute;
-    left: 50%;
-    top: 50%;
-    z-index: 2;
-    transform: translate(-50%, -50%);
-    padding: 0.75rem 1.25rem;
-    border-radius: var(--radius-pill);
-    background: rgba(18, 18, 17, 0.72);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    font-size: var(--fs-lead);
+    inset: 0;
+    background:
+      radial-gradient(ellipse 48% 40% at 50% 50%, rgba(18, 18, 17, 0.94), rgba(18, 18, 17, 0.55) 65%, rgba(18, 18, 17, 0.2)),
+      linear-gradient(var(--paper), transparent 18%, transparent 82%, var(--paper));
+    pointer-events: none;
+  }
+  .sb-wall__title {
+    position: relative;
+    z-index: 1;
+    padding-inline: var(--gutter);
+    text-align: center;
+    font-size: var(--fs-display);
     font-weight: var(--fw-medium);
-    letter-spacing: var(--tracking-lead);
-    white-space: nowrap;
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sb-wall__track {
+      animation: none;
+    }
   }
 
   /* 6. Duas frentes */
@@ -573,10 +563,12 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
   .sb-front {
     display: grid;
     justify-items: center;
+    align-content: start;
     gap: 0.9rem;
   }
   .sb-front h3 {
-    max-width: 11em;
+    max-width: 10em;
+    text-wrap: balance; /* as duas frentes quebram em duas linhas equilibradas */
     font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
     font-weight: var(--fw-medium);
     line-height: 1.1;
@@ -587,6 +579,8 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     color: var(--ink-2);
   }
   .sb-chip {
+    align-self: start;
+    white-space: nowrap;
     display: inline-flex;
     padding: 0.35rem 0.75rem;
     border: 1px solid var(--line);
@@ -672,71 +666,6 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     margin: 0.75rem 0 0;
   }
 
-  /* 9. Arco + convite: o centro do arco fica na altura do convite; as fotos ficam por cima */
-  .sb-arc {
-    --p: 0.5;
-    --r: clamp(16rem, 36vw, 32rem);
-    --center: calc(var(--space-l) + var(--r) + 4rem); /* altura do centro do arco */
-    --off: -5rem; /* topo do convite em relação ao centro */
-    position: relative;
-    display: grid;
-    justify-items: center;
-    padding: calc(var(--center) + var(--off)) var(--gutter) var(--space-l);
-    overflow: hidden;
-  }
-  .sb-arc__ring {
-    position: absolute;
-    left: 50%;
-    top: var(--center);
-    width: 0;
-    height: 0;
-    transform: rotate(calc((var(--p) - 0.5) * 20deg));
-  }
-  .sb-arc__item {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: clamp(4.5rem, 7.5vw, 7rem);
-    aspect-ratio: 4 / 5;
-    overflow: hidden;
-    border-radius: 4px;
-    transform: rotate(var(--a)) translateY(calc(var(--r) * -1)) translate(-50%, -50%);
-    transform-origin: 0 0;
-    box-shadow: 0 10px 24px rgba(18, 18, 17, 0.15);
-  }
-  .sb-arc__item :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .sb-arc__cta {
-    position: relative;
-    display: grid;
-    justify-items: center;
-    gap: 1rem;
-    max-width: 26rem;
-    text-align: center;
-  }
-  .sb-arc__cta h2 {
-    font-size: clamp(1.75rem, 1.1rem + 2vw, 3rem);
-    font-weight: var(--fw-medium);
-    line-height: 1.05;
-    letter-spacing: var(--tracking-display);
-  }
-  .sb-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-    padding: 0.8rem 1.25rem;
-    border-radius: var(--radius-pill);
-    background: var(--ink);
-    color: var(--paper);
-    font-size: var(--fs-small);
-    font-weight: var(--fw-medium);
-  }
-
   @media (max-width: 1023px) {
     .sb-philo__side,
     .sb-philo__main {
@@ -767,15 +696,8 @@ const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
     .sb-fronts__practice {
       margin-top: var(--space-m);
     }
-    .sb-collage__title {
-      font-size: 1.125rem;
-    }
-    .sb-arc {
-      --r: 10.5rem;
-      --off: 1.5rem;
-    }
-    .sb-arc__item {
-      width: 3.9rem;
+    .sb-wall__title {
+      max-width: 9em;
     }
   }
 </style>
