@@ -149,7 +149,7 @@ export const studio = {
       label: 'Resultado de uma década de trabalho',
       items: [
         { value: `${years} anos`, label: 'desenhando marcas e produtos' },
-        { value: '+100', label: 'marcas atendidas' },
+        { value: '+500', label: 'marcas atendidas' },
         { value: '5 frentes', label: 'marca, UX/UI, sites, campanhas e motion' },
       ],
     },

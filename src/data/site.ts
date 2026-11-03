@@ -51,7 +51,7 @@ export const site = {
       'Artta', 'Bioerde', 'Duo Garage', 'Fense Seguros', 'Four Pink', 'Gaslog', 'Gedisa', 'Golden Vibes', 'Grupo Exati',
       'Leque', 'Lepistache', 'Lomarco', 'Marozi', 'MKA Transportes', 'Sabores de Curitiba', 'SB Crédito', 'Thalles Consultoria',
     ].sort((a, b) => a.localeCompare(b, 'pt-BR')),
-    brandsMore: '+100', // aparece logo abaixo da lista, em tom secundário
+    brandsMore: '+500', // aparece logo abaixo da lista, em tom secundário
   },
 
   // Página About (ref. max-pratt.webflow.io/about)
