@@ -1,0 +1,703 @@
+---
+// Sobre do estúdio — referência: Halo Lab /about, traduzida para um estúdio de uma pessoa.
+// 1. Manifesto · 2. Feito por humanos, acelerado por IA · 3. Filosofia (marca + produto, 3 princípios)
+// 4. O que você pode esperar (3 compromissos) · 5. Parede de projetos (escura)
+// 6. Um estúdio, duas frentes + na prática · 7. Números · 8. Perguntas · Convite
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SplitText from '../components/SplitText.astro';
+import Faq from '../components/studio/Faq.astro';
+import Cta from '../components/Cta.astro';
+import { site, coverOf } from '../data/site';
+import { studio } from '../data/studio';
+import { noWidow } from '../utils/text';
+import { withBase } from '../utils/url';
+
+const A = studio.aboutPage;
+
+
+// Frase da filosofia com {marca} e {produto} em pílulas
+const parts = A.philosophy.statement.split(/(\{marca\}|\{produto\})/);
+
+// Colagem e arco: capas dos projetos
+const covers = site.works.map((w) => ({ img: coverOf(w.slug), name: w.name }));
+const workCase = (slug: string) => site.works.find((w) => w.slug === slug)!;
+---
+
+<BaseLayout studio title={`Sobre — ${site.name}`} description={A.title}>
+  <!-- 1. Manifesto -->
+  <section class="sb-hero" aria-labelledby="sb-title">
+    <svg class="sb-hero__arc" viewBox="0 0 1000 500" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="sb-arc" x1="0" x2="1">
+          <stop offset="0" stop-color="currentColor" stop-opacity="0" />
+          <stop offset="0.5" stop-color="currentColor" stop-opacity="0.5" />
+          <stop offset="1" stop-color="currentColor" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      <path d="M40,500 A460,460 0 0,1 960,500" fill="none" stroke="url(#sb-arc)" stroke-width="1.5" />
+    </svg>
+    <p class="eyebrow muted" data-reveal>{A.eyebrow}</p>
+    <div class="sb-hero__title">
+      <SplitText as="h1" id="sb-title" mode="load" parts={[{ text: A.title }]} />
+    </div>
+  </section>
+
+  <!-- 2. Feito por humanos, acelerado por IA -->
+  <section class="sb-ai" aria-labelledby="sb-ai-title">
+    <p class="sb-ai__label small muted">{A.ai.label}</p>
+    <div class="sb-ai__title">
+      <SplitText as="h2" id="sb-ai-title" parts={[{ text: A.ai.lead }, { text: A.ai.rest, class: 'tone-2' }]} />
+    </div>
+    <div class="sb-ai__cols">
+      <div class="sb-ai__col" data-reveal>
+        <p class="sb-ai__head"><span class="sb-ai__dot" aria-hidden="true"></span>{A.ai.human.title}</p>
+        <ul>{A.ai.human.items.map((it) => <li>{it}</li>)}</ul>
+      </div>
+      <span class="sb-ai__plus" aria-hidden="true">+</span>
+      <div class="sb-ai__col sb-ai__col--machine theme-dark" data-reveal style="--reveal-delay:0.08s">
+        <p class="sb-ai__head"><span class="sb-ai__spark" aria-hidden="true">✦</span>{A.ai.machine.title}</p>
+        <ul>{A.ai.machine.items.map((it) => <li>{it}</li>)}</ul>
+      </div>
+    </div>
+    <p class="sb-ai__note" data-reveal>{noWidow(A.ai.note)}</p>
+  </section>
+
+  <!-- 3. Filosofia -->
+  <section class="sb-philo grid" aria-labelledby="sb-philo-label">
+    <div class="sb-philo__side">
+      <svg class="sb-icon sb-icon--lg" viewBox="0 0 64 64" aria-hidden="true">
+        <ellipse cx="32" cy="32" rx="28" ry="11" />
+        <ellipse cx="32" cy="32" rx="28" ry="11" transform="rotate(60 32 32)" />
+        <ellipse cx="32" cy="32" rx="28" ry="11" transform="rotate(-60 32 32)" />
+        <circle cx="32" cy="32" r="3" class="fill" />
+      </svg>
+      <p id="sb-philo-label" class="small">{A.philosophy.label}.<br /><span class="muted">{A.philosophy.sub}</span></p>
+    </div>
+    <div class="sb-philo__main">
+      <p class="sb-philo__statement" data-reveal>
+        {parts.map((p) =>
+          p === '{marca}' ? <span class="sb-pill">Marca</span> : p === '{produto}' ? <span class="sb-pill">Produto</span> : p,
+        )}
+      </p>
+      <ul class="sb-principles">
+        {
+          A.philosophy.principles.map((pr, i) => (
+            <li data-reveal style={`--reveal-delay:${i * 0.06}s`}>
+              <div>
+                <h3>{pr.title}</h3>
+                <p class="small">{noWidow(pr.text)}</p>
+              </div>
+              <svg class="sb-icon" viewBox="0 0 64 64" aria-hidden="true">
+                {pr.icon === 'eye' && (
+                  <>
+                    <path d="M8,32 Q32,10 56,32 Q32,54 8,32Z" />
+                    <circle cx="32" cy="32" r="8" />
+                    <path d="M6,14 V6 H14 M50,6 H58 V14 M58,50 V58 H50 M14,58 H6 V50" />
+                  </>
+                )}
+                {pr.icon === 'clarity' && (
+                  <>
+                    <circle cx="32" cy="32" r="24" />
+                    <path d="M20,36 Q32,48 44,36" />
+                  </>
+                )}
+                {pr.icon === 'rings' && (
+                  <>
+                    <circle cx="32" cy="32" r="24" />
+                    <circle cx="32" cy="32" r="15" />
+                    <circle cx="32" cy="32" r="6" />
+                    <path d="M32,32 H58" />
+                  </>
+                )}
+              </svg>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. O que você pode esperar -->
+  <section class="sb-beliefs" aria-labelledby="sb-expect-label">
+    <p id="sb-expect-label" class="sb-beliefs__label eyebrow">{A.expectLabel}</p>
+    <div class="sb-beliefs__row">
+      {
+        A.beliefs.map((b, i) => (
+          <article class="sb-belief" data-reveal style={`--reveal-delay:${i * 0.08}s`}>
+            <span class="sb-belief__num">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{b.title}</h3>
+            <p>{noWidow(b.text)}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 5. Parede de projetos: três fileiras inclinadas correndo em sentidos alternados -->
+  <section class="sb-wall theme-dark" aria-labelledby="sb-wall-title">
+    <div class="sb-wall__rows" aria-hidden="true">
+      {
+        [0, 1, 2].map((r) => {
+          const row = [...covers.slice(r * 4), ...covers.slice(0, r * 4)];
+          return (
+            <div class="sb-wall__row" style={`--dir:${r % 2 ? 'reverse' : 'normal'};--dur:${70 + r * 12}s`}>
+              <div class="sb-wall__track">
+                {[...row, ...row].map((c) => (
+                  <div class="sb-wall__tile">
+                    <Image src={c.img} alt="" widths={[360, 560]} sizes="22vw" loading="lazy" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+    <h2 id="sb-wall-title" class="sb-wall__title" data-reveal>{A.collage}</h2>
+  </section>
+
+  <!-- 6. Um estúdio, duas frentes -->
+  <section class="sb-fronts" aria-labelledby="sb-fronts-title">
+    <svg class="sb-icon sb-icon--lg sb-fronts__star" viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M32,4 C34,24 40,30 60,32 C40,34 34,40 32,60 C30,40 24,34 4,32 C24,30 30,24 32,4Z" />
+    </svg>
+    <h2 id="sb-fronts-title" class="sb-fronts__title" data-reveal>
+      {A.fronts.title[0]}<br />{A.fronts.title[1]}
+    </h2>
+    <div class="sb-fronts__tree">
+      <svg class="sb-fronts__lines" viewBox="0 0 600 60" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M300,0 V20 Q300,30 290,30 H160 Q150,30 150,40 V60 M300,20 Q300,30 310,30 H440 Q450,30 450,40 V60" />
+      </svg>
+      <div class="sb-fronts__cols">
+        {
+          A.fronts.items.map((f, i) => (
+            <div class="sb-front" data-reveal style={`--reveal-delay:${i * 0.08}s`}>
+              <span class="sb-chip">{f.tag}</span>
+              <h3>{f.title}</h3>
+              <p class="small">{noWidow(f.text)}</p>
+            </div>
+          ))
+        }
+      </div>
+      <svg class="sb-fronts__lines sb-fronts__lines--down" viewBox="0 0 600 60" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M150,0 V20 Q150,30 160,30 H290 Q300,30 300,40 V60 M450,0 V20 Q450,30 440,30 H310 Q300,30 300,40" />
+      </svg>
+      <span class="sb-chip sb-fronts__practice">{A.fronts.practice}</span>
+    </div>
+
+    <div class="sb-cases">
+      {
+        A.fronts.cases.map((c, i) => {
+          const w = workCase(c.slug);
+          return (
+            <a class="sb-case" href={withBase(`${studio.base}/works/${c.slug}`)} data-reveal style={`--reveal-delay:${i * 0.08}s`}>
+              <div class="sb-case__img">
+                <Image src={coverOf(c.slug)} alt={w.name} widths={[640, 960]} sizes="(max-width: 767px) 100vw, 45vw" />
+              </div>
+              <h3>{w.name}</h3>
+              <p class="small muted">{c.text}</p>
+              <ul>{c.tags.map((t) => <li class="sb-chip">{t}</li>)}</ul>
+            </a>
+          );
+        })
+      }
+    </div>
+  </section>
+
+  <!-- 7. Números -->
+  <section class="sb-stats" aria-labelledby="sb-stats-label">
+    <p id="sb-stats-label" class="sb-stats__label small muted">{A.stats.label}</p>
+    <dl>
+      {
+        A.stats.items.map((s, i) => (
+          <div data-reveal style={`--reveal-delay:${i * 0.06}s`}>
+            <dt>{s.value}</dt>
+            <dd class="small muted">{s.label}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- 8. Perguntas -->
+  <Faq />
+
+  <Cta studio />
+</BaseLayout>
+
+
+<style>
+  /* 1. Manifesto */
+  .sb-hero {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 1.5rem;
+    padding: clamp(10rem, 24vh, 14rem) var(--gutter) var(--space-l);
+    text-align: center;
+    overflow: hidden;
+  }
+  .sb-hero__arc {
+    position: absolute;
+    left: 50%;
+    top: clamp(5rem, 11vh, 7rem);
+    width: min(1100px, 120vw);
+    height: auto;
+    aspect-ratio: 2;
+    transform: translateX(-50%);
+    color: var(--ink);
+    pointer-events: none;
+  }
+  .sb-hero__title {
+    position: relative;
+    max-width: 14em;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+
+  /* 2. Feito por humanos, acelerado por IA */
+  .sb-ai {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-m);
+    padding: 0 var(--gutter) var(--space-l);
+    text-align: center;
+  }
+  .sb-ai__label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+  .sb-ai__label::before,
+  .sb-ai__label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .sb-ai__title {
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-ai__cols {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--col-gap);
+    width: min(100%, 56rem);
+    text-align: left;
+  }
+  .sb-ai__col {
+    display: grid;
+    gap: 1.25rem;
+    height: 100%;
+    padding: 1.75rem;
+    border-radius: var(--radius-media);
+    background: #fff;
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .sb-ai__col--machine {
+    background: var(--paper);
+  }
+  .sb-ai__head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: var(--fw-medium);
+  }
+  .sb-ai__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .sb-ai__spark {
+    font-size: 0.9em;
+    line-height: 1;
+  }
+  .sb-ai__col ul {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sb-ai__col li {
+    padding-block: 0.7rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-2);
+  }
+  .sb-ai__plus {
+    color: var(--ink-3);
+    font-size: 1.5rem;
+  }
+  .sb-ai__note {
+    max-width: 34em;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+
+  /* ícones de traço fino */
+  .sb-icon {
+    width: 56px;
+    height: 56px;
+    fill: none;
+    stroke: var(--ink-3);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .sb-icon .fill {
+    fill: var(--ink-3);
+    stroke: none;
+  }
+  .sb-icon--lg {
+    width: 64px;
+    height: 64px;
+    stroke: var(--ink-2);
+  }
+
+  /* 3. Filosofia */
+  .sb-philo {
+    row-gap: var(--space-m);
+    padding-block: var(--space-l);
+  }
+  .sb-philo__side {
+    grid-column: 1 / span 3;
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+  .sb-philo__main {
+    grid-column: 5 / -1;
+    display: grid;
+    gap: var(--space-m);
+  }
+  .sb-philo__statement {
+    max-width: 21em;
+    font-size: var(--fs-lead);
+    font-weight: var(--fw-medium);
+    line-height: 1.35;
+    letter-spacing: var(--tracking-lead);
+  }
+  .sb-pill {
+    display: inline-block;
+    padding: 0 0.45em 0.05em;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-pill);
+    line-height: 1.2;
+  }
+  .sb-principles {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .sb-principles li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding-block: 1.75rem;
+    border-top: 1px solid var(--line);
+  }
+  .sb-principles h3 {
+    margin-bottom: 0.6rem;
+    font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-principles p {
+    max-width: 34em;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+
+  /* 4. O que eu acredito */
+  .sb-beliefs {
+    padding: 0 var(--gutter) var(--space-l);
+  }
+  .sb-beliefs__row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--col-gap);
+  }
+  .sb-beliefs__label {
+    margin-bottom: 1.25rem;
+  }
+  .sb-belief__num {
+    color: var(--ink-3);
+    font-size: var(--fs-small);
+    font-variant-numeric: tabular-nums;
+    padding-bottom: 1.5rem;
+  }
+  .sb-belief {
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 1.75rem;
+    border-radius: var(--radius-media);
+    background: #fff;
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .sb-belief h3 {
+    font-size: 1.25rem;
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-lead);
+  }
+  .sb-belief p {
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+  /* 5. Parede de projetos */
+  .sb-wall {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: clamp(30rem, 78vh, 48rem);
+    overflow: hidden;
+  }
+  .sb-wall__rows {
+    position: absolute;
+    inset: -15% -10%;
+    display: grid;
+    align-content: center;
+    gap: var(--col-gap);
+    transform: rotate(-6deg);
+  }
+  .sb-wall__row {
+    overflow: hidden;
+  }
+  .sb-wall__track {
+    display: flex;
+    gap: var(--col-gap);
+    width: max-content;
+    animation: sb-wall var(--dur) linear infinite;
+    animation-direction: var(--dir);
+  }
+  .sb-wall__tile {
+    flex: none;
+    width: clamp(14rem, 22vw, 22rem);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-media);
+  }
+  .sb-wall__tile :global(img) {
+    opacity: 0.62;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  @keyframes sb-wall {
+    to {
+      transform: translateX(calc(-50% - var(--col-gap) / 2));
+    }
+  }
+  /* escurece o centro e as bordas para o título ler bem */
+  .sb-wall::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 48% 40% at 50% 50%, rgba(18, 18, 17, 0.94), rgba(18, 18, 17, 0.55) 65%, rgba(18, 18, 17, 0.2)),
+      linear-gradient(var(--paper), transparent 18%, transparent 82%, var(--paper));
+    pointer-events: none;
+  }
+  .sb-wall__title {
+    position: relative;
+    z-index: 1;
+    padding-inline: var(--gutter);
+    text-align: center;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sb-wall__track {
+      animation: none;
+    }
+  }
+
+  /* 6. Duas frentes */
+  .sb-fronts {
+    display: grid;
+    justify-items: center;
+    gap: 1.5rem;
+    padding: var(--space-l) var(--gutter);
+    text-align: center;
+  }
+  .sb-fronts__title {
+    font-size: var(--fs-display);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-fronts__tree {
+    display: grid;
+    justify-items: center;
+    width: min(100%, 52rem);
+  }
+  .sb-fronts__lines {
+    width: 100%;
+    height: 48px;
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+  }
+  .sb-fronts__lines path {
+    stroke: rgba(18, 18, 17, 0.18);
+  }
+  .sb-fronts__cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-m);
+    width: 100%;
+  }
+  .sb-front {
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 0.9rem;
+  }
+  .sb-front h3 {
+    max-width: 10em;
+    text-wrap: balance; /* as duas frentes quebram em duas linhas equilibradas */
+    font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.25rem);
+    font-weight: var(--fw-medium);
+    line-height: 1.1;
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-front p {
+    max-width: 28em;
+    color: var(--ink-2);
+  }
+  .sb-chip {
+    align-self: start;
+    white-space: nowrap;
+    display: inline-flex;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    font-size: var(--fs-small);
+  }
+  .sb-cases {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--col-gap);
+    width: min(100%, 72rem);
+    margin-top: var(--space-m);
+    text-align: left;
+  }
+  .sb-case {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .sb-case__img {
+    overflow: hidden;
+    border-radius: var(--radius-media);
+    aspect-ratio: 16 / 10;
+    margin-bottom: 0.4rem;
+  }
+  .sb-case__img :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s var(--ease-out);
+  }
+  @media (hover: hover) {
+    .sb-case:hover .sb-case__img :global(img) {
+      transform: scale(1.04);
+    }
+  }
+  .sb-case h3 {
+    font-size: 1.125rem;
+    font-weight: var(--fw-medium);
+  }
+  .sb-case ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* 7. Números */
+  .sb-stats {
+    display: grid;
+    gap: var(--space-m);
+    padding: var(--space-m) var(--gutter) var(--space-l);
+  }
+  .sb-stats__label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .sb-stats__label::before,
+  .sb-stats__label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .sb-stats dl {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--col-gap);
+    margin: 0;
+    text-align: center;
+  }
+  .sb-stats dt {
+    font-size: var(--fs-stat);
+    font-weight: var(--fw-medium);
+    line-height: 1;
+    letter-spacing: var(--tracking-display);
+  }
+  .sb-stats dd {
+    margin: 0.75rem 0 0;
+  }
+
+  @media (max-width: 1023px) {
+    .sb-philo__side,
+    .sb-philo__main {
+      grid-column: 1 / -1;
+    }
+    .sb-beliefs__row {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 767px) {
+    .sb-ai__cols {
+      grid-template-columns: 1fr;
+    }
+    .sb-ai__plus {
+      text-align: center;
+    }
+    .sb-principles .sb-icon {
+      display: none;
+    }
+    .sb-fronts__lines {
+      display: none;
+    }
+    .sb-fronts__cols,
+    .sb-cases,
+    .sb-stats dl {
+      grid-template-columns: 1fr;
+    }
+    .sb-fronts__practice {
+      margin-top: var(--space-m);
+    }
+    .sb-wall__title {
+      max-width: 9em;
+    }
+  }
+</style>

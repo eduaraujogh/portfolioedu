@@ -5,13 +5,13 @@ import { site, startYear } from './site';
 const years = new Date().getFullYear() - startYear;
 
 export const studio = {
-  base: '/estudio',
+  base: '', // o estúdio é o site principal (raiz)
   detail: 'Estúdio de design · Curitiba, BR', // ao lado do nome, no topo
   role: 'Estúdio de design', // avatar do convite final
   nav: [
-    { label: 'Início', href: '/estudio', exact: true },
-    { label: 'Projetos', href: '/estudio/works' },
-    { label: 'Sobre', href: '/estudio/sobre' },
+    { label: 'Início', href: '/', exact: true },
+    { label: 'Projetos', href: '/works' },
+    { label: 'Sobre', href: '/sobre' },
   ],
   footerLabel: `Estúdio de design · desde ${startYear}`,
 

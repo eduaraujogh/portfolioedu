@@ -6,11 +6,13 @@ Marcas e produtos digitais: identidade visual, UX/UI, sites, campanhas e motion.
 
 | Versão | Para quem | Link |
 |---|---|---|
-| **Estúdio** | Clientes (versão comercial) | **[eduaraujogh.github.io/portfolioedu/estudio](https://eduaraujogh.github.io/portfolioedu/estudio/)** |
-| Portfólio | Recrutadores (com experiência e formação) | [eduaraujogh.github.io/portfolioedu](https://eduaraujogh.github.io/portfolioedu/) |
+| **Estúdio** (site principal) | Clientes | **[eduaraujogh.github.io/portfolioedu](https://eduaraujogh.github.io/portfolioedu/)** |
+| Portfólio | Recrutadores (com experiência e formação) | [eduaraujogh.github.io/portfolioedu/portfolio](https://eduaraujogh.github.io/portfolioedu/portfolio/) |
 | Currículo | PDF de 1 página | [curriculo-eduardo-araujo.pdf](https://eduaraujogh.github.io/portfolioedu/curriculo-eduardo-araujo.pdf) |
 
-Páginas do estúdio: [Início](https://eduaraujogh.github.io/portfolioedu/estudio/) · [Projetos](https://eduaraujogh.github.io/portfolioedu/estudio/works/) · [Sobre](https://eduaraujogh.github.io/portfolioedu/estudio/sobre/)
+Páginas do estúdio: [Início](https://eduaraujogh.github.io/portfolioedu/) · [Projetos](https://eduaraujogh.github.io/portfolioedu/works/) · [Sobre](https://eduaraujogh.github.io/portfolioedu/sobre/)
+
+Endereços antigos (`/estudio/…`) redirecionam para os novos.
 
 ---
 
@@ -39,9 +41,10 @@ Páginas do estúdio: [Início](https://eduaraujogh.github.io/portfolioedu/estud
 ```
 src/
   pages/
-    index.astro, about.astro, works.astro   → portfólio
-    works/[slug].astro                       → case (portfólio)
-    estudio/                                 → versão estúdio (início, projetos, sobre, cases)
+    index.astro, sobre.astro, works.astro    → estúdio (site principal)
+    works/[slug].astro                       → case (estúdio)
+    portfolio/                               → versão recrutador (home, about, works, cases)
+    estudio/                                 → redirecionamentos dos endereços antigos
     curriculo.astro                          → currículo para imprimir
   components/                                → seções reaproveitadas pelas duas versões
   components/studio/                         → seções só do estúdio
@@ -55,7 +58,7 @@ npm install
 npm run dev
 ```
 
-Abre em http://localhost:4321/portfolioedu/ (estúdio em `/portfolioedu/estudio/`).
+Abre em http://localhost:4321/portfolioedu/ (portfólio de recrutador em `/portfolioedu/portfolio/`).
 
 Gerar o PDF do currículo: `npm run curriculo`.
 

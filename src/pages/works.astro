@@ -4,12 +4,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import WorkCard from '../components/WorkCard.astro';
 import { site } from '../data/site';
+import { studio } from '../data/studio';
 ---
 
-<BaseLayout title={`Works — ${site.name}`}>
+<BaseLayout studio title={`Projetos — ${site.name}`}>
   <h1 class="visually-hidden">Projetos</h1>
   <section class="wk-grid" aria-label="Todos os projetos">
-    {site.works.map((work, i) => <WorkCard work={work} variant="grid" delay={(i % 2) * 0.12} eager={i < 2} />)}
+    {site.works.map((work, i) => <WorkCard work={work} base={studio.base} variant="grid" delay={(i % 2) * 0.12} eager={i < 2} />)}
   </section>
 </BaseLayout>
 

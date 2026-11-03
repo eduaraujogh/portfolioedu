@@ -7,8 +7,8 @@ interface Props {
   studio?: boolean; // versão estúdio: outro menu, outro subtítulo, nome leva ao início do estúdio
 }
 const isStudio = Astro.props.studio ?? false;
-const nav = isStudio ? studio.nav : site.nav.map((n) => ({ ...n, exact: n.href === '/' }));
-const home = isStudio ? studio.base : '/';
+const nav = isStudio ? studio.nav : site.nav.map((n) => ({ ...n, exact: n.href === '/portfolio' }));
+const home = isStudio ? '/' : '/portfolio';
 const detail = isStudio ? studio.detail : `${site.role} · ${site.location}`;
 
 const path = stripBase(Astro.url.pathname).replace(/\/$/, '') || '/';

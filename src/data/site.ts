@@ -12,9 +12,9 @@ export const site = {
   email: 'edujunior254@gmail.com',
 
   nav: [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-    { label: 'Works', href: '/works' },
+    { label: 'Home', href: '/portfolio' },
+    { label: 'About', href: '/portfolio/about' },
+    { label: 'Works', href: '/portfolio/works' },
   ],
 
   // TODO: preencher as URLs reais

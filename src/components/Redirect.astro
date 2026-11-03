@@ -1,0 +1,17 @@
+---
+// Página de redirecionamento (endereços antigos continuam funcionando em links já compartilhados).
+import { withBase } from '../utils/url';
+interface Props { to: string }
+const url = withBase(Astro.props.to);
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${url}`} />
+    <link rel="canonical" href={url} />
+    <meta name="robots" content="noindex" />
+    <title>Redirecionando…</title>
+  </head>
+  <body><a href={url}>Continuar</a></body>
+</html>

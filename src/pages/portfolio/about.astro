@@ -3,13 +3,13 @@
 // 1. Apresentação grande · 2. Coluna lateral (listas) + subtítulo com pílulas, texto e foto
 // 3. Formação e Experiência (RowList) · 4. Como eu trabalho · CTA
 import { Image } from 'astro:assets';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import SplitText from '../components/SplitText.astro';
-import RowList from '../components/RowList.astro';
-import Cta from '../components/Cta.astro';
-import ProcessScroll from '../components/ProcessScroll.astro';
-import { site } from '../data/site';
-import { noWidow } from '../utils/text';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SplitText from '../../components/SplitText.astro';
+import RowList from '../../components/RowList.astro';
+import Cta from '../../components/Cta.astro';
+import ProcessScroll from '../../components/ProcessScroll.astro';
+import { site } from '../../data/site';
+import { noWidow } from '../../utils/text';
 
 const { intro, side, heading, paragraphs, approachLabel, approach } = site.aboutPage;
 const { experience, education } = site;
@@ -17,7 +17,7 @@ const { experience, education } = site;
 // Separador entre as palavras em pílula: "a, b e c "
 const sep = (i: number) => (i < heading.pills.length - 2 ? ', ' : i === heading.pills.length - 2 ? ' e ' : ' ');
 
-const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/me/portrait.{jpg,jpeg,png,webp}', {
+const photos = import.meta.glob<{ default: ImageMetadata }>('../../assets/me/portrait.{jpg,jpeg,png,webp}', {
   eager: true,
 });
 const photo = Object.values(photos)[0]?.default;

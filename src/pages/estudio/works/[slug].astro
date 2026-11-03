@@ -1,13 +1,8 @@
 ---
-// Página de case na versão estúdio: mesmo conteúdo, navegação e links do estúdio.
-import CasePage from '../../../components/CasePage.astro';
-import { site, type Work } from '../../../data/site';
-import { studio } from '../../../data/studio';
-
+import Redirect from '../../../components/Redirect.astro';
+import { site } from '../../../data/site';
 export function getStaticPaths() {
-  return site.works.map((work) => ({ params: { slug: work.slug }, props: { work } }));
+  return site.works.map((w) => ({ params: { slug: w.slug } }));
 }
-const { work } = Astro.props as { work: Work };
 ---
-
-<CasePage work={work} base={studio.base} studio />
+<Redirect to={`/works/${Astro.params.slug}`} />
