@@ -1,14 +1,14 @@
 ---
 // Gaveta de contato — referência: Max Pratt.
 // Abre pela direita a partir de qualquer link com [data-contact]; o resto da página desfoca atrás.
-// Formulário em forma de frase ("Oi, meu nome é ___"). Como o site é estático, o envio
-// abre o app de e-mail com a mensagem pronta (sem servidor). Esc ou clique fora fecham.
+// Formulário em forma de frase ("Oi, meu nome é ___"). O envio abre o WhatsApp com a mensagem
+// pronta (sem servidor). Esc ou clique fora fecham.
 import { site } from '../data/site';
 
 const { intro, submit } = site.contact;
 ---
 
-<dialog class="contact" aria-labelledby="contact-title" data-lenis-prevent>
+<dialog class="contact" aria-labelledby="contact-title" data-lenis-prevent data-wa={site.whatsapp}>
   <div class="contact__panel">
     <div class="contact__top">
       <p id="contact-title" class="small">{intro}</p>
@@ -20,9 +20,9 @@ const { intro, submit } = site.contact;
     <form class="contact__form" novalidate>
       <p class="contact__sentence">
         Oi, meu nome é
-        <input name="nome" type="text" autocomplete="name" required aria-label="Seu nome" placeholder="seu nome" />.
-        Pode me responder no e-mail
-        <input name="email" type="email" autocomplete="email" required aria-label="Seu e-mail" placeholder="voce@email.com" />.
+        <input name="nome" type="text" autocomplete="name" required aria-label="Seu nome" placeholder="seu nome" />,
+        da empresa
+        <input name="empresa" type="text" autocomplete="organization" aria-label="Empresa" placeholder="sua empresa" />.
         Preciso de ajuda com
         <input
           name="tipo"
@@ -47,6 +47,7 @@ const { intro, submit } = site.contact;
 
     <div class="contact__bottom small">
       {site.socials.map((s) => <a class="link-line" href={s.href} target="_blank" rel="noopener">{s.label}</a>)}
+      <a class="link-line" href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener">WhatsApp</a>
       <a class="link-line" href={`mailto:${site.email}`}>{site.email}</a>
     </div>
   </div>
@@ -58,7 +59,6 @@ const { intro, submit } = site.contact;
     const form = dialog.querySelector<HTMLFormElement>('.contact__form')!;
     const status = dialog.querySelector<HTMLElement>('.contact__status')!;
     const lenis = () => (window as unknown as { lenis?: { stop(): void; start(): void } | null }).lenis;
-    const email = form.closest('dialog')!.querySelector<HTMLAnchorElement>('a[href^="mailto:"]')!.href.slice(7);
 
     const open = () => {
       dialog.showModal();
@@ -85,12 +85,12 @@ const { intro, submit } = site.contact;
       if (!form.reportValidity()) return;
       const v = Object.fromEntries(new FormData(form)) as Record<string, string>;
       const or = (x: string) => x?.trim() || 'a combinar';
-      const body =
-        `Oi, meu nome é ${v.nome.trim()}. Pode me responder no e-mail ${v.email.trim()}. ` +
+      const empresa = v.empresa?.trim() ? `, da empresa ${v.empresa.trim()}` : '';
+      const text =
+        `Oi, Eduardo! Meu nome é ${v.nome.trim()}${empresa}. ` +
         `Preciso de ajuda com ${or(v.tipo)}, meu orçamento é de ${or(v.orcamento)} e o prazo é ${or(v.prazo)}.`;
-      const subject = `Novo projeto: ${v.tipo?.trim() || 'contato pelo portfólio'}`;
-      location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      status.textContent = 'Abrindo seu e-mail com a mensagem pronta…';
+      window.open(`https://wa.me/${dialog.dataset.wa}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+      status.textContent = 'Abrindo o WhatsApp com a mensagem pronta…';
     });
   }
 </script>

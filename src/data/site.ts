@@ -10,6 +10,9 @@ export const site = {
   role: 'Designer Sênior', // header, aba do navegador e descrição
   location: 'Curitiba, BR',
   email: 'edujunior254@gmail.com',
+  // WhatsApp (só números, com DDI 55). Mensagem que já vem escrita ao abrir a conversa.
+  whatsapp: '5541988714749',
+  whatsappText: 'Oi, Eduardo! Vim pelo seu site e quero conversar sobre um projeto.',
 
   nav: [
     { label: 'Home', href: '/portfolio' },
@@ -190,11 +193,10 @@ export const site = {
     coords: '25.4284° S, 49.2733° W', // Curitiba
   },
 
-  // Gaveta de contato: formulário em forma de frase. Envio abre o e-mail com a mensagem pronta.
-  // TODO: se quiser receber sem abrir o app de e-mail, ligar a um serviço (Formspree, Web3Forms).
+  // Gaveta de contato: formulário em forma de frase. Envio abre o WhatsApp com a mensagem pronta.
   contact: {
     intro: 'Conte um pouco sobre o seu projeto',
-    submit: 'Enviar',
+    submit: 'Enviar pelo WhatsApp',
   },
 
   // Chamada antes do rodapé (ref. Norwalk): pergunta + avatar com nome e cargo
