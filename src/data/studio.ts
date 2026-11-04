@@ -65,7 +65,7 @@ export const studio = {
     stats: [
       { value: `${years}+`, label: 'anos de design' },
       { value: site.about.brandsMore, label: 'marcas atendidas' },
-      { value: '2 min', label: 'de onboarding na Artta. Eram 7 dias.' },
+      { value: '+1.000', label: 'projetos entregues' },
     ],
   },
 
@@ -150,7 +150,7 @@ export const studio = {
       items: [
         { value: `${years} anos`, label: 'desenhando marcas e produtos' },
         { value: '+500', label: 'marcas atendidas' },
-        { value: '2 min', label: 'de onboarding na Artta. Eram 7 dias.' },
+        { value: '+1.000', label: 'projetos entregues' },
       ],
     },
     cta: {
