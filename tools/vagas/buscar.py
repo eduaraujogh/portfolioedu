@@ -2,6 +2,9 @@
 
 Uso: python3 tools/vagas/buscar.py [dias]   →  imprime JSON com as vagas dos últimos N dias (padrão 7)
 
+Vagas que pedem inglês avançado ou fluente ficam de fora; as demais trazem o campo "ingles"
+("português" ou "não informado": nesse caso a entrevista provavelmente é em inglês).
+
 Só usa APIs e feeds públicos. Vagas do Brasil (Gupy, LinkedIn) não entram aqui: a rotina diária
 as encontra pela pesquisa na web. Nada é enviado; a candidatura é sempre feita pelo Eduardo.
 """
@@ -32,6 +35,25 @@ SENIOR = re.compile(r'senior|sênior|\bsr\b|lead|principal|staff|head|director|d
 FOCO = re.compile(r'brand|visual|product|ux|ui\b|motion|creative|identity|identidade|web', re.I)
 # Locais em que dá para trabalhar a partir de Curitiba
 LOCAL_OK = re.compile(r'worldwide|anywhere|global|latam|latin|south america|americas|brazil|brasil', re.I)
+# O Eduardo tem inglês intermediário: vaga que exige inglês avançado/fluente sai da lista
+INGLES_AVANCADO = re.compile(
+    r'(fluent|fluency|advanced|native|excellent|exceptional|outstanding|strong|professional|full)[\w\s,-]{0,25}english'
+    r'|english[\w\s,()-]{0,25}(fluen|advanced|native|c1|c2|proficien)'
+    r'|ingl[eê]s (avançado|fluente)|\bc1\b|\bc2\b',
+    re.I,
+)
+PORTUGUES = re.compile(r'portugu[eê]s|portuguese|\bvaga\b|requisitos|experiência', re.I)
+TAG = re.compile(r'<[^>]+>')
+
+
+def ingles(texto):
+    """Diz o que a vaga pede de idioma: 'português', 'avançado' (fica de fora) ou 'não informado'."""
+    t = TAG.sub(' ', html.unescape(texto or ''))
+    if PORTUGUES.search(t):
+        return 'português'
+    if INGLES_AVANCADO.search(t):
+        return 'avançado'
+    return 'não informado'
 
 
 def get(url):
@@ -52,6 +74,7 @@ def remotive():
             'salario': j.get('salary') or '',
             'data': datetime.fromisoformat(j['publication_date']).replace(tzinfo=timezone.utc),
             'link': j['url'],
+            'texto': j.get('description') or '',
         }
 
 
@@ -78,6 +101,7 @@ def himalayas():
                 'salario': sal,
                 'data': datetime.fromtimestamp(j['pubDate'], timezone.utc),
                 'link': j['applicationLink'],
+                'texto': (j.get('description') or '') + ' ' + (j.get('excerpt') or ''),
             }
 
 
@@ -96,6 +120,7 @@ def wwr():
             'salario': '',
             'data': parsedate_to_datetime(tag('pubDate')),
             'link': tag('link') or tag('guid'),
+            'texto': tag('description'),
         }
 
 
@@ -107,6 +132,8 @@ def nota(v):
         n += 2
     if re.search(r'brazil|brasil|latam|latin|south america', v['local'], re.I):
         n += 2
+    if v.get('ingles') == 'português':
+        n += 3
     return n
 
 
@@ -127,6 +154,9 @@ def main():
         if not DESIGN.search(v['titulo']) or FORA.search(v['titulo']):
             continue
         if v['local'] and not LOCAL_OK.search(v['local']):
+            continue
+        v['ingles'] = ingles(v.pop('texto', ''))
+        if v['ingles'] == 'avançado':
             continue
         links.add(v['link'])
         chaves.add(chave)
