@@ -221,17 +221,17 @@ export const site = {
     { slug: 'artta', name: 'Artta', sector: 'Mercado financeiro', discipline: 'Branding e UX/UI', featured: true },
     { slug: 'sba', name: 'Grupo SBA', sector: 'Mercado financeiro', discipline: 'Identidade Visual', featured: true },
     { slug: 'sabores', name: 'Sabores de Curitiba', sector: 'Gastronomia', discipline: 'Identidade Visual', featured: true },
+    { slug: 'riverside', name: 'Riverside', sector: 'Outdoor', discipline: 'Identidade Visual', featured: true },
     // Opcional: focus: 'left center' — ponto da imagem que fica visível quando a capa é recortada.
     // Gedisa fica fora até ter uma capa boa (a atual é print de site).
     { slug: 'thalles', name: 'Thalles Consultoria', sector: 'Consultoria financeira', discipline: 'Identidade Visual', featured: true },
     { slug: 'fense', name: 'Fense Seguros', sector: 'Corretora de seguros', discipline: 'Identidade Visual', featured: true },
     { slug: 'duo', name: 'Duo Garage', sector: 'Revenda de veículos', discipline: 'Identidade Visual', featured: true },
-    { slug: 'golden-vibes', name: 'Golden Vibes', sector: 'Semijoias', discipline: 'Branding', featured: true },
+    { slug: 'golden-vibes', name: 'Golden Vibes', sector: 'Semijoias', discipline: 'Branding', featured: false },
     // Hascunho Studio (Behance)
     { slug: 'four-pink', name: 'Four Pink', sector: 'Moda', discipline: 'Branding', featured: false },
     { slug: 'marozi', name: 'Marozi', sector: 'Moda', discipline: 'Identidade Visual', featured: false },
     { slug: 'bioerde', name: 'Bioerde', sector: 'Agronegócio', discipline: 'Branding', featured: false },
-    { slug: 'riverside', name: 'Riverside', sector: 'Outdoor', discipline: 'Identidade Visual', featured: false },
   ],
 } as const;
 

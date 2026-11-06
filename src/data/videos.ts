@@ -8,5 +8,6 @@ export const coverVideos: Record<string, { alt: string }> = {
   duo: { alt: 'Logo da Duo Garage em movimento: uma porta de garagem sobe e revela a marca' },
   thalles: { alt: 'Cards da Thalles em movimento: o logo se monta, o texto entra e a flecha sobe' },
   sba: { alt: 'Logo do Grupo SBA em movimento: os dois anéis se desenham como um traço e se unem, e as letras se escrevem ao lado' },
+  riverside: { alt: 'Logo da Riverside em movimento: as linhas de construção se desenham, as letras sobem e o fundo passa do azul ao laranja' },
   fense: { alt: 'Logo da Fense em movimento: o F ganha volume e o nome entra ao lado' },
 };

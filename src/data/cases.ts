@@ -283,17 +283,80 @@ export const cases: Record<Work['slug'], Case> = {
       'Posicionamento de parceira do agricultor, presente em todos os pontos de contato.',
     ],
   },
+  // Textos a partir da apresentação da marca (público, objetivos, DNA e conceito).
   riverside: {
     client: 'Riverside',
-    services: 'Identidade visual, sistema de marca',
+    services: 'Identidade visual, sistema de marca, aplicações',
+    labels: ['A marca', 'O projeto'],
     challenge:
-      'Traduzir em marca a sensação de conquista de quem escala uma montanha, acampa com os amigos e sente a natureza na pele.',
+      'A Riverside é uma marca de roupas e equipamentos para quem gosta de se aventurar na natureza: um público majoritariamente masculino, de 18 a 45 anos, que acampa, faz trilha e pega a estrada atrás de paisagens. Entrando numa nova fase, a empresa precisava de uma identidade com personalidade clara, fácil de reconhecer e pronta para viver em produtos, embalagens e no digital.',
     solution:
-      'A letra R, inicial do nome, carrega em seus traços a silhueta de um punho cerrado, o gesto da comemoração. As formas do logotipo geram os demais elementos do sistema visual.',
+      'Parti do sentimento que une esse público: a sensação de vitória ao chegar ao topo de uma montanha. A letra R, inicial do nome, traz em seus traços a silhueta de um punho erguido, o gesto da comemoração. Das formas do logotipo nasce todo o resto: versões, selos e ícones que mantêm a mesma voz da etiqueta bordada à caixa de envio.',
+    chapters: [
+      {
+        id: 'marca',
+        title: 'Marca',
+        kicker: 'Logotipo, símbolo e grid',
+        text: 'O logotipo foi desenhado sobre um grid de retas e cortes a 45°, que dão às letras um aspecto robusto, quase de estêncil, como as marcações de equipamentos de campo. O R isolado vira o símbolo e resume o conceito. A paleta parte do azul-marinho da noite no acampamento e do laranja da fogueira, com dois neutros de apoio. A Russo One assina títulos e campanhas, e a Ubuntu cuida dos textos.',
+        decisions: [
+          {
+            title: 'Um R que comemora',
+            text: 'O símbolo precisava funcionar sozinho em etiquetas e produtos. O R carrega o punho erguido e mantém o conceito mesmo sem o nome ao lado.',
+          },
+          {
+            title: 'Letras de equipamento',
+            text: 'Retas e cortes a 45° deixam o logotipo resistente e legível bordado, estampado ou gravado, em qualquer tamanho.',
+          },
+          {
+            title: 'A noite e a fogueira',
+            text: 'Duas cores fortes e contrastantes, que se alternam como fundo e destaque e são reconhecidas de longe, na trilha ou na prateleira.',
+          },
+        ],
+        shots: [
+          { label: 'Logotipo sobre o azul', full: true },
+          { label: 'Grid de construção do logotipo', full: true },
+          { label: 'Símbolo R' },
+          { label: 'O gesto da conquista' },
+          { label: 'Paleta de cores', full: true },
+          { label: 'Tipografia', full: true },
+          { label: 'Logotipo sobre o laranja', full: true },
+        ],
+      },
+      {
+        id: 'sistema',
+        title: 'Sistema visual',
+        kicker: 'Versões, selos e ícones',
+        text: 'Uma marca de outdoor vive em superfícies muito diferentes: tecido, metal, papelão e tela. Por isso o sistema tem uma versão para cada uso: a horizontal, a empilhada com árvores e fogueira, e uma família de selos com as frases da marca, como Stay Wild e The Adventure Awaits. Ícones de árvore, onda, montanha e fogueira completam o repertório.',
+        shots: [
+          { label: 'Assinatura Stay Wild', full: true },
+          { label: 'Versão empilhada' },
+          { label: 'Selo RS Co.' },
+          { label: 'Selo Adventure Awaits' },
+          { label: 'Selo hexagonal' },
+        ],
+      },
+      {
+        id: 'aplicacoes',
+        title: 'Aplicações',
+        kicker: 'Vestuário, equipamentos e embalagens',
+        text: 'A identidade foi pensada para onde a marca realmente vai estar: camisetas, gorros, bonés, mochilas e bolsas, as caixas de envio da loja on-line e até o adesivo no carro de quem pega a estrada. Cada peça usa uma versão diferente do sistema, sempre com a mesma voz.',
+        shots: [
+          { label: 'Camiseta', full: true },
+          { label: 'Gorro' },
+          { label: 'Boné' },
+          { label: 'Mochila' },
+          { label: 'Bolsa' },
+          { label: 'Caixa de envio', full: true },
+          { label: 'Embalagens' },
+          { label: 'Acampamento' },
+          { label: 'Adesivo no carro', full: true },
+        ],
+      },
+    ],
     concept: 'A letra R traz em seus traços a silhueta de um punho. O gesto que fazemos ao celebrar uma conquista.',
     results: [
-      'Uma marca que transmite energia e conquista, alinhada ao espírito de quem vive ao ar livre.',
-      'Um sistema visual inteiro gerado a partir do próprio logotipo, coerente em qualquer aplicação.',
+      'Uma marca aventureira, forte e rústica, alinhada ao espírito de quem vive ao ar livre.',
+      'Um sistema visual inteiro gerado a partir do próprio logotipo, coerente do bordado à embalagem.',
       'Um símbolo forte o bastante para ser usado sozinho em produtos e equipamentos.',
     ],
   },
