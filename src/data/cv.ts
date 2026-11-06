@@ -8,14 +8,14 @@ export const cv = {
   experience: [
     {
       company: 'Grupo SBA',
-      role: 'Designer Sênior Multidisciplinar',
+      role: 'Designer Sênior',
       period: '2025 — 2026',
       description:
         'Responsável pela direção e execução de projetos de design para duas marcas do mercado financeiro e a marca institucional do grupo. Atuação em identidade visual, UX/UI, campanhas e comunicação interna. Em parceria com o time de produto, redesenhei o cadastro de parceiros, reduzindo o tempo de preenchimento de até 7 dias para aproximadamente 2 minutos.',
     },
     {
       company: 'Grupo Ergon',
-      role: 'Designer Multidisciplinar',
+      role: 'Designer Sênior',
       period: '2025 — 2026',
       description:
         'Atuação transversal nas empresas do grupo, conduzindo projetos de identidade visual, campanhas, comunicação digital e interfaces. Responsável por transformar demandas de diferentes áreas em soluções visuais consistentes, da concepção à implementação.',

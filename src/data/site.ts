@@ -30,7 +30,7 @@ export const site = {
 
   hero: {
     // Primeira parte: quem é (tom principal). Segunda: o que diferencia (tom secundário).
-    lead: 'Designer Sênior multidisciplinar:',
+    lead: 'Designer Sênior:',
     rest: 'identidade visual, UX/UI, campanhas, sites e motion design.',
     // Apresentação ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
     about:
@@ -138,14 +138,14 @@ export const site = {
     items: [
       {
         company: 'Grupo SBA',
-        role: 'Designer Sênior multidisciplinar',
+        role: 'Designer Sênior',
         period: '2025 — 2026',
         description:
           'Responsável pelo design de duas marcas do mercado financeiro e da marca do grupo: identidade visual, UX/UI, campanhas, motion e comunicação interna. Com o time de produto, redesenhei o cadastro de parceiros, que passou de até 7 dias para 2 minutos.',
       },
       {
         company: 'Grupo Ergon',
-        role: 'Designer multidisciplinar',
+        role: 'Designer Sênior',
         period: '2025 — 2026',
         description:
           'Responsável por todas as frentes de design das empresas do grupo. Atuei de ponta a ponta, da identidade visual e das campanhas à presença digital, com landing pages e interfaces responsivas.',
