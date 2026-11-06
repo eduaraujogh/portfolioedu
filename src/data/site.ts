@@ -137,11 +137,18 @@ export const site = {
     label: 'Experiência',
     items: [
       {
+        company: 'Independente',
+        role: 'Designer multidisciplinar',
+        period: '2026 — Atual',
+        description:
+          'Identidade visual, sites, UX/UI e motion para empresas de diferentes segmentos.',
+      },
+      {
         company: 'Grupo SBA',
         role: 'Designer Sênior multidisciplinar',
-        period: 'Atual',
+        period: '2025 — 2026',
         description:
-          'Responsável por todas as frentes de design de duas marcas do mercado financeiro. Conduzo identidade visual, UX/UI, campanhas, social media, motion e audiovisual, garantindo uma comunicação consistente em todos os pontos de contato.',
+          'Responsável pelo design de duas marcas do mercado financeiro e da marca do grupo: identidade visual, UX/UI, campanhas, motion e comunicação interna. Com o time de produto, redesenhei o cadastro de parceiros, que passou de até 7 dias para 2 minutos.',
       },
       {
         company: 'Grupo Ergon',
@@ -169,7 +176,7 @@ export const site = {
         role: 'Designer e Ilustrador',
         period: '2015 — 2018',
         description:
-          'Criação de identidades visuais para clientes da agência, do logotipo às aplicações, além de arte-final de peças impressas e digitais e ilustrações para marcas de diferentes segmentos.',
+          'Identidades visuais para clientes da agência, do logotipo às aplicações, além de ilustração e arte-final de peças impressas e digitais.',
       },
     ],
   },
