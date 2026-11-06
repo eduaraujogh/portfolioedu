@@ -12,6 +12,8 @@ import '../styles/tokens.css';
 const year = new Date().getFullYear();
 const years = year - startYear;
 const siteUrl = new URL(import.meta.env.BASE_URL, Astro.site).href;
+// Versão do portfólio feita para recrutadores (a raiz do site é a versão estúdio)
+const portfolioUrl = siteUrl.replace(/\/?$/, '/') + 'portfolio/';
 const pretty = (url: string) => decodeURI(url).replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 
 const { hero, about, aboutPage, experience, education } = site;
@@ -66,7 +68,14 @@ const avatar = Object.values(avatars)[0]?.default;
             <span>{years}+</span>
             <small class="muted">anos de experiência</small>
           </p>
-          <p class="intro__text">{noWidow(about.rest)}</p>
+          <div class="intro__main">
+            <p class="intro__text">{noWidow(about.rest)}</p>
+            <!-- Botão para o portfólio digital (clicável no PDF) -->
+            <a class="cta" href={portfolioUrl}>
+              <span>Ver portfólio digital</span>
+              <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9 9 3M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </a>
+          </div>
         </section>
 
         <div class="body">
@@ -134,7 +143,7 @@ const avatar = Object.values(avatars)[0]?.default;
       <footer class="end">
         <div class="end__cta">
           <p class="eyebrow">Portfólio completo</p>
-          <a href={siteUrl}>{pretty(siteUrl)}<span aria-hidden="true"> ↗</span></a>
+          <a href={portfolioUrl}>{pretty(portfolioUrl)}<span aria-hidden="true"> ↗</span></a>
         </div>
         <div class="end__meta">
           <span>Portfólio {startYear} — {year}</span>
@@ -308,6 +317,28 @@ const avatar = Object.values(avatars)[0]?.default;
   .intro__stat small {
     margin-top: 1.6mm;
     font-size: 7pt;
+  }
+  .intro__main {
+    display: grid;
+    justify-items: start;
+    gap: 4.5mm;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.2mm;
+    padding: 2.6mm 4.6mm 2.6mm 5.4mm;
+    border-radius: 99px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 9.5pt;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .cta svg {
+    width: 3.4mm;
+    height: 3.4mm;
   }
   .intro__text {
     font-size: 9.8pt;
