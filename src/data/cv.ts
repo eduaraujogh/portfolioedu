@@ -72,6 +72,8 @@ export const cv = {
   languages: { label: 'Idiomas', items: ['Português: nativo', 'Inglês: intermediário'] },
 
   education: [
+    // Curso livre, sem certificado (Coursera, modo gratuito). Trocar para o ano ao concluir.
+    { title: 'Criatividade e IA', subtitle: 'Parsons School of Design · Coursera', period: 'Em andamento' },
     { title: 'Publicidade e Propaganda', subtitle: 'Universidade Positivo', period: '2020 — 2024' },
     { title: 'Design Gráfico', subtitle: 'EBAC', period: '2020 — 2022' },
     { title: 'Profissão UX/UI', subtitle: 'EBAC', period: '2020' },
