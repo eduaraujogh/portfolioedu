@@ -137,13 +137,6 @@ export const site = {
     label: 'Experiência',
     items: [
       {
-        company: 'Independente',
-        role: 'Designer multidisciplinar',
-        period: '2026 — Atual',
-        description:
-          'Identidade visual, sites, UX/UI e motion para empresas de diferentes segmentos.',
-      },
-      {
         company: 'Grupo SBA',
         role: 'Designer Sênior multidisciplinar',
         period: '2025 — 2026',
