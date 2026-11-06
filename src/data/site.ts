@@ -30,7 +30,7 @@ export const site = {
 
   hero: {
     // Primeira parte: quem é (tom principal). Segunda: o que diferencia (tom secundário).
-    lead: 'Designer Sênior:',
+    lead: 'Designer Sênior multidisciplinar:',
     rest: 'identidade visual, UX/UI, campanhas, sites e motion design.',
     // Apresentação ao lado do título: quem sou, não onde trabalhei (isso vai para Experiência).
     about:
